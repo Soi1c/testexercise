@@ -3,8 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Test Exercise</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<script src="static/main.js"></script>
+	<!--<script src="static/LoginController.js"></script>-->
 </head>
+
 <body ng-app="testexercise">
 <div class="container" ng-controller="LoginController">
 	<label>User</label> <input type="text" ng-model="userDto.userName" class="input-sm spacing"/>
@@ -13,10 +18,7 @@
 	<hr/>
 	<button ng-click="login()" class="btn btn-sm btn-info">Login</button>
 	<hr/>
-	<button ng-click="signUp()" class="btn btn-sm btn-info">Sign Up</button>
+	<button href="/signup" class="btn btn-sm btn-info">Sign Up</button>
 </div>
 </body>
-<script src="js/static/main.js"></script>
-<script src="js/static/LoginController.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </html>

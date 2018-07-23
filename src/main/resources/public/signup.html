@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="static/main.js"></script>
+    <script src="static/SignUpController.js"></script>
+</head>
+
+<body ng-app="testexercise">
+<div class="container" ng-controller="SignUpController">
+    <form class="form-horizontal" ng-submit="submitForm()">
+        <label>E-mail</label> <input type="text" ng-model="email" class="input-sm spacing"/>
+        <hr/>
+        <label>Password</label> <input type="text" ng-model="password" class="input-sm spacing"/>
+        <hr/>
+        <button type="submit" class="btn btn-sm btn-info">Register</button>
+    </form>
+</div>
+</body>
+</html>
