@@ -12,7 +12,7 @@
 
 <body ng-app="testexercise">
 <div class="container" ng-controller="SignUpController">
-    <form class="form-horizontal" ng-submit="submitForm()">
+    <form class="form-horizontal" ng-submit="submitForm()" modelAttribute="user">
         <label>E-mail</label> <input type="text" ng-model="email" class="input-sm spacing"/>
         <hr/>
         <label>Password</label> <input type="text" ng-model="password" class="input-sm spacing"/>
