@@ -1,6 +1,6 @@
 package com.pestov.testexercise.services;
 
-import com.pestov.testexercise.Dto.UserDto;
+import com.pestov.testexercise.dto.UserDto;
 import com.pestov.testexercise.models.User;
 import com.pestov.testexercise.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,12 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public User registerNewUser(UserDto userDto) {
+    public User registerNewUser(String userDto) {
         final User user = new User();
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-
+        UserDto dto = new UserDto(userDto);
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+        userRepository.save(user);
         return user;
     }
 }
