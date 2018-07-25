@@ -15,7 +15,13 @@ app.controller('SignUpController', ['vcRecaptchaService', function($scope, $http
             $scope.postResultMessage = response.data;
         }, function error(response) {
             $scope.postResultMessage = "Error with status: " +  response.statusText;
-        });
+        })
+			.fail(function(data) {
+				grecaptcha.reset();
+				if(data.responseJSON.error == "InvalidReCaptcha"){
+					$("#captchaError").show().html(data.responseJSON.message);
+				}
+			});
 
         $scope.email = "";
         $scope.password = "";

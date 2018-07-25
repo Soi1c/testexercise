@@ -1,4 +1,4 @@
-package com.pestov.testexercise.conf;
+package com.pestov.testexercise.captcha;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -9,15 +9,15 @@ public class UserDto {
 
     private String password;
 
+    private String gCaptchaResponse;
+
+    private String xfHeader;
+
     public UserDto(String userJson) {
     	JSONObject result = new JSONObject(userJson);
     	this.email = result.getString("email");
     	this.password = result.getString("password");
-	}
-
-	public UserDto(String email, String password) {
-		this.email = email;
-		this.password = password;
+    	this.gCaptchaResponse = result.getString("g-captcha-response");
 	}
 
 	public String getEmail() {
@@ -35,4 +35,8 @@ public class UserDto {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public String getgCaptchaResponse() {
+		return gCaptchaResponse;
+	}
 }
