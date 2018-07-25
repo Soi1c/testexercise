@@ -4,18 +4,17 @@
 	<meta charset="UTF-8">
 	<title>Test Exercise</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link href='app.css' rel='stylesheet' type='text/css'/>
 	<script src="main.js" type="text/javascript"></script>
 </head>
 
-<body ng-app="testexercise">
-<div class="container" ng-controller="Login">
-	<label>User</label> <input type="text" ng-model="userDto.userName" class="input-sm spacing"/>
+<body>
+<div class="container">
+	<label>User</label> <input type="text"/>
 	<hr/>
-	<label>Password</label> <input type="text" ng-model="userDto.password" class="input-sm spacing"/>
+	<label>Password</label> <input type="text"/>
 	<hr/>
-	<button ng-click="login()" class="btn btn-sm btn-info">Login</button>
+	<button onclick="login()">Login</button>
 	<hr/>
 	<a href="signup.html">Sign Up</a>
 </div>
