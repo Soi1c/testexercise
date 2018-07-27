@@ -6,4 +6,6 @@ import com.pestov.testexercise.models.User;
 public interface IUserService {
 
     User registerNewUser(String userDto);
+
+
 }

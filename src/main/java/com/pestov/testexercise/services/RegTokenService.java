@@ -3,6 +3,7 @@ package com.pestov.testexercise.services;
 import com.pestov.testexercise.models.RegToken;
 import com.pestov.testexercise.models.User;
 import com.pestov.testexercise.repositories.RegTokenRepository;
+import com.pestov.testexercise.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,11 @@ public class RegTokenService implements IRegTokenService {
 		regToken.setCreationTime(LocalDateTime.now());
 		regTokenRepository.save(regToken);
 		return result;
+	}
+
+	public void approveUserAndDeleteToken(String token) {
+		RegToken regToken = regTokenRepository.findByRegToken(token);
+		regToken.getUserId().setActive(true);
+		regTokenRepository.delete(regToken);
 	}
 }

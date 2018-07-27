@@ -15,6 +15,7 @@ public class User {
 
     private String password;
 
+    @Column(name="is_active")
     private boolean isActive;
 
     public User() {

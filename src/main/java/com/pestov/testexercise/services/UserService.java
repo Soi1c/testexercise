@@ -36,7 +36,7 @@ public class UserService implements IUserService {
 		emailService.sendSimpleMessage(
 				dto.getEmail(),
 				"Подтверждение регистрации",
-				applicationUrl.concat("/token=").concat(token)
+				applicationUrl.concat("/signup/token=").concat(token)
 		);
 		return user;
 	}
