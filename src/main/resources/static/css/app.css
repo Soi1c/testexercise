@@ -31,7 +31,8 @@ input.spacing{
 	width:30px;
 	height:30px;
 	bottom:45px;
-	background-image: url(rpt.png);
+	background-image: url(../images/rpt.png);
+	background-size: cover;
 }
 
 #txtInput, #Button1{

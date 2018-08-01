@@ -6,9 +6,10 @@ import com.pestov.testexercise.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping(name = "signup")
+@RequestMapping(value = "signup")
 public class RegistrationController {
 
     @Autowired
@@ -23,10 +24,13 @@ public class RegistrationController {
         userService.registerNewUser(request);
     }
 
-	@RequestMapping(value = "{token}", method = RequestMethod.GET)
+	@RequestMapping(value = "confirmEmail", method = RequestMethod.GET)
 	@ResponseBody
-	public String approveUser(@PathVariable String token) {
-		regTokenService.approveUserAndDeleteToken(token);
-		return "index";
+	public RedirectView approveUser(@RequestParam String token) {
+		if (regTokenService.approveUserAndDeleteToken(token)) {
+			return new RedirectView("/login.html");
+		} else {
+			return new RedirectView("/badToken.html");
+		}
 	}
 }

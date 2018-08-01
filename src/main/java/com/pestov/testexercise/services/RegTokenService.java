@@ -25,9 +25,19 @@ public class RegTokenService implements IRegTokenService {
 		return result;
 	}
 
-	public void approveUserAndDeleteToken(String token) {
+	public boolean approveUserAndDeleteToken(String token) {
 		RegToken regToken = regTokenRepository.findByRegToken(token);
-		regToken.getUserId().setActive(true);
-		regTokenRepository.delete(regToken);
+		if (isTokenStillActive(regToken)) {
+			regToken.getUserId().setActive(true);
+			regTokenRepository.delete(regToken);
+			return true;
+		} else {
+			regTokenRepository.delete(regToken);
+			return false;
+		}
+	}
+
+	private boolean isTokenStillActive(RegToken regToken) {
+		return LocalDateTime.now().isBefore(regToken.getCreationTime().plusDays(1));
 	}
 }

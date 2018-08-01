@@ -18,7 +18,7 @@ function Captcha(){
 }
 function ValidCaptcha(){
 	var string1 = removeSpaces(document.getElementById('mainCaptcha').value);
-	var string2 = removeSpaces(document.getElementById('txtInput').value);
+	var string2 =         removeSpaces(document.getElementById('txtInput').value);
 	if (string1 == string2){
 		return true;
 	}else{
@@ -40,6 +40,6 @@ function submitRegistration() {
 		xhttp.open('POST', url, false);
 		xhttp.setRequestHeader("Content-Type", "application/json");
 		xhttp.send(data);
-		window.location = serverAddress + '/index.html';
+		window.location.href = serverAddress + '/login.html';
 	}
 }

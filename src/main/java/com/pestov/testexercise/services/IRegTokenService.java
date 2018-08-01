@@ -6,5 +6,5 @@ public interface IRegTokenService {
 
 	String saveNewRegToken(User user);
 
-	void approveUserAndDeleteToken(String token);
+	boolean approveUserAndDeleteToken(String token);
 }
