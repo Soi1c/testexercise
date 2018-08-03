@@ -23,6 +23,7 @@ import {TableHeaderLocalization} from "../pipes/table-header-names-localization/
 import {MdPaginatorModule, MdTableModule} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SinglebookshelfComponent} from "./pages/user/bookshelves/singlebookshelf/singlebookshelf.component";
+import {EmailConfirmComponent} from "./components/auth/emailConfirm/emailConfirm.component";
 
 
 
@@ -41,6 +42,7 @@ import {SinglebookshelfComponent} from "./pages/user/bookshelves/singlebookshelf
     BookshelvesComponent,
     TableWrapper,
     SinglebookshelfComponent,
+    EmailConfirmComponent,
     TableHeaderLocalization
   ],
   imports: [

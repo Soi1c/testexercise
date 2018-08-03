@@ -110,8 +110,12 @@ class Accounts extends HttpRequest{
 
     createUser(user): Observable<any> {
       return this.post(`${BASE}/signup/submit`,user);
-
     }
+
+
+    confirmEmail(token): Observable<any> {
+      return this.get(`${BASE}/signup/confirmEmail?token=`+token);
+   }
 
 }
 
@@ -124,7 +128,7 @@ class BookShelf extends HttpRequest{
     return this.get(`${BASE}/mocks/bookshelves.json`);
   }
 
-  getBooksFromShelves(){
+  getBooksFromShelves(): Observable<any>{
     return this.get(`${BASE}/mocks/books.json`);
   }
 }

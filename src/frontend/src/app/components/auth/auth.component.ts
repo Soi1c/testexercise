@@ -4,7 +4,7 @@ import { MASKS } from '../../libs/masks';
 import {CaptchaComponent} from '../captcha/captcha.component';
 import {ApiService} from "../../services/api.service";
 import {error} from "util";
-import {Router} from "@angular/router";
+import { Router} from "@angular/router";
 
 
 @Component({
@@ -14,7 +14,8 @@ import {Router} from "@angular/router";
 })
 export class AuthComponent implements OnInit{
   @ViewChild(CaptchaComponent) captcha: CaptchaComponent;
-  constructor(private api: ApiService,protected router: Router){}
+
+  constructor(private api: ApiService, protected router: Router){}
 
   ngOnInit() {
     this.clearForm();
@@ -24,15 +25,19 @@ export class AuthComponent implements OnInit{
     });
   }
 
+
   public form: FormGroup;
   MASKS = MASKS;
   errors = '';
+  confirmMessage = '';
   status = {
     login: true,
     forgotPassword: false,
     forgotLogin: false,
-    registration: false
+    registration: false,
   }
+
+  confirmEmailState = false;
 
   public togglePassRecovery(e: Event) {
     e.preventDefault();
@@ -79,6 +84,7 @@ export class AuthComponent implements OnInit{
 
     }
   }
+
 
   authorize(){
     console.log("authorize" + this.form.value.username);
