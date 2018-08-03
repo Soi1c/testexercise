@@ -1,0 +1,83 @@
+<div class="authWrap">
+  <div fxFlex fxLayout="column" class="auth" *ngIf="status.login">
+    <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
+      <app-input-text
+        formControlName="username"
+        label="true"
+        class="input_limiter"
+        inputPlaceholder="E-mail">
+        <app-error
+          *ngIf="form.controls.username?.errors?.required"
+          error="Не может быть пустым">
+        </app-error>
+        <app-error
+          *ngIf="form.controls.username?.errors?.email
+                        || form.controls.username?.errors?.pattern"
+          error="Неправильный формат e-mail адреса">
+        </app-error>
+      </app-input-text>
+      <app-input-text [label]="true" inputType="password" formControlName="password" inputPlaceholder="Пароль"></app-input-text>
+      <div class="forgot-password__wrapper">
+        <a href="#" (click)="toggleLoginRecovery($event)" class="forgot-password">Забыли логин?</a>
+        <a href="#" (click)="togglePassRecovery($event)" class="forgot-password">Забыли пароль?</a>
+      </div>
+      <app-error [error]="errors"></app-error>
+      <app-button [submit]="true" type="submit" (click)="login()">Войти</app-button>
+      <app-button [submit]="true" type="submit" (click)="toggleRegistrationForm()">Регистрация</app-button>
+
+    </form>
+  </div>
+
+
+  <div class="auth" *ngIf="status.registration">
+    <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center" >
+      <app-input-text
+        formControlName="username"
+        label="true"
+        class="input_limiter"
+        inputPlaceholder="Введите email">
+        <app-error
+          *ngIf="form.controls.username?.errors?.required"
+          error="Не может быть пустым">
+        </app-error>
+        <app-error
+          *ngIf="form.controls.username?.errors?.email
+                        || form.controls.username?.errors?.pattern"
+          error="Неправильный формат e-mail адреса">
+        </app-error>
+      </app-input-text>
+      <app-input-text [label]="true" inputType="password" formControlName="password" inputPlaceholder="Введите пароль"></app-input-text>
+
+      <app-captcha></app-captcha>
+      <app-error [error]="errors"></app-error>
+
+      <app-button [submit]="true" type="submit" (click)="createNewUser()">Регистрация</app-button>
+    </form>
+  </div>
+
+  <div class="auth" *ngIf="status.forgotPassword">
+    <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
+      <h3>На ваш email будет оправлено письмо с паролем</h3>
+      <app-input-text
+        formControlName="username"
+        label="true"
+        class="input_limiter"
+        inputPlaceholder="Введите email">
+        <app-error
+          *ngIf="form.controls.username?.errors?.required"
+          error="Не может быть пустым">
+        </app-error>
+        <app-error
+          *ngIf="form.controls.username?.errors?.email
+                        || form.controls.username?.errors?.pattern"
+          error="Неправильный формат e-mail адреса">
+        </app-error>
+      </app-input-text>
+
+      <app-error [error]="errors"></app-error>
+
+      <app-button [submit]="true" type="submit" (click)="sendPasswordOnEmail()">Отправить email</app-button>
+
+    </form>
+  </div>
+</div>

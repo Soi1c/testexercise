@@ -1,0 +1,23 @@
+{
+  "books":[
+    {
+      "id":1,
+      "name": "Chuk and Gek",
+      "dateStart": "01-01-2018",
+      "description": "В канун Нового года в московскую квартиру ",
+    },
+    {
+      "id":2,
+      "name": "Dark Tower",
+      "dateStart": "01-01-2018",
+      "description": "В канун Нового года в московскую квартиру ",
+    },
+    {
+      "id":3,
+      "name": "Spider-man",
+      "dateStart": "01-12-2017",
+      "description": "В канун Нового года в московскую квартиру ",
+    }
+
+  ]
+}

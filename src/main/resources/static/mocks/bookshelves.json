@@ -1,0 +1,22 @@
+{
+  "bookshelves":[
+    {
+      "id":1,
+      "name": "первая",
+      "dateStart": "01-01-2018",
+      "booksCount": "6"
+    },
+    {
+      "id":2,
+      "name": "вторая",
+      "dateStart": "12-03-2018",
+      "booksCount": "8"
+    },
+    {
+      "id":3,
+      "name": "третья",
+      "dateStart": "21-01-2018",
+      "booksCount": "12"
+    }
+  ]
+}

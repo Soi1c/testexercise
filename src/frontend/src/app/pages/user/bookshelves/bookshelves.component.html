@@ -1,0 +1,21 @@
+
+<h1>Книжные полки</h1>
+
+<div *ngIf="isListShowable()">
+  <app-button  (click)="showCreation()">Добавить книжную полку</app-button>
+
+  <app-table
+    *ngIf="table.data.length"
+    [displayed]="table.displayed"
+    [data]="table.data"
+    [size]="table.size"
+    [page]="table.page"
+    (paginatorchanged)="paginatorChanged($event)"
+    (rowclicked)="rowClicked($event)">
+  </app-table>
+</div>
+<div *ngIf="isCreationShowable()"></div>
+<div *ngIf="isSingleShelfShowable()">
+  <app-bookshelf></app-bookshelf>
+</div>
+<div *ngIf="isBookShowable()"></div>

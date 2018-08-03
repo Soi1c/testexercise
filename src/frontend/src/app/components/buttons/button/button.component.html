@@ -1,0 +1,21 @@
+<div (click)="onClick($event)">
+    <button
+        class="btn"
+        [disabled]="disabled"
+        [class.btn-primary]="this.primary"
+        [class.btn-submit]="this.submit"
+        [class.btn-with-icon]="this.icon"
+        [class.btn-borderless]="this.borderless"
+        [class.btn-disabled]="this.disabled"
+        [class.btn-icon-only]="this.iconOnly"
+        [class.btn-loading]="this.loading"
+        [type]="type">
+        <div class="btn-content">
+            <ng-content *ngIf="!this.loading"></ng-content>
+            <span *ngIf="this.loading" fxLayout="row" fxLayoutAlign="center center">
+                <img src="../../../../assets/images/loading.gif" alt="">
+                {{ this.loadingText }}
+            </span>
+        </div>
+    </button>
+</div>

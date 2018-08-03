@@ -1,0 +1,35 @@
+
+.authWrap{
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  background-color: #fff;
+}
+
+.auth{
+  width: 350px;
+  border: 1px solid #d3d3d3;
+  padding: 20px;
+  margin-top: -150px;
+}
+
+.forgot-password{
+  color: #000;
+  text-decoration: none;
+  margin-right: 10px;
+  &__wrapper{
+    margin-bottom: 10px;
+  }
+  &:hover{
+    color: Red;
+  }
+}

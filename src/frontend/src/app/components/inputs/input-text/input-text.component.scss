@@ -1,0 +1,261 @@
+@import '../../assets/variables';
+
+/*
+:host(.submitted), .hasError {
+
+  div.with-tooltip {
+    border: 1px solid $app-red-pastel !important;
+
+    input {
+      height: 62px !important;
+      border: none !important;
+
+      &:focus {
+        padding: 27px 0 13px 24px !important;
+      }
+    }
+
+    .tooltip-container {
+      height: 61px !important;
+    }
+
+    input:focus + .tooltip-container {
+      height: 62px !important;
+      margin-bottom: 0 !important;
+      border: none !important;
+    }
+  }
+
+  div.labeled {
+    input:focus {
+      padding-left: 24px !important;
+    }
+  }
+
+  input {
+    border: 1px solid $app-red-pastel !important;
+    &:focus {
+      padding-left: 24px !important;
+    }
+  }
+
+  .error-container {
+    color: $app-red-pastel;
+    margin-top: 8px;
+    padding-left: 24px;
+
+    span {
+      display: block;
+      height: auto;
+    }
+  }
+}
+
+/deep/ input {
+  &:disabled {
+    opacity: 0.5;
+    color: #8393a3 !important;
+  }
+}
+
+div {
+  position: relative;
+
+  &.input-text-container {
+
+    span {
+      position: absolute;
+      line-height: 1;
+      font-family: Pragmatica;
+      display: block;
+      color: #8393a3;
+      top: 24px;
+      left: 24px;
+      font-size: 16px;
+
+      &.float-to-top {
+        font-size: 12px;
+        top: 14px;
+      }
+    }
+  }
+
+  &.labeled {
+    height: 64px !important;
+
+    .tooltip-container {
+      height: 63px !important;
+      margin-top: -16px;
+
+      app-tooltip {
+        margin-top: 20px;
+      }
+    }
+    input:focus + .tooltip-container {
+      height: 64px !important;
+      margin-top: -15px;
+    }
+
+    input {
+      padding: 28px 0 13px 24px !important;
+
+      &:focus {
+        padding-left: 23px !important;
+      }
+    }
+  }
+}
+
+input.without-tooltip {
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #000000;
+  border-radius: 6px;
+  background-color: $app-grey-pale;
+  border: none;
+  padding: 13px 0 13px 16px;
+  text-align: left !important;
+
+  &:focus {
+    outline: none !important;
+    background-color: $app-white-casual;
+    border: 1px solid $app-grey-disabled;
+    padding: 13px 0 13px 15px;
+  }
+
+  &::placeholder {
+    color: $app-grey-placeholder;
+  }
+}
+
+div.with-tooltip {
+  height: 48px;
+  margin: 0;
+  background-color: $app-grey-pale;
+  border-radius: 6px;
+
+  input, div.tooltip-container {
+    display: inline-block;
+  }
+
+  input {
+    height: 100%;
+    width: calc(100% - 36px);
+    border: none;
+    background-color: inherit;
+    border-radius: 6px 0 0 6px;
+    padding: 13px 0 13px 16px;
+
+    &:focus {
+      outline: none !important;
+      background-color: $app-white-casual;
+      border: 1px solid $app-grey-disabled;
+      border-right: none;
+      padding: 13px 0 13px 15px;
+    }
+
+    &::placeholder {
+      color: $app-grey-placeholder;
+    }
+  }
+
+  div.tooltip-container {
+    border-radius: 0 6px 6px 0;
+    width: 36px;
+    height: calc(100% - 2px);
+    vertical-align: middle;
+    background-color: $app-grey-pale;
+
+    /deep/ app-tooltip {
+      display: block;
+      margin-right: 12px;
+      margin-top: 12px;
+    }
+  }
+
+  input:focus + .tooltip-container {
+    background-color: $app-white-casual;
+    height: calc(100%);
+    border: 1px solid #dddfe0;
+    border-left: none;
+    margin-bottom: 2px;
+
+  }
+}
+*/
+
+:host {
+    width: 100%;
+    position: relative;
+    .disabled {
+        background: #F3F3F3 !important;
+        color: #989898 !important;
+    }
+    .error-container {
+      font-size: 12px;
+    }
+    .tip-container {
+      font-size: 12px;
+    }
+    .uppercase {
+      text-transform: uppercase;
+    }
+    .input-with-tooltip {
+        position: relative;
+        height: 40px;
+        input {
+            padding-right: 30px;
+        }
+        .tooltip-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 38px;
+            width: 38px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .field-input {
+        box-sizing: border-box;
+        width: 100%;
+        height: 40px;
+        background: #fff;
+        padding: 0 10px;
+        border-radius: 3px;
+        border: solid 1px #cdcdcd;
+    }
+    .field-label {
+        font-family: 'Exo 2', sans-serif;
+        font-size: 13px;
+        color: #222222;
+    }
+    .form-user__label {
+        display: inline-block;
+        padding-bottom: 7px;
+    }
+    .form-user__forgot-pass {
+        text-align: right;
+        padding-top: 4px;
+    }
+    .form-user__forgot-pass a {
+        font-size: 13px;
+        color: #4990E2;
+    }
+    .form-user__forgot-pass a:hover {
+        text-decoration: underline;
+    }
+    .form-user__line-text {
+        font-size: 13px;
+        color: #222;
+    }
+    .form-user__wrapper {
+        padding-bottom: 25px;
+    }
+}

@@ -1,0 +1,15 @@
+<div>
+
+
+<app-button  (click)="showCreation()">Добавить книгу</app-button>
+
+<app-table
+  *ngIf="tableBooks.data.length"
+  [displayed]="tableBooks.displayed"
+  [data]="tableBooks.data"
+  [size]="tableBooks.size"
+  [page]="tableBooks.page"
+  (paginatorchanged)="paginatorChanged($event)"
+  (rowclicked)="rowClicked($event)">
+</app-table>
+</div>

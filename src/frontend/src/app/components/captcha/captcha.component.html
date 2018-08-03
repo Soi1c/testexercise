@@ -1,0 +1,4 @@
+<div class="mainCaptcha" [formGroup]= "captchaForm">
+  <p class="captcha">{{code}}</p>
+  <app-input-text  [(ngModel)] = 'captcha' [label]="true" inputType="text" formControlName="captcha" inputPlaceholder="Капча"></app-input-text>
+</div>
