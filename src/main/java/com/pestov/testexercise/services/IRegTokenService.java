@@ -1,10 +1,10 @@
 package com.pestov.testexercise.services;
 
-import com.pestov.testexercise.models.User;
+import com.pestov.testexercise.models.CustomUser;
 
 public interface IRegTokenService {
 
-	String saveNewRegToken(User user);
+	String saveNewRegToken(CustomUser customUser);
 
 	boolean approveUserAndDeleteToken(String token);
 }

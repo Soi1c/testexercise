@@ -1,13 +1,15 @@
 package com.pestov.testexercise.conf;
 
+import com.pestov.testexercise.repositories.UserRepository;
+import com.pestov.testexercise.services.CustomDetailsUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -18,13 +20,19 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationEntryPoint authEntryPoint;
 
+	private CustomDetailsUserService customUserDetailsService;
+
 	@Autowired
-	private UserDetailsService userDetailsService;
+	public SecSecurityConfig(CustomDetailsUserService customDetailsUserService) {
+		this.customUserDetailsService = customDetailsUserService;
+	}
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-				.withUser("user1").password(passwordEncoder().encode("user1Pass")).roles("USER");
+		auth.authenticationProvider(authProvider());
 	}
 
 	@Override
@@ -35,13 +43,21 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and()
 				.csrf().disable()
-				.httpBasic().authenticationEntryPoint(authEntryPoint)
-				.and()
+				.addFilter(new JWTAutheticationFilter(authenticationManager()))
+				.addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailsService))
 				.formLogin().loginPage("/login.html")
-				.defaultSuccessUrl("/homepage.html")
+				.defaultSuccessUrl("/static/homepage.html")
 				.failureUrl("/login.html?error=true")
 				.and()
 				.logout().logoutSuccessUrl("/login.html");
+	}
+
+	@Bean
+	public DaoAuthenticationProvider authProvider() {
+		final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
+		authProvider.setUserDetailsService(customUserDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
 	}
 
 	@Bean

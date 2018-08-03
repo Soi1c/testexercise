@@ -1,10 +1,14 @@
 package com.pestov.testexercise.models;
 
+import com.pestov.testexercise.models.enums.Role;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class CustomUser {
     @Id
     @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,10 +22,10 @@ public class User {
     @Column(name="is_active")
     private boolean isActive;
 
-    public User() {
+    public CustomUser() {
 
     }
-    public User(String email, String password) {
+    public CustomUser(String email, String password) {
         this.email = email;
         this.password = password;
         this.isActive = false;
@@ -57,5 +61,11 @@ public class User {
 
 	public void setActive(boolean active) {
 		isActive = active;
+	}
+
+	public Collection<Role> getRoles() {
+		Collection<Role> result = new ArrayList<>();
+		((ArrayList<Role>) result).add(1, Role.ROLE_USER);
+		return result;
 	}
 }
