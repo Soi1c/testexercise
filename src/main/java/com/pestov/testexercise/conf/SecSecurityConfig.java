@@ -27,19 +27,20 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 		this.customUserDetailsService = customDetailsUserService;
 	}
 
-	@Autowired
-	private UserRepository userRepository;
-
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authProvider());
-	}
+//	@Autowired
+//	private UserRepository userRepository;
+//
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.authenticationProvider(authProvider());
+//	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 				.authorizeRequests()
-				.antMatchers("/js/*", "/images/*", "/css/*","/mocks/*", "/login*", "/signup/*", "/signup*", "/badToken*").permitAll()
+				.antMatchers("/js/*", "/images/*", "/css/*","/mocks/*",
+						"/login*", "/signup/*", "/signup*", "/badToken*").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.csrf().disable()
@@ -52,16 +53,16 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logout().logoutSuccessUrl("/login.html");
 	}
 
-	@Bean
-	public DaoAuthenticationProvider authProvider() {
-		final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
-		authProvider.setUserDetailsService(customUserDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder());
-		return authProvider;
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public DaoAuthenticationProvider authProvider() {
+//		final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
+//		authProvider.setUserDetailsService(customUserDetailsService);
+//		authProvider.setPasswordEncoder(passwordEncoder());
+//		return authProvider;
+//	}
+//
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 }
