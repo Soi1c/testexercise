@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Table(name="reg_token")
 public class RegToken {
 
-	@OneToOne(targetEntity = User.class)
+	@OneToOne(targetEntity = CustomUser.class)
 	@JoinColumn(name = "user_id")
-	private User user;
+	private CustomUser customUser;
 
 	@Id
 	@Column(name = "reg_token")
@@ -22,16 +22,16 @@ public class RegToken {
 	public RegToken() {
 	}
 
-	public RegToken(User userId) {
-		this.user = userId;
+	public RegToken(CustomUser customUserId) {
+		this.customUser = customUserId;
 	}
 
-	public User getUserId() {
-		return user;
+	public CustomUser getUserId() {
+		return customUser;
 	}
 
-	public void setUserId(User userId) {
-		this.user = userId;
+	public void setUserId(CustomUser customUserId) {
+		this.customUser = customUserId;
 	}
 
 	public String getRegToken() {

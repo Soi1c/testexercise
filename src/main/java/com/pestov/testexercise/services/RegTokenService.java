@@ -1,9 +1,8 @@
 package com.pestov.testexercise.services;
 
+import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.models.RegToken;
-import com.pestov.testexercise.models.User;
 import com.pestov.testexercise.repositories.RegTokenRepository;
-import com.pestov.testexercise.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,8 @@ public class RegTokenService implements IRegTokenService {
 	@Autowired
 	private RegTokenRepository regTokenRepository;
 
-	public String saveNewRegToken(User user) {
-		RegToken regToken = new RegToken(user);
+	public String saveNewRegToken(CustomUser customUser) {
+		RegToken regToken = new RegToken(customUser);
 		String result = UUID.randomUUID().toString();
 		regToken.setRegToken(result);
 		regToken.setCreationTime(LocalDateTime.now());

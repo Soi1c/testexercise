@@ -2,7 +2,8 @@ package com.pestov.testexercise.errors;
 
 public enum ApiError {
 
-	USER_NOT_FOUND ("0100", "User not found");
+	USER_NOT_FOUND ("0100", "CustomUser not found"),
+	WRONG_PASSWORD ("0110", "Wrong passwrod");
 
 	public final String errCode;
 	public final String errDesc;

@@ -1,12 +1,11 @@
 package com.pestov.testexercise.repositories;
 
-import com.pestov.testexercise.models.User;
+import com.pestov.testexercise.models.CustomUser;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<CustomUser, Long> {
 
-    User findByEmail(String email);
+    CustomUser findByEmail(String email);
 
-	User findAllById(Long id);
+	CustomUser findAllById(Long id);
 }

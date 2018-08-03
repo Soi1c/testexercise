@@ -3,12 +3,11 @@ package com.pestov.testexercise;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.pestov.testexercise.models.User;
+import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -44,10 +42,10 @@ public class FixtureLoader implements ApplicationListener<ApplicationReadyEvent>
 	@Transactional
 	public void loadUsers() {
 		userRepository.deleteAllInBatch();
-		List<User> users = loadFromJson("fixtures/users.json", User.class);
-		//users.get(0).setRoles(Collections.singletonList(roleRepository.findByName("ROLE_ADMIN")));
+		List<CustomUser> customUsers = loadFromJson("fixtures/users.json", CustomUser.class);
+		//customUsers.get(0).setRoles(Collections.singletonList(roleRepository.findByName("ROLE_ADMIN")));
 
-//		users.forEach(u -> {
+//		customUsers.forEach(u -> {
 //			List<Role> roles = new ArrayList<>();
 //			u.getRoles().forEach(r -> {
 //				Role byName = roleRepository.findByName(r.getName());
@@ -55,8 +53,8 @@ public class FixtureLoader implements ApplicationListener<ApplicationReadyEvent>
 //			});
 //			u.setRoles(roles);
 //		});
-//		users.forEach(a -> a.setPassword(passwordEncoder.encode(a.getPassword())));
-		userRepository.saveAll(users);
+//		customUsers.forEach(a -> a.setPassword(passwordEncoder.encode(a.getPassword())));
+		userRepository.saveAll(customUsers);
 	}
 
 	public <T> T loadFromJson(String resourcePath, Class<?> target) {
