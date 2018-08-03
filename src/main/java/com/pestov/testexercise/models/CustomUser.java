@@ -62,10 +62,4 @@ public class CustomUser {
 	public void setActive(boolean active) {
 		isActive = active;
 	}
-
-	public Collection<Role> getRoles() {
-		Collection<Role> result = new ArrayList<>();
-		((ArrayList<Role>) result).add(1, Role.ROLE_USER);
-		return result;
-	}
 }

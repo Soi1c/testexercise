@@ -6,5 +6,4 @@ public interface IUserService {
 
     CustomUser registerNewUser(String userDto);
 
-
 }
