@@ -1,0 +1,13 @@
+.mat-header-cell{
+  font-weight: 600;
+}
+
+md-row{
+  &:nth-child(2n){
+    background-color: #f1f1f1;
+  }
+}
+
+md-header-row, md-row{
+  border-bottom-color: #d3d3d3;
+}

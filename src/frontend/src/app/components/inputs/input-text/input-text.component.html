@@ -1,0 +1,37 @@
+
+<div class="form-user__wrapper">
+    <div *ngIf="!isTooltiped() && !mask" class="form-user__line">
+        <label class="field-label form-user__label" for="form-label">{{inputPlaceholder}}</label>
+        <input #myInput [placeholder]="this.placeholder" [class.uppercase]="this.uppercase" [class.disabled]="this.disabled" class="field-input form-user__input" [type]="inputType" [disabled]="disabled" [value]="data || ''" (change)="onChange($event)"
+            (keyup)="onChange($event, myInput)" (focus)="onFocus()" (blur)="onBlur($event)">
+    </div>
+    
+    <div *ngIf="!isTooltiped() && mask" class="form-user__line">
+        <label class="field-label form-user__label" for="form-label">{{inputPlaceholder}}</label>
+        <input #myInput [placeholder]="this.placeholder" [class.uppercase]="this.uppercase" [class.disabled]="this.disabled" class="field-input form-user__input" [type]="inputType" [disabled]="disabled" [textMask]="mask" [value]="data || ''"
+            (change)="onChange($event)" (keyup)="onChange($event, myInput)" (focus)="onFocus()" (blur)="onBlur($event)">
+    </div>
+    
+    <div *ngIf="isTooltiped() && !mask" class="form-user__line with-tooltip">
+        <label class="field-label form-user__label" for="form-label">{{inputPlaceholder}}</label>
+        <div class="input-with-tooltip">
+            <input #myInput [placeholder]="this.placeholder" [class.uppercase]="this.uppercase" [class.disabled]="this.disabled" class="field-input form-user__input" [type]="inputType" [disabled]="disabled" [value]="data || ''" (change)="onChange($event)"
+                (keyup)="onChange($event, myInput)" (focus)="onFocus()" (blur)="onBlur($event)">
+        </div>
+    </div>
+    
+    <div *ngIf="isTooltiped() && mask" class="form-user__line with-tooltip">
+        <label class="field-label form-user__label" for="form-label">{{inputPlaceholder}}</label>
+        <div class="input-with-tooltip">
+            <input #myInput [placeholder]="this.placeholder" [class.uppercase]="this.uppercase" [class.disabled]="this.disabled" class="field-input form-user__input" [type]="inputType" [disabled]="disabled" [textMask]="mask" [value]="data || ''" (change)="onChange($event)"
+                (keyup)="onChange($event, myInput)" (focus)="onFocus()" (blur)="onBlur($event)">
+        </div>
+    </div>
+
+    <div class="error-container" *ngIf="!hideErrors">
+        <ng-content></ng-content>
+    </div>
+</div>
+
+
+

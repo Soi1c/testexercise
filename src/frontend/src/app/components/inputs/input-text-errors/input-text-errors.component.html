@@ -1,0 +1,16 @@
+<app-error
+    *ngIf="control.errors?.pattern"
+    error="Вводится кириллицей">
+</app-error>
+<app-error
+    *ngIf="control.errors?.required && control.touched"
+    error="Не может быть пустым">
+</app-error>
+<app-error
+    *ngIf="control.errors?.validateName"
+    error="Вводится кириллицей">
+</app-error>
+<app-error
+    *ngIf="control.errors?.maxlength"
+    error="Не более {{control.errors.maxlength.requiredLength}} символов">
+</app-error>

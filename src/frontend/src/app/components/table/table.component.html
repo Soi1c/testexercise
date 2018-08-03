@@ -1,0 +1,19 @@
+<div class="table-wrapper" *ngIf="data?.length">
+    <md-table #table [dataSource]="dataSource">
+        <ng-container *ngFor="let column of displayedColumns" [mdColumnDef]="column">
+            <md-header-cell *mdHeaderCellDef>{{ column | tableHeaderRuLocalization }}</md-header-cell>
+            <md-cell *mdCellDef="let element">{{ element[column]}}</md-cell>
+        </ng-container>
+        <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
+        <md-row *mdRowDef="let row;columns: displayedColumns" (click)="onRowClicked(row)" style="cursor: pointer;"></md-row>
+    </md-table>
+    <md-paginator
+        [pageIndex]="page"
+        [pageSize]="10"
+        [length]="size"
+        [pageSizeOptions]="[10, 20, 100]"
+        (page)="onPaginatorChanged($event)">
+    </md-paginator>
+</div>
+
+

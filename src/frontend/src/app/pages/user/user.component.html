@@ -1,0 +1,31 @@
+<div class="wrapper">
+  <div class="nav">
+    <ul >
+      <li [class.active]="index === 0">
+        <a (click)="index = 0">Читать книгу</a>
+      </li>
+      <li [class.active]="index === 1">
+        <a (click)="index = 1">Книжная полка</a>
+      </li>
+      <li [class.active]="index === 2">
+        <a (click)="index = 2">Одобренные книги</a>
+      </li>
+      <li [class.active]="tabIndex === 3">
+        <a (click)="logout()">Выход</a>
+      </li>
+    </ul>
+  </div>
+
+  <div id ="content">
+    <div *ngIf="index === 0">
+      <app-readbook></app-readbook>
+    </div>
+    <div *ngIf="index === 1">
+      <app-bookshelves></app-bookshelves>
+    </div>
+    <div *ngIf="index === 2">
+      <h1>третья</h1>
+    </div>
+
+  </div>
+</div>
