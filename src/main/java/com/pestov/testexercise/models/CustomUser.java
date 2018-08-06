@@ -1,10 +1,6 @@
 package com.pestov.testexercise.models;
 
-import com.pestov.testexercise.models.enums.Role;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
 @Table(name = "users")
