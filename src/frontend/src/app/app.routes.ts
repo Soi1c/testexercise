@@ -3,6 +3,7 @@ import {AuthComponent} from './components/auth/auth.component';
 import {UserComponent} from './pages/user/user.component';
 import {NgModule} from '@angular/core';
 import {EmailConfirmComponent} from "./components/auth/emailConfirm/emailConfirm.component";
+import {AuthService} from "./services/auth.service";
 
 const ROUTES: Routes = [
   {
@@ -10,6 +11,7 @@ const ROUTES: Routes = [
     component: AuthComponent
   },
   {
+    canActivate: [AuthService],
     path: 'user',
     component: UserComponent,
     data: {title: 'Личный кабинет пользователя'}

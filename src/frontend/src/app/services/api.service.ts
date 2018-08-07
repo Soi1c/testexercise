@@ -1,12 +1,18 @@
 ///<reference path="../../../node_modules/@angular/core/src/di/metadata.d.ts"/>
-import {Http, RequestOptionsArgs} from "@angular/http";
-import {Observable} from "rxjs";
-import {Injectable} from "@angular/core";
+import {Headers, Http, RequestOptionsArgs} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/zip';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/share';
+import {forwardRef, Inject, Injectable} from "@angular/core";
+import {AuthService} from "./auth.service";
 
 
 const
   BASE = '/api',
-  B64KEY = 'ZGVmYXVsdDpzZWNyZXQ=',
   anonOptions = () => ({
     withCredentials: true,
     headers: new Headers({
@@ -19,28 +25,19 @@ const
       'Content-Type': 'application/json'
     })
   }),
-  oauthOptions = headerValue => ({
-    headers: new Headers({
-      Authorization: headerValue,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    })
-  }),
-  uploaderOptions = header => ({
-    headers: new Headers({
-      Authorization: header,
-      'enctype': 'multipart/form-data'
-    })
-  }),
   prepare = response => ('_body' in response ? {
     ...response,
     body: JSON.parse(response._body)
   } : {...response}),
+
   prepareSuccess = response =>
     prepare(response).body,
+
   prepareError = response => {
     const error = prepare(response);
     return Observable.throw(error);
   };
+
 
 class HttpRequest {
 
@@ -48,6 +45,7 @@ class HttpRequest {
   }
 
   get(url: string, params?: {}, customOptions?: any): Observable<any> {
+    console.log('get');
     const options = customOptions || anonOptions();
     return this.http
       .get(url, {...options, params})
@@ -57,7 +55,6 @@ class HttpRequest {
   }
 
   post(url: string, request: any, customOptions?: any): Observable<any> {
-    console.log("post: " + url);
     return this.http
       .post(url, request, customOptions || anonOptions())
       .map(prepareSuccess)
@@ -81,13 +78,6 @@ class HttpRequest {
       .share();
   }
 
-  patch(url: string, body: any, customOptions?: any): Observable<any> {
-    return this.http
-      .patch(url, body, customOptions || anonOptions())
-      .map(prepareSuccess)
-      .catch(prepareError)
-      .share();
-  }
 }
 
 
@@ -96,10 +86,12 @@ export class ApiService{
     public account;
     public bookshelves;
 
-    constructor(http: Http){
+    constructor(http: Http
+                ,@Inject(forwardRef(() => AuthService)) auth: AuthService){
       this.account = new Accounts(http);
-      this.bookshelves = new BookShelf(http);
+      this.bookshelves = new BookShelf(http,auth);
     }
+
 }
 
 
@@ -117,18 +109,30 @@ class Accounts extends HttpRequest{
       return this.get(`${BASE}/signup/confirmEmail?token=`+token);
    }
 
+  login(user): Observable<any> {
+      return this.http.post(`${BASE}/login`,user);
+  }
+
 }
 
 class BookShelf extends HttpRequest{
-  constructor(http: Http) {
+  constructor(http: Http, protected auth: AuthService) {
     super(http);
   }
 
-  getBookShelves(id): Observable<any>{
-    return this.get(`${BASE}/mocks/bookshelves.json`);
+  getBookShelves(): Observable<any>{
+
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/bookshelf`,null, authorisedOptions(token));
   }
 
   getBooksFromShelves(): Observable<any>{
     return this.get(`${BASE}/mocks/books.json`);
   }
+
+  createBookShelf(shelf):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.post(`${BASE}/bookshelf`,shelf, authorisedOptions(token));
+  }
+
 }

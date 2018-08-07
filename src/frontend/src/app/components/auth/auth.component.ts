@@ -5,6 +5,7 @@ import {CaptchaComponent} from '../captcha/captcha.component';
 import {ApiService} from "../../services/api.service";
 import {error} from "util";
 import { Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 
 @Component({
@@ -15,7 +16,7 @@ import { Router} from "@angular/router";
 export class AuthComponent implements OnInit{
   @ViewChild(CaptchaComponent) captcha: CaptchaComponent;
 
-  constructor(private api: ApiService, protected router: Router){}
+  constructor(private api: ApiService, protected router: Router, protected authService: AuthService){}
 
   ngOnInit() {
     this.clearForm();
@@ -118,18 +119,21 @@ export class AuthComponent implements OnInit{
     }
     console.log("send password on email");
   }
-
   login(){
 
-    //TODO подключить нормальный вызов api
+    this.api.account.login({email: this.form.value.username, password: this.form.value.password })
+      .subscribe(
+        (response) =>{
+          let headersValue = response.headers;
+          this.authService.access_token = headersValue.get('authorization');
+          this.router.navigate(['/user']);
+        },
+        (error) => {
+          this.errors = 'Wrong login or password';
+          console.log(error);
+        }
+    );
 
-    if(this.form.value.username == 'admin'
-      && this.form.value.password == '12345'){
-      this.router.navigate(['/user']);
-    }
-    else{
-      this.errors = 'Wrong login or password';
-    }
   }
 
   clearForm(){

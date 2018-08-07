@@ -24,6 +24,8 @@ import {MdPaginatorModule, MdTableModule} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SinglebookshelfComponent} from "./pages/user/bookshelves/singlebookshelf/singlebookshelf.component";
 import {EmailConfirmComponent} from "./components/auth/emailConfirm/emailConfirm.component";
+import {LocalStorageService} from "./services/local-storage.service";
+import {AuthService} from "./services/auth.service";
 
 
 
@@ -58,6 +60,8 @@ import {EmailConfirmComponent} from "./components/auth/emailConfirm/emailConfirm
   ],
   providers: [
     UtilityService,
+    LocalStorageService,
+    AuthService,
     ApiService
   ],
   bootstrap: [AppComponent]
