@@ -24,10 +24,9 @@ public class BookshelfController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity submit(@RequestBody BookshelfDto request) {
-		bookshelfService.saveNewBookshelf(getLoggedUserId(), request);
-		JSONObject response = new JSONObject().put("status", "ok");
-		return new ResponseEntity(response.toString(), HttpStatus.OK);
+	public ResponseEntity<Bookshelf> submit(@RequestBody BookshelfDto request) {
+		Bookshelf newBookshelf = bookshelfService.saveNewBookshelf(getLoggedUserId(), request);
+		return new ResponseEntity<>(newBookshelf, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -36,9 +35,9 @@ public class BookshelfController {
 		return new ResponseEntity<>(bookshelfService.bookshelvesByUser(getLoggedUserId()), HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity deleteBookshelf(@RequestBody Long id) {
+	public ResponseEntity deleteBookshelf(@PathVariable Long id) {
 		bookshelfService.deleteBookshelf(id);
 		JSONObject response = new JSONObject().put("status", "ok");
 		return new ResponseEntity(response.toString(), HttpStatus.OK);

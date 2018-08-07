@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookshelfService implements IBookshelfService {
@@ -16,9 +15,9 @@ public class BookshelfService implements IBookshelfService {
 	private BookshelfRepository bookshelfRepository;
 
 
-	public void saveNewBookshelf(Long userId, BookshelfDto bookshelfDto) {
+	public Bookshelf saveNewBookshelf(Long userId, BookshelfDto bookshelfDto) {
 		Bookshelf bookshelf = new Bookshelf(userId, bookshelfDto.getName());
-		bookshelfRepository.save(bookshelf);
+		return bookshelfRepository.save(bookshelf);
 	}
 
 	public List<Bookshelf> bookshelvesByUser(Long userId) {
@@ -30,6 +29,8 @@ public class BookshelfService implements IBookshelfService {
 	}
 
 	public void renameBookshelf(BookshelfDto bookshelfDto) {
-		bookshelfRepository.findById(bookshelfDto.getId()).get().setName(bookshelfDto.getName());
+		Bookshelf target = bookshelfRepository.findById(bookshelfDto.getId()).get();
+		target.setName(bookshelfDto.getName());
+		bookshelfRepository.save(target);
 	}
 }
