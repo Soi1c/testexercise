@@ -31,9 +31,10 @@ public class BookService implements IBookService {
 		this.bookshelfService = bookshelfService;
 	}
 
-	public void saveNewBook(BookDto bookDto) {
+	public Book saveNewBook(BookDto bookDto) {
 		Book book = new Book(bookDto);
 		bookRepository.save(book);
+		return book;
 	}
 
 	public String getTextOfPage(Long bookId, int numeration) {

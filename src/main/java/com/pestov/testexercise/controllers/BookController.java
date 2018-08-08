@@ -37,9 +37,9 @@ public class BookController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity addNewBook(@RequestBody BookDto bookDto) {
-		bookService.saveNewBook(bookDto);
-		return new ResponseEntity<>("ok", HttpStatus.OK);
+	public ResponseEntity<Book> addNewBook(@RequestBody BookDto bookDto) {
+		Book book = bookService.saveNewBook(bookDto);
+		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{bookId}", method = RequestMethod.POST)

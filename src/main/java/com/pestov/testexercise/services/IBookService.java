@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IBookService {
 
-	void saveNewBook(BookDto bookDto);
+	Book saveNewBook(BookDto bookDto);
 
 	void addTextToBook(File file, Long bookId);
 
