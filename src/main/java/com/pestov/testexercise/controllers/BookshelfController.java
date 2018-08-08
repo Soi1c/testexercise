@@ -19,8 +19,11 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 @RequestMapping(value = "bookshelf")
 public class BookshelfController {
 
-	@Autowired
-	private BookshelfService bookshelfService;
+	private final BookshelfService bookshelfService;
+
+	public BookshelfController(BookshelfService bookshelfService) {
+		this.bookshelfService = bookshelfService;
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody

@@ -5,16 +5,16 @@ import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.Page;
 import com.pestov.testexercise.repositories.BookRepository;
 import com.pestov.testexercise.repositories.PageRepository;
-import org.apache.commons.io.FileUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
+
+import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
 
 @Service
 public class BookService implements IBookService {
@@ -23,9 +23,12 @@ public class BookService implements IBookService {
 
 	private final PageRepository pageRepository;
 
-	public BookService(BookRepository bookRepository, PageRepository pageRepository) {
+	private final BookshelfService bookshelfService;
+
+	public BookService(BookRepository bookRepository, PageRepository pageRepository, BookshelfService bookshelfService) {
 		this.bookRepository = bookRepository;
 		this.pageRepository = pageRepository;
+		this.bookshelfService = bookshelfService;
 	}
 
 	public void saveNewBook(BookDto bookDto) {
@@ -33,11 +36,46 @@ public class BookService implements IBookService {
 		bookRepository.save(book);
 	}
 
-	public void addTextToBook(MultipartFile file, Long bookId) throws IOException, SQLException {
-		File usualFile = new File(new UUID(1, 1).toString());
-		FileUtils.writeByteArrayToFile(usualFile, file.getBytes());
-		int pageAmount = divideBookToPages(usualFile, bookId);
-		usualFile.delete();
+	public String getTextOfPage(Long bookId, int numeration) {
+		Page targetPage = pageRepository.findPageByBookIdAndNumeration(bookId, numeration);
+		Book book = bookRepository.findById(bookId).get();
+		book.setLastPage(numeration);
+		bookRepository.save(book);
+		return targetPage.getText().toString();
+	}
+
+	public int continueReading(Long bookId) {
+		return bookRepository.findById(bookId).get().getLastPage();
+	}
+
+	public void changeBookshelf(Long bookId, Long bookshelfId) {
+		Book book = bookRepository.findById(bookId).get();
+		book.setBookshelfId(bookshelfId);
+		bookRepository.save(book);
+	}
+
+	public boolean isBookBelongToUser(long bookId) {
+		Long bookshelfId = bookRepository.findById(bookId).get().getBookshelfId();
+		if (!bookshelfService.bookshelvesByUser(getLoggedUserId()).contains(bookshelfId)) {
+			return false;
+		}
+		return true;
+	}
+
+	public List<Book> allBooksByBookshelf(Long bookshelfId) {
+		return bookRepository.findAllByBookshelfId(bookshelfId);
+	}
+
+	@Async
+	public void addTextToBook(File file, Long bookId) {
+		if (pageRepository.existsByBookId(bookId)) pageRepository.deleteAllByBookId(bookId);
+		int pageAmount = 0;
+		try {
+			pageAmount = divideBookToPages(file, bookId);
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+		}
+		file.delete();
 		bookRepository.findById(bookId).get().setPagesAmount(pageAmount);
 	}
 
@@ -48,19 +86,17 @@ public class BookService implements IBookService {
 			if (lines.size() > 30) {
 				String pageText = "";
 				for (int i = 0; i < 30; i++) {
-					pageText.concat(lines.get(i)).concat("\n");
+					pageText = pageText.concat(lines.get(i)).concat("\n");
 				}
 				Page page = new Page(bookId, pageNumber++, new javax.sql.rowset.serial.SerialClob(pageText.toCharArray()));
 				pageRepository.save(page);
-				for (int i = 0; i < 30; i++) {
-					lines.remove(0);
-				}
+				lines.subList(0, 30).clear();
 			} else {
 				String pageText = "";
-				for (int i = 0; i < lines.size(); i++) {
-					pageText.concat(lines.get(i));
-					lines.remove(i);
+				for (String line : lines) {
+					pageText = pageText.concat(line).concat("\n");
 				}
+				lines.clear();
 				Page page = new Page(bookId, pageNumber++, new javax.sql.rowset.serial.SerialClob(pageText.toCharArray()));
 				pageRepository.save(page);
 				lines.clear();

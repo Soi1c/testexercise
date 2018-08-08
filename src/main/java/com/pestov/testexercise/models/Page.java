@@ -21,9 +21,16 @@ public class Page {
 	@Lob
 	private java.sql.Clob text;
 
+	public Page() {
+	}
+
 	public Page(Long bookId, int numeration, Clob text) {
 		this.bookId = bookId;
 		this.numeration = numeration;
 		this.text = text;
+	}
+
+	public Clob getText() {
+		return text;
 	}
 }

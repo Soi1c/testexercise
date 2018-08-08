@@ -26,6 +26,9 @@ public class Book {
 	@Column(name = "total_amount")
 	private int pagesAmount;
 
+	public Book() {
+	}
+
 	public Book(Long bookshelfId, String name) {
 		this.bookshelfId = bookshelfId;
 		this.name = name;
@@ -56,6 +59,10 @@ public class Book {
 		return bookshelfId;
 	}
 
+	public void setBookshelfId(Long bookshelfId) {
+		this.bookshelfId = bookshelfId;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -66,6 +73,10 @@ public class Book {
 
 	public int getLastPage() {
 		return lastPage;
+	}
+
+	public void setLastPage(int lastPage) {
+		this.lastPage = lastPage;
 	}
 
 	public int getPagesAmount() {

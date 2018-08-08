@@ -1,14 +1,24 @@
 package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookDto;
-import org.springframework.web.multipart.MultipartFile;
+import com.pestov.testexercise.models.Book;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import java.io.File;
+import java.util.List;
 
 public interface IBookService {
 
 	void saveNewBook(BookDto bookDto);
 
-	void addTextToBook(MultipartFile file, Long bookId) throws IOException, SQLException;
+	void addTextToBook(File file, Long bookId);
+
+	String getTextOfPage(Long bookId, int pageId);
+
+	int continueReading(Long bookId);
+
+	void changeBookshelf(Long bookId, Long bookshelfId);
+
+	boolean isBookBelongToUser(long bookId);
+
+	List<Book> allBooksByBookshelf(Long bookshelfId);
 }
