@@ -27,7 +27,7 @@ public interface IBookService {
 
 	Page getPageByNum(Long bookId, int pageNum);
 
-	Book updateBook(BookDto bookDto);
+	Book updateBook(Long bookId, BookDto bookDto);
 
 	void deleteBook(Long bookId);
 }

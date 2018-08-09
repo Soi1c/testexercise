@@ -1,16 +1,11 @@
 <div *ngIf="isListShowable()">
-  <div class="buttons_wrap">
-    <app-button  (click)="showCreation()">Добавить книгу</app-button>
-    <app-button  (click)="deleteBookshelf()">Удалить полку</app-button>
-    <app-button  (click)="showPrev()">Назад</app-button>
-  </div>
   <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
-    <app-input-text [label]="true" inputType="text" formControlName="bookshelfId" inputPlaceholder="ID"></app-input-text>
-    <app-input-text [label]="true" inputType="text" formControlName="bookshelfName" inputPlaceholder="Название книжной полки"></app-input-text>
-
+    <div class="input__wrapper">
+      <app-input-text [label]="true" inputType="text" formControlName="bookshelfId" inputPlaceholder="ID"></app-input-text>
+      <app-input-text [label]="true" inputType="text" formControlName="bookshelfName" inputPlaceholder="Название книжной полки"></app-input-text>
+    </div>
     <app-error [error]="errors"></app-error>
     <app-button [submit]="true" type="submit" (click)="updateBookShelf()">Сохранить</app-button>
-
   </form>
   <app-table
     *ngIf="tableBooks.data.length"
@@ -22,14 +17,30 @@
     (rowclicked)="rowClicked($event)">
   </app-table>
   <h3>{{errors}}</h3>
+  <div class="buttons_wrap">
+    <app-button  (click)="showCreation()">Добавить книгу</app-button>
+    <app-button  (click)="deleteBookshelf()">Удалить полку</app-button>
+    <app-button  (click)="showPrev()">Назад</app-button>
+  </div>
 </div>
-<div *ngIf="isCreationShowable()">
 
+
+<div *ngIf="isCreationShowable()">
   <form [formGroup]="formCreation" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
     <app-button (click)="showList()">Назад</app-button>
     <app-input-text [label]="true" inputType="text" formControlName="bookName" inputPlaceholder="Название книги"></app-input-text>
     <app-input-text [label]="true" inputType="text" formControlName="bookDescription" inputPlaceholder="Описание"></app-input-text>
     <app-button [submit]="true" type="submit" (click)="createBook()">Создать</app-button>
+    <app-error [error]="errors"></app-error>
+  </form>
+</div>
+
+
+<div *ngIf="isBookShowable()">
+  <form [formGroup]="formCreation" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
+    <app-input-text [label]="true" inputType="text" formControlName="bookName" inputPlaceholder="Название книги"></app-input-text>
+    <app-input-text [label]="true" inputType="text" formControlName="bookDescription" inputPlaceholder="Описание"></app-input-text>
+    <app-button [submit]="true" type="submit" (click)="saveBook()">Сохранить</app-button>
     <div class="document-uploader">
       <label for="file">{{uploadTitle}}</label>
       <input type="file" id="file" (change)="fileUploaded($event)"/>
@@ -37,6 +48,10 @@
     <app-error [error]="errors"></app-error>
 
   </form>
-
+  <div class="buttons_wrap">
+    <app-button  (click)="deleteBook()">Удалить Книгу</app-button>
+    <app-button  (click)="reedBook()">Читать Книгу</app-button>
+    <app-button  (click)="changeBookshelf()">Изменить полку</app-button>
+    <app-button  (click)="showList()">Назад</app-button>
+  </div>
 </div>
-<div *ngIf="isBookShowable()"></div>

@@ -42,13 +42,13 @@ public class BookController {
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(value = "{bookId}",method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<Book> updateBook(@RequestBody BookDto bookDto) {
-		if (!bookService.isBookBelongToUser(bookDto.getId())) {
+	public ResponseEntity<Book> updateBook(@PathVariable Long bookId,@RequestBody BookDto bookDto) {
+		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-		Book book = bookService.updateBook(bookDto);
+		Book book = bookService.updateBook(bookId, bookDto);
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 

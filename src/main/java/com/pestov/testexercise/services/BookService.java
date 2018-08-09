@@ -37,8 +37,8 @@ public class BookService implements IBookService {
 		return book;
 	}
 
-	public Book updateBook(BookDto bookDto) {
-		Book book = bookRepository.getOne(bookDto.getId());
+	public Book updateBook(Long bookId, BookDto bookDto) {
+		Book book = bookRepository.getOne(bookId);
 		book.setName(bookDto.getName());
 		book.setDescription(bookDto.getDescription());
 		bookRepository.save(book);

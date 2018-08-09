@@ -2,7 +2,7 @@
   .buttons_wrap {
     display: flex;
     justify-content: space-between;
-    max-width: 800px;
+    max-width: 850px;
     button {
       width: 200px !important;
     }
@@ -12,7 +12,7 @@
   }
 
 form{
-  width: 500px;
+  width: 470px;
 }
 
 
@@ -37,5 +37,15 @@ form{
 
   input {
     display: none;
+  }
+}
+
+
+.input__wrapper{
+  display: flex;
+  width: 500px;
+
+  app-input-text{
+    margin-right: 30px;
   }
 }

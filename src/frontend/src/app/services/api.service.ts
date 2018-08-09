@@ -144,6 +144,11 @@ class BookShelf extends HttpRequest{
     return this.post(`${BASE}/bookshelf`,shelf, authorisedOptions(token));
   }
 
+  getBooksFromBookshelf(id){
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/bookshelf/`+ id,null, authorisedOptions(token));
+  }
+
 }
 
 class Book extends HttpRequest{
@@ -156,8 +161,19 @@ class Book extends HttpRequest{
     return this.post(`${BASE}/books`,book, authorisedOptions(token));
   }
 
-  getBooksFromBookshelf(id){
+  deleteBook(id):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.delete(`${BASE}/books/`+id,null, authorisedOptions(token));
+  }
 
+  updateBook(id, book):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.put(`${BASE}/books/`+id,book, authorisedOptions(token));
+  }
+
+  changeBookShelf(bookId, shelfId):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.put(`${BASE}/books`+bookId+`/movetoanotherbookshelf/`+ shelfId, null, authorisedOptions(token));
   }
 
   uploadBook(id, file):Observable<any>{
