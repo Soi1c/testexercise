@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 public class UserService implements IUserService {
@@ -39,5 +41,9 @@ public class UserService implements IUserService {
 				applicationUrl.concat("/signup/confirmEmail?token=").concat(token)
 		);
 		return customUser;
+	}
+
+	public List<CustomUser> getUsers() {
+		return userRepository.findAll();
 	}
 }

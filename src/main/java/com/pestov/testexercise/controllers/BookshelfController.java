@@ -4,8 +4,8 @@ package com.pestov.testexercise.controllers;
 import com.pestov.testexercise.dto.BookshelfDto;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.Bookshelf;
-import com.pestov.testexercise.services.BookService;
-import com.pestov.testexercise.services.BookshelfService;
+import com.pestov.testexercise.services.IBookService;
+import com.pestov.testexercise.services.IBookshelfService;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,11 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 @RequestMapping(value = "bookshelf")
 public class BookshelfController {
 
-	private final BookshelfService bookshelfService;
+	private final IBookshelfService bookshelfService;
 
-	private final BookService bookService;
+	private final IBookService bookService;
 
-	public BookshelfController(BookshelfService bookshelfService, BookService bookService) {
+	public BookshelfController(IBookshelfService bookshelfService, IBookService bookService) {
 		this.bookshelfService = bookshelfService;
 		this.bookService = bookService;
 	}
