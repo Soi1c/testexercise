@@ -45,6 +45,9 @@ public class BookController {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseEntity<Book> updateBook(@RequestBody BookDto bookDto) {
+		if (!bookService.isBookBelongToUser(bookDto.getId())) {
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
 		Book book = bookService.updateBook(bookDto);
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
@@ -52,6 +55,9 @@ public class BookController {
  	@RequestMapping(value = "{bookId}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseEntity deleteBook(@PathVariable Long bookId) {
+		if (!bookService.isBookBelongToUser(bookId)) {
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
 		bookService.deleteBook(bookId);
 		return new ResponseEntity("ok", HttpStatus.OK);
 	}
