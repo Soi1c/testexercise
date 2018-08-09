@@ -29,13 +29,14 @@
         font-size: 18px;
         cursor: pointer;
         border-radius: 3px;
-      margin-bottom: 10px;
+        margin-bottom: 10px;
         &:hover {
             background: #EFEFEF;
             color: #222;
         }
         &.btn-primary{
-          width: max-content;
+          min-width: 200px;
+          margin-right: 10px;
         }
         &.btn-with-icon {
             font-size: 14px;
@@ -44,14 +45,14 @@
             background: #efefef;
         }
         &.btn-submit {
-            background: #FF2C00;
+            background: #1153ff;
             color: white;
             border: none;
             font-weight: 700;
           width: 100%;
 
           &:hover {
-                background: #e62800;
+                background: #1153ff;
             }
         }
 

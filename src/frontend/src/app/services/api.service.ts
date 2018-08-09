@@ -9,6 +9,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/share';
 import {forwardRef, Inject, Injectable} from "@angular/core";
 import {AuthService} from "./auth.service";
+import {httpFactory} from "@angular/http/src/http_module";
 
 
 const
@@ -23,6 +24,12 @@ const
     headers: new Headers({
       Authorization: headerValue,
       'Content-Type': 'application/json'
+    })
+  }),
+  uploaderOptions = header => ({
+    headers: new Headers({
+      Authorization: header,
+      'enctype': 'multipart/form-data',
     })
   }),
   prepare = response => ('_body' in response ? {
@@ -85,11 +92,12 @@ class HttpRequest {
 export class ApiService{
     public account;
     public bookshelves;
-
+    public book;
     constructor(http: Http
                 ,@Inject(forwardRef(() => AuthService)) auth: AuthService){
       this.account = new Accounts(http);
       this.bookshelves = new BookShelf(http,auth);
+      this.book = new Book(http, auth)
     }
 
 }
@@ -126,8 +134,9 @@ class BookShelf extends HttpRequest{
     return this.get(`${BASE}/bookshelf`,null, authorisedOptions(token));
   }
 
-  getBooksFromShelves(): Observable<any>{
-    return this.get(`${BASE}/mocks/books.json`);
+  deleteBookshelfById(id): Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.delete(`${BASE}/bookshelf/`+id,null, authorisedOptions(token));
   }
 
   createBookShelf(shelf):Observable<any>{
@@ -135,4 +144,26 @@ class BookShelf extends HttpRequest{
     return this.post(`${BASE}/bookshelf`,shelf, authorisedOptions(token));
   }
 
+}
+
+class Book extends HttpRequest{
+  constructor(http: Http, protected auth: AuthService) {
+    super(http);
+  }
+
+  createBook(book):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.post(`${BASE}/books`,book, authorisedOptions(token));
+  }
+
+  getBooksFromBookshelf(id){
+
+  }
+
+  uploadBook(id, file):Observable<any>{
+    const token = `${this.auth.access_token}`;
+    let form = new FormData();
+    form.append('file', file);
+    return this.post(`${BASE}/books/`+id,form, uploaderOptions(token));
+  }
 }
