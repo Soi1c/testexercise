@@ -42,6 +42,21 @@ public class BookController {
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 
+	@RequestMapping(method = RequestMethod.PUT)
+	@ResponseBody
+	public ResponseEntity<Book> updateBook(@RequestBody BookDto bookDto) {
+		Book book = bookService.updateBook(bookDto);
+		return new ResponseEntity<>(book, HttpStatus.OK);
+	}
+
+ 	@RequestMapping(value = "{bookId}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public ResponseEntity deleteBook(@PathVariable Long bookId) {
+		bookService.deleteBook(bookId);
+		return new ResponseEntity("ok", HttpStatus.OK);
+	}
+
+
 	@RequestMapping(value = "{bookId}", method = RequestMethod.POST)
 	public ResponseEntity addBookText(@RequestParam("file") MultipartFile file, @PathVariable Long bookId) throws IOException {
 		if (!bookService.isBookBelongToUser(bookId)) {

@@ -37,6 +37,18 @@ public class BookService implements IBookService {
 		return book;
 	}
 
+	public Book updateBook(BookDto bookDto) {
+		Book book = bookRepository.getOne(bookDto.getId());
+		book.setName(bookDto.getName());
+		book.setDescription(bookDto.getDescription());
+		bookRepository.save(book);
+		return book;
+	}
+
+	public void deleteBook(Long bookId) {
+		bookRepository.deleteById(bookId);
+	}
+
 	public Book getBookById(Long bookId) {
 		return bookRepository.findById(bookId).get();
 	}
@@ -65,7 +77,8 @@ public class BookService implements IBookService {
 
 	public boolean isBookBelongToUser(long bookId) {
 		Long bookshelfId = bookRepository.findById(bookId).get().getBookshelfId();
-		if (!bookshelfService.bookshelvesByUser(getLoggedUserId()).contains(bookshelfService.getBookshelfById(bookshelfId))) {
+		if (!bookshelfService.bookshelvesByUser(getLoggedUserId())
+				.contains(bookshelfService.getBookshelfById(bookshelfId))) {
 			return false;
 		}
 		return true;

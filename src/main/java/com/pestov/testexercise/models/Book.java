@@ -86,4 +86,12 @@ public class Book {
 	public void setPagesAmount(int pagesAmount) {
 		this.pagesAmount = pagesAmount;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }
