@@ -65,7 +65,7 @@ public class BookService implements IBookService {
 
 	public boolean isBookBelongToUser(long bookId) {
 		Long bookshelfId = bookRepository.findById(bookId).get().getBookshelfId();
-		if (!bookshelfService.bookshelvesByUser(getLoggedUserId()).contains(bookshelfId)) {
+		if (!bookshelfService.bookshelvesByUser(getLoggedUserId()).contains(bookshelfService.getBookshelfById(bookshelfId))) {
 			return false;
 		}
 		return true;
@@ -85,7 +85,9 @@ public class BookService implements IBookService {
 			e.printStackTrace();
 		}
 		file.delete();
-		bookRepository.findById(bookId).get().setPagesAmount(pageAmount);
+		Book book = bookRepository.findById(bookId).get();
+		book.setPagesAmount(pageAmount);
+		bookRepository.save(book);
 	}
 
 	private int divideBookToPages(File file, Long bookId) throws IOException, SQLException {
