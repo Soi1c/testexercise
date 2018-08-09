@@ -43,56 +43,55 @@ public class BookController {
 	}
 
 	@RequestMapping(value = "{bookId}", method = RequestMethod.POST)
-	public ResponseEntity addBookText(@RequestParam("file") MultipartFile file, @PathVariable Long bookId) {
-		if (bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity addBookText(@RequestParam("file") MultipartFile file, @PathVariable Long bookId) throws IOException {
+		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		if (!file.getOriginalFilename().endsWith(".txt")) {
 			return new ResponseEntity<>(ApiError.WRONG_EXTENSION.toString(), HttpStatus.NOT_ACCEPTABLE);
 		}
 		File usualFile = new File(bookId.toString());
-		try {
-			FileUtils.writeByteArrayToFile(usualFile, file.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		FileUtils.writeByteArrayToFile(usualFile, file.getBytes());
 		bookService.addTextToBook(usualFile, bookId);
 		return new ResponseEntity<>("ok", HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "{bookId}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Book> getBook(@PathVariable Long bookId) {
+		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "{bookId}/pages/{pageNum}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> getPage(@PathVariable Long bookId, @PathVariable int pageNum) {
-		if (bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity<Page> getPage(@PathVariable Long bookId, @PathVariable int pageNum) {
+		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-		return new ResponseEntity<>(bookService.getTextOfPage(bookId, pageNum), HttpStatus.OK);
+		return new ResponseEntity<>(bookService.getPageByNum(bookId, pageNum), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{bookId}/continuereading", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> continueReading(@PathVariable Long bookId) {
-		if (bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity<Page> continueReading(@PathVariable Long bookId) {
+		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-		int lastReadPageNumber = bookService.continueReading(bookId);
-		return new ResponseEntity<>(bookService.getTextOfPage(bookId, lastReadPageNumber), HttpStatus.OK);
+		Page lastReadPage = bookService.continueReading(bookId);
+		return new ResponseEntity<>(lastReadPage, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{bookId}/movetoanotherbookshelf/{bookshelfId}", method = RequestMethod.POST)
+	@RequestMapping(value = "{bookId}/movetoanotherbookshelf/{bookshelfId}", method = RequestMethod.PUT)
 	public ResponseEntity moveBookToAnotherBookshelf(@PathVariable Long bookId, @PathVariable Long bookshelfId) {
-		if (bookService.isBookBelongToUser(bookId)) {
+		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-		if (!bookshelfService.bookshelvesByUser(getLoggedUserId()).contains(bookshelfId)) {
+		if (!bookshelfService.bookshelvesByUser(getLoggedUserId())
+				.contains(bookshelfService.getBookshelfById(bookshelfId))) {
 			return new ResponseEntity("Bookshelf does not belong to user!!!", HttpStatus.FORBIDDEN);
 		}
 		bookService.changeBookshelf(bookId, bookshelfId);
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "bookshelf={bookshelfId}", method = RequestMethod.GET)
-	public ResponseEntity<List<Book>> allBooksByBookshelf(@PathVariable Long bookshelfId) {
-		return new ResponseEntity<>(bookService.allBooksByBookshelf(bookshelfId), HttpStatus.OK);
-	}
 }

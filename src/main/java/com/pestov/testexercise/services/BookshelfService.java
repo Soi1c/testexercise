@@ -33,4 +33,8 @@ public class BookshelfService implements IBookshelfService {
 		target.setName(bookshelfDto.getName());
 		bookshelfRepository.save(target);
 	}
+
+	public Bookshelf getBookshelfById(Long id) {
+		return bookshelfRepository.findById(id).get();
+	}
 }

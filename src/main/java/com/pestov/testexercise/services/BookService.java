@@ -37,6 +37,10 @@ public class BookService implements IBookService {
 		return book;
 	}
 
+	public Book getBookById(Long bookId) {
+		return bookRepository.findById(bookId).get();
+	}
+
 	public String getTextOfPage(Long bookId, int numeration) {
 		Page targetPage = pageRepository.findPageByBookIdAndNumeration(bookId, numeration);
 		Book book = bookRepository.findById(bookId).get();
@@ -45,8 +49,12 @@ public class BookService implements IBookService {
 		return targetPage.getText().toString();
 	}
 
-	public int continueReading(Long bookId) {
-		return bookRepository.findById(bookId).get().getLastPage();
+	public Page getPageByNum(Long bookId, int pageNum) {
+		return pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
+	}
+
+	public Page continueReading(Long bookId) {
+		return pageRepository.findPageByBookIdAndNumeration(bookId, bookRepository.findById(bookId).get().getLastPage());
 	}
 
 	public void changeBookshelf(Long bookId, Long bookshelfId) {

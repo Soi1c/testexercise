@@ -14,4 +14,6 @@ public interface IBookshelfService {
 	void deleteBookshelf(Long id);
 
 	void renameBookshelf(BookshelfDto bookshelfDto);
+
+	Bookshelf getBookshelfById(Long id);
 }

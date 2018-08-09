@@ -2,6 +2,7 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookDto;
 import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.models.Page;
 
 import java.io.File;
 import java.util.List;
@@ -14,11 +15,15 @@ public interface IBookService {
 
 	String getTextOfPage(Long bookId, int pageId);
 
-	int continueReading(Long bookId);
+	Page continueReading(Long bookId);
 
 	void changeBookshelf(Long bookId, Long bookshelfId);
 
 	boolean isBookBelongToUser(long bookId);
 
 	List<Book> allBooksByBookshelf(Long bookshelfId);
+
+	Book getBookById(Long bookId);
+
+	Page getPageByNum(Long bookId, int pageNum);
 }

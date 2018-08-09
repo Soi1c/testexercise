@@ -2,10 +2,11 @@ package com.pestov.testexercise.controllers;
 
 
 import com.pestov.testexercise.dto.BookshelfDto;
+import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.Bookshelf;
+import com.pestov.testexercise.services.BookService;
 import com.pestov.testexercise.services.BookshelfService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,8 +22,11 @@ public class BookshelfController {
 
 	private final BookshelfService bookshelfService;
 
-	public BookshelfController(BookshelfService bookshelfService) {
+	private final BookService bookService;
+
+	public BookshelfController(BookshelfService bookshelfService, BookService bookService) {
 		this.bookshelfService = bookshelfService;
+		this.bookService = bookService;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -38,20 +42,26 @@ public class BookshelfController {
 		return new ResponseEntity<>(bookshelfService.bookshelvesByUser(getLoggedUserId()), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<List<Book>> getBooksByBookshelf(@PathVariable Long id) {
+		return new ResponseEntity<>(bookService.allBooksByBookshelf(id), HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity deleteBookshelf(@PathVariable Long id) {
+	public ResponseEntity<String> deleteBookshelf(@PathVariable Long id) {
 		bookshelfService.deleteBookshelf(id);
 		JSONObject response = new JSONObject().put("status", "ok");
-		return new ResponseEntity(response.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(response.toString(), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity renameBookshelf(@RequestBody BookshelfDto bookshelfDto) {
+	public ResponseEntity<String> renameBookshelf(@RequestBody BookshelfDto bookshelfDto) {
 		bookshelfService.renameBookshelf(bookshelfDto);
 		JSONObject response = new JSONObject().put("status", "ok");
-		return new ResponseEntity(response.toString(), HttpStatus.OK);
+		return new ResponseEntity<>(response.toString(), HttpStatus.OK);
 	}
 
 }
