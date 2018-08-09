@@ -1,6 +1,8 @@
 package com.pestov.testexercise.controllers;
 
+import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.services.IBookService;
@@ -9,10 +11,7 @@ import com.pestov.testexercise.services.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class UserController {
 		return new ResponseEntity<>(bookService.allBooksByBookshelf(bookshelfId), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{userId}/bookshelves/{bookshelfId}/{bookId}")
+	@RequestMapping(value = "{userId}/bookshelves/{bookshelfId}/{bookId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Book> getBook(@PathVariable Long userId,
 										@PathVariable Long bookshelfId,
@@ -57,5 +56,20 @@ public class UserController {
 		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "{userId}/bookshelves/{bookshelfId}/{bookId}", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<BookSharing> createBookSharingRequest(@PathVariable Long userId,
+																@PathVariable Long bookshelfId,
+																@PathVariable Long bookId,
+																@RequestBody BookSharingDto bookSharingDto) {
+		BookSharing bookSharing = userService.createBookSharingRequest(bookSharingDto);
+		return new ResponseEntity<>(bookSharing, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "getMyRequests", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<List<BookSharing>> getMyRequests() {
+		return new ResponseEntity<>(userService.getMyRequests(), HttpStatus.OK);
+	}
 
 }

@@ -35,7 +35,7 @@ public class BookController {
 		this.bookshelfService = bookshelfService;
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	@ResponseBody
 	public ResponseEntity<Book> addNewBook(@RequestBody BookDto bookDto) {
 		Book book = bookService.saveNewBook(bookDto);
@@ -46,7 +46,7 @@ public class BookController {
 	@ResponseBody
 	public ResponseEntity<Book> updateBook(@PathVariable Long bookId,@RequestBody BookDto bookDto) {
 		if (!bookService.isBookBelongToUser(bookId)) {
-			return new ResponseEntity(HttpStatus.FORBIDDEN);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		Book book = bookService.updateBook(bookId, bookDto);
 		return new ResponseEntity<>(book, HttpStatus.OK);
@@ -59,7 +59,7 @@ public class BookController {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		bookService.deleteBook(bookId);
-		return new ResponseEntity("ok", HttpStatus.OK);
+		return ResponseEntity.ok("ok");
 	}
 
 
@@ -103,6 +103,7 @@ public class BookController {
 	}
 
 	@RequestMapping(value = "{bookId}/movetoanotherbookshelf/{bookshelfId}", method = RequestMethod.PUT)
+	@ResponseBody
 	public ResponseEntity moveBookToAnotherBookshelf(@PathVariable Long bookId, @PathVariable Long bookshelfId) {
 		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
