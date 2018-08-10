@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "signup")
 public class RegistrationController {
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
-    @Autowired
-	private IRegTokenService regTokenService;
+	private final IRegTokenService regTokenService;
 
-    @RequestMapping(value = "submit", method = RequestMethod.POST)
+	public RegistrationController(IUserService userService, IRegTokenService regTokenService) {
+		this.userService = userService;
+		this.regTokenService = regTokenService;
+	}
+
+	@RequestMapping(value = "submit", method = RequestMethod.POST)
     @ResponseBody
     public void submit(@RequestBody String request) {
         userService.registerNewUser(request);

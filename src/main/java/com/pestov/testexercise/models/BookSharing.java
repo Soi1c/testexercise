@@ -19,7 +19,7 @@ public class BookSharing {
 	private Long askingUserId;
 
 	@Column(name = "is_allowed")
-	private boolean isAllowed = false;
+	private boolean allowed = false;
 
 	@Column(name = "expire_date")
 	private LocalDateTime expireDate;
@@ -64,11 +64,11 @@ public class BookSharing {
 	}
 
 	public boolean isAllowed() {
-		return isAllowed;
+		return allowed;
 	}
 
 	public void setAllowed(boolean allowed) {
-		isAllowed = allowed;
+		this.allowed = allowed;
 	}
 
 	public LocalDateTime getExpireDate() {
