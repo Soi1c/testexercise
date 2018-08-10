@@ -58,7 +58,7 @@ public class BookService implements IBookService {
 		Book book = bookRepository.findById(bookId).get();
 		book.setLastPage(numeration);
 		bookRepository.save(book);
-		return targetPage.getText().toString();
+		return targetPage.getText();
 	}
 
 	public Page getPageByNum(Long bookId, int pageNum) {

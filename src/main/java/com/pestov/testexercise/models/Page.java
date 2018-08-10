@@ -16,6 +16,7 @@ public class Page {
 
 	private int numeration;
 
+	@Column(length = 32000)
 	private String text;
 
 	public Page() {
@@ -29,5 +30,9 @@ public class Page {
 
 	public String getText() {
 		return text;
+	}
+
+	public int getNumeration() {
+		return numeration;
 	}
 }
