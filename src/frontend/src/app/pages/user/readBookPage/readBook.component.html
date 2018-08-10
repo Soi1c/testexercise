@@ -1,4 +1,9 @@
 
 <h1>{{title}}</h1>
-<textarea name="" id="" cols="30" rows="10">{{page}}</textarea>
+<div class="book">
+  <div (click)="getPrevPage()" class="left">
+  </div><textarea name="" id="" cols="30" rows="10">{{page}}</textarea>
+  <div (click)="getNextPage()" class="right"></div>
+</div>
+
 <p></p>

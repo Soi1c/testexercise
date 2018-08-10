@@ -32,7 +32,7 @@ export class ReadBookComponent implements OnInit{
     this.getPage(this.currentPage);
   }
 
-  getPrev(){
+  getPrevPage(){
     this.currentPage--;
     this.getPage(this.currentPage);
   }
