@@ -112,7 +112,7 @@ public class BookService implements IBookService {
 				for (int i = 0; i < 30; i++) {
 					pageText = pageText.concat(lines.get(i)).concat("\n");
 				}
-				Page page = new Page(bookId, pageNumber++, new javax.sql.rowset.serial.SerialClob(pageText.toCharArray()));
+				Page page = new Page(bookId, pageNumber++, pageText);
 				pageRepository.save(page);
 				lines.subList(0, 30).clear();
 			} else {
@@ -121,7 +121,7 @@ public class BookService implements IBookService {
 					pageText = pageText.concat(line).concat("\n");
 				}
 				lines.clear();
-				Page page = new Page(bookId, pageNumber++, new javax.sql.rowset.serial.SerialClob(pageText.toCharArray()));
+				Page page = new Page(bookId, pageNumber++, pageText);
 				pageRepository.save(page);
 				lines.clear();
 			}

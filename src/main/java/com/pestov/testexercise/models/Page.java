@@ -1,7 +1,6 @@
 package com.pestov.testexercise.models;
 
 import javax.persistence.*;
-import java.sql.Clob;
 
 @Entity
 @Table(name = "pages")
@@ -17,20 +16,18 @@ public class Page {
 
 	private int numeration;
 
-	@Column(columnDefinition = "CLOB")
-	@Lob
-	private java.sql.Clob text;
+	private String text;
 
 	public Page() {
 	}
 
-	public Page(Long bookId, int numeration, Clob text) {
+	public Page(Long bookId, int numeration, String text) {
 		this.bookId = bookId;
 		this.numeration = numeration;
 		this.text = text;
 	}
 
-	public Clob getText() {
+	public String getText() {
 		return text;
 	}
 }
