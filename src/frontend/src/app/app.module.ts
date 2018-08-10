@@ -26,6 +26,7 @@ import {SinglebookshelfComponent} from "./pages/user/bookshelves/singlebookshelf
 import {EmailConfirmComponent} from "./components/auth/emailConfirm/emailConfirm.component";
 import {LocalStorageService} from "./services/local-storage.service";
 import {AuthService} from "./services/auth.service";
+import {BookService} from "./services/book.service";
 
 
 
@@ -39,8 +40,8 @@ import {AuthService} from "./services/auth.service";
     AuthComponent,
     CaptchaComponent,
     LayoutComponent,
-    UserComponent,
     ReadBookComponent,
+    UserComponent,
     BookshelvesComponent,
     TableWrapper,
     SinglebookshelfComponent,
@@ -62,6 +63,7 @@ import {AuthService} from "./services/auth.service";
     UtilityService,
     LocalStorageService,
     AuthService,
+    BookService,
     ApiService
   ],
   bootstrap: [AppComponent]

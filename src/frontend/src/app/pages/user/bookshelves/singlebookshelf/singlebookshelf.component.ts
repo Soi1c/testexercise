@@ -4,6 +4,8 @@ import {ApiService} from "../../../../services/api.service";
 import R from "ramda";
 import {BookshelvesComponent} from "../bookshelves.component";
 import {FormControl, FormGroup} from "@angular/forms";
+import {UserComponent} from "../../user.component";
+import {BookService} from "../../../../services/book.service";
 
 
 const VIEW_STATES = {
@@ -24,9 +26,15 @@ export class SinglebookshelfComponent implements OnInit{
   public state;
   public formCreation: FormGroup;
   public form: FormGroup;
-  bookId;
+  public changeBookshelfForm: FormGroup;
+  public bookId;
+  newBookshelf;
+  public dataBooks ={
+    bookshelfList: []
+  };
 
-  constructor(private api: ApiService, protected  bookshelves: BookshelvesComponent){
+  constructor(private api: ApiService, protected  bookshelves: BookshelvesComponent
+  ,protected userPage: UserComponent, protected book: BookService){
    // this.showBookList({page: 0, size: 10});
   }
 
@@ -48,6 +56,7 @@ export class SinglebookshelfComponent implements OnInit{
     this.state = VIEW_STATES.LIST;
     this.showBookList();
   }
+
   public showCreation(){
     this.state = VIEW_STATES.CREATION;
     this.formCreation.reset();
@@ -66,7 +75,6 @@ export class SinglebookshelfComponent implements OnInit{
     this.api.bookshelves.getBooksFromBookshelf(this.bookshelves.chosen.id)
       .subscribe(
         (response) => {
-          console.log(response);
           this.tableBooks.data = R.prop( response)
             ? R.map(
               (it) => ({
@@ -117,7 +125,9 @@ export class SinglebookshelfComponent implements OnInit{
         response =>{
           this.showList();
         },
-        error =>{}
+        error =>{
+          this.showList();
+        }
       );
   }
 
@@ -156,27 +166,52 @@ export class SinglebookshelfComponent implements OnInit{
     );
   }
 
-  public reedBook(){}
-  public changeBookshelf(){
+  public readBook(){
     if(!this.bookId){
       this.bookId = this.chosenBook.id;
     }
-    this.api.book.changeBookShelf(this.bookId, this.bookshelves.chosen.id)
+    this.userPage.index = 0;
+    this.book.bookId=this.bookId;
+    this.book.bookName = this.chosenBook.name;
+
+  }
+
+  public changeBookshelf(){
+  if(!this.bookId){
+      this.bookId = this.chosenBook.id;
+    }
+    this.api.book.changeBookShelf(this.bookId, this.newBookshelf)
       .subscribe(
         response =>{
 
         },
         error =>{}
       );
+    this.showList();
   }
-
 
   public showPrev(){
     this.bookshelves.showList();
 
   }
+
   public paginatorChanged = (data) =>
     this.showBookList({size: data.pageSize, page: data.pageIndex});
+
+  public getBookshelvesList(){
+    this.api.bookshelves.getBookShelves()
+      .subscribe(
+        (response) => {
+          this.dataBooks.bookshelfList = response.map(shelf => {
+            return {
+              name: shelf.name,
+              value: shelf.id
+            }
+          });
+
+        });
+
+  }
 
   ngOnInit(){
     this.formCreation = new FormGroup({
@@ -188,7 +223,11 @@ export class SinglebookshelfComponent implements OnInit{
       bookshelfId: new FormControl(''),
       bookshelfName: new FormControl('')
     });
+    this.changeBookshelfForm = new FormGroup({
+      bookshelf: new FormControl('')
+    });
     this.uploadTitle = 'Загрузить книгу';
     this.showList();
+    this.getBookshelvesList();
   }
 }

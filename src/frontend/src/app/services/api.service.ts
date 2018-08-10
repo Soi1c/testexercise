@@ -52,7 +52,6 @@ class HttpRequest {
   }
 
   get(url: string, params?: {}, customOptions?: any): Observable<any> {
-    console.log('get');
     const options = customOptions || anonOptions();
     return this.http
       .get(url, {...options, params})
@@ -173,7 +172,7 @@ class Book extends HttpRequest{
 
   changeBookShelf(bookId, shelfId):Observable<any>{
     let token = `${this.auth.access_token}`;
-    return this.put(`${BASE}/books`+bookId+`/movetoanotherbookshelf/`+ shelfId, null, authorisedOptions(token));
+    return this.put(`${BASE}/books/`+bookId+`/movetoanotherbookshelf/`+ shelfId, null, authorisedOptions(token));
   }
 
   uploadBook(id, file):Observable<any>{
@@ -181,5 +180,15 @@ class Book extends HttpRequest{
     let form = new FormData();
     form.append('file', file);
     return this.post(`${BASE}/books/`+id,form, uploaderOptions(token));
+  }
+
+  continueReading(id):Observable <any>{
+    const token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/books/`+id+`/continuereading`,null, uploaderOptions(token));
+  }
+
+  getPage(bookId, pageId):Observable <any>{
+    const token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/books/`+bookId+`/pages/` + pageId,null, uploaderOptions(token));
   }
 }

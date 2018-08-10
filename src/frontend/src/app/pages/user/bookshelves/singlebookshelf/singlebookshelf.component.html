@@ -50,8 +50,16 @@
   </form>
   <div class="buttons_wrap">
     <app-button  (click)="deleteBook()">Удалить Книгу</app-button>
-    <app-button  (click)="reedBook()">Читать Книгу</app-button>
-    <app-button  (click)="changeBookshelf()">Изменить полку</app-button>
+    <app-button  (click)="readBook()">Читать Книгу</app-button>
     <app-button  (click)="showList()">Назад</app-button>
+  </div>
+  <div class="changeShelf">
+    <h3>Изменить книжную полку</h3>
+    <div class="buttons_wrap">
+      <select [(ngModel)]="newBookshelf">
+        <option  *ngFor="let x of dataBooks.bookshelfList" value="{{x.value}}">{{x.name}}</option>
+      </select>
+      <app-button  (click)="changeBookshelf()">Изменить полку</app-button>
+    </div>
   </div>
 </div>

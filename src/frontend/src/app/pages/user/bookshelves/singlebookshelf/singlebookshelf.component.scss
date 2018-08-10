@@ -12,7 +12,7 @@
   }
 
 form{
-  width: 470px;
+  width: 500px;
 }
 
 
@@ -47,5 +47,19 @@ form{
 
   app-input-text{
     margin-right: 30px;
+  }
+}
+
+.changeShelf{
+  margin: 20px 0;
+  border: 1px solid #d3d3d3;
+  padding: 20px;
+  width: 460px;
+
+  select{
+    width: 200px;
+    background-color: transparent;
+    height: 44px;
+    border-radius: 3px;
   }
 }
