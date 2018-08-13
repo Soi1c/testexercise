@@ -6,11 +6,11 @@ import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.repositories.BookSharingRepository;
 import com.pestov.testexercise.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
@@ -59,14 +59,8 @@ public class UserService implements IUserService {
 	}
 
 	public BookSharing createBookSharingRequest(BookSharingDto bookSharingDto) {
-		BookSharing bookSharing;
-		if (bookSharingDto.getExpireDate() == null) {
-			bookSharing = new BookSharing(bookSharingDto.getOwnerUserId(), bookSharingDto.getAskingUserId(),
-					bookSharingDto.getBook_id());
-		} else {
-			bookSharing = new BookSharing(bookSharingDto.getOwnerUserId(), bookSharingDto.getAskingUserId(),
-					bookSharingDto.getExpireDate(), bookSharingDto.getBook_id());
-		}
+		BookSharing bookSharing = new BookSharing(bookSharingDto.getOwnerUserId(), bookSharingDto.getAskingUserId(),
+				bookSharingDto.getBook_id());
 		bookSharingRepository.save(bookSharing);
 		return bookSharing;
 	}
@@ -75,5 +69,30 @@ public class UserService implements IUserService {
 		return bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(getLoggedUserId());
 	}
 
+	public BookSharing allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
+		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
+		bookSharing.setAllowed(true);
+		if (bookSharingDto.getExpireDate() != null) {
+			bookSharing.setExpireDate(bookSharingDto.getExpireDate());
+		}
+		bookSharingRepository.save(bookSharing);
+		return bookSharing;
+	}
+
+	public BookSharing refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
+		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
+		bookSharing.setAllowed(false);
+		bookSharing.setRefuseDescription(bookSharingDto.getRefuseDescription());
+		bookSharingRepository.save(bookSharing);
+		return bookSharing;
+	}
+
+	public void deleteExpiredBooksharings(LocalDate yesterday) {
+		List<BookSharing> expiredList = bookSharingRepository.findAllByExpireDateEquals(yesterday);
+		for (BookSharing bookSharing : expiredList) {
+			bookSharing.setAllowed(false);
+			bookSharingRepository.save(bookSharing);
+		}
+	}
 
 }

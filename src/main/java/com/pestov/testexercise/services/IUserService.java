@@ -4,6 +4,7 @@ import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IUserService {
@@ -15,4 +16,10 @@ public interface IUserService {
 	BookSharing createBookSharingRequest(BookSharingDto bookSharingDto);
 
 	List<BookSharing> getMyRequests();
+
+	BookSharing allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
+
+	BookSharing refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
+
+	void deleteExpiredBooksharings(LocalDate yesterday);
 }

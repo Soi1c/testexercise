@@ -2,7 +2,7 @@ package com.pestov.testexercise.dto;
 
 import org.springframework.lang.Nullable;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class BookSharingDto {
 
@@ -17,7 +17,7 @@ public class BookSharingDto {
 	private boolean isAllowed;
 
 	@Nullable
-	private LocalDateTime expireDate;
+	private LocalDate expireDate;
 
 	private Long book_id;
 
@@ -42,7 +42,7 @@ public class BookSharingDto {
 	}
 
 	@Nullable
-	public LocalDateTime getExpireDate() {
+	public LocalDate getExpireDate() {
 		return expireDate;
 	}
 

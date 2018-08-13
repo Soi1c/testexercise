@@ -1,7 +1,7 @@
 package com.pestov.testexercise.models;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "book_sharing")
@@ -22,7 +22,7 @@ public class BookSharing {
 	private boolean allowed = false;
 
 	@Column(name = "expire_date")
-	private LocalDateTime expireDate;
+	private LocalDate expireDate;
 
 	@Column(name = "book_id")
 	private Long book_id;
@@ -30,7 +30,7 @@ public class BookSharing {
 	@Column(name = "refuse_description")
 	private String refuseDescription;
 
-	public BookSharing(Long ownerUserId, Long askingUserId, LocalDateTime expireDate, Long book_id) {
+	public BookSharing(Long ownerUserId, Long askingUserId, LocalDate expireDate, Long book_id) {
 		this.ownerUserId = ownerUserId;
 		this.askingUserId = askingUserId;
 		this.expireDate = expireDate;
@@ -71,11 +71,11 @@ public class BookSharing {
 		this.allowed = allowed;
 	}
 
-	public LocalDateTime getExpireDate() {
+	public LocalDate getExpireDate() {
 		return expireDate;
 	}
 
-	public void setExpireDate(LocalDateTime expireDate) {
+	public void setExpireDate(LocalDate expireDate) {
 		this.expireDate = expireDate;
 	}
 
@@ -85,5 +85,13 @@ public class BookSharing {
 
 	public void setBook_id(Long book_id) {
 		this.book_id = book_id;
+	}
+
+	public String getRefuseDescription() {
+		return refuseDescription;
+	}
+
+	public void setRefuseDescription(String refuseDescription) {
+		this.refuseDescription = refuseDescription;
 	}
 }

@@ -72,4 +72,15 @@ public class UserController {
 		return new ResponseEntity<>(userService.getMyRequests(), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "allowRequest/{booksharingId}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ResponseEntity<BookSharing> allowRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
+		return new ResponseEntity<>(userService.allowBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "refuseRequest/{booksharingId}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ResponseEntity<BookSharing> refuseRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
+		return new ResponseEntity<>(userService.refuseBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
+	}
 }
