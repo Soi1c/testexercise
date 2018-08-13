@@ -22,4 +22,10 @@ public interface IUserService {
 	BookSharing refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
 
 	void deleteExpiredBooksharings(LocalDate yesterday);
+
+	List<BookSharing> myRefusedRequests();
+
+	List<BookSharing> mySharedBooks();
+
+	boolean checkBookShared(Long bookId);
 }

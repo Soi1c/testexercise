@@ -29,12 +29,12 @@ public class BookshelfService implements IBookshelfService {
 	}
 
 	public void renameBookshelf(BookshelfDto bookshelfDto) {
-		Bookshelf target = bookshelfRepository.findById(bookshelfDto.getId()).get();
+		Bookshelf target = bookshelfRepository.getOne(bookshelfDto.getId());
 		target.setName(bookshelfDto.getName());
 		bookshelfRepository.save(target);
 	}
 
 	public Bookshelf getBookshelfById(Long id) {
-		return bookshelfRepository.findById(id).get();
+		return bookshelfRepository.getOne(id);
 	}
 }

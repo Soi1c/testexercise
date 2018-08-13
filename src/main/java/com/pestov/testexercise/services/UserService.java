@@ -95,4 +95,16 @@ public class UserService implements IUserService {
 		}
 	}
 
+	public List<BookSharing> myRefusedRequests() {
+		return bookSharingRepository.findAllByAskingUserIdAndAllowedIsFalse(getLoggedUserId());
+	}
+
+	public List<BookSharing> mySharedBooks() {
+		return bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(getLoggedUserId());
+	}
+
+	public boolean checkBookShared(Long bookId) {
+		return bookSharingRepository.findByAskingUserIdAndBook_id(getLoggedUserId(), bookId).isAllowed();
+	}
+
 }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
@@ -50,33 +49,36 @@ public class BookService implements IBookService {
 	}
 
 	public Book getBookById(Long bookId) {
-		return bookRepository.findById(bookId).get();
+		return bookRepository.getOne(bookId);
 	}
 
 	public String getTextOfPage(Long bookId, int numeration) {
 		Page targetPage = pageRepository.findPageByBookIdAndNumeration(bookId, numeration);
-		Book book = bookRepository.findById(bookId).get();
+		Book book = bookRepository.getOne(bookId);
 		book.setLastPage(numeration);
 		bookRepository.save(book);
 		return targetPage.getText();
 	}
 
 	public Page getPageByNum(Long bookId, int pageNum) {
+		Book book = bookRepository.getOne(bookId);
+		book.setLastPage(pageNum++);
+		bookRepository.save(book);
 		return pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
 	}
 
 	public Page continueReading(Long bookId) {
-		return pageRepository.findPageByBookIdAndNumeration(bookId, bookRepository.findById(bookId).get().getLastPage());
+		return pageRepository.findPageByBookIdAndNumeration(bookId, bookRepository.getOne(bookId).getLastPage());
 	}
 
 	public void changeBookshelf(Long bookId, Long bookshelfId) {
-		Book book = bookRepository.findById(bookId).get();
+		Book book = bookRepository.getOne(bookId);
 		book.setBookshelfId(bookshelfId);
 		bookRepository.save(book);
 	}
 
 	public boolean isBookBelongToUser(long bookId) {
-		Long bookshelfId = bookRepository.findById(bookId).get().getBookshelfId();
+		Long bookshelfId = bookRepository.getOne(bookId).getBookshelfId();
 		if (!bookshelfService.bookshelvesByUser(getLoggedUserId())
 				.contains(bookshelfService.getBookshelfById(bookshelfId))) {
 			return false;
@@ -94,16 +96,16 @@ public class BookService implements IBookService {
 		int pageAmount = 0;
 		try {
 			pageAmount = divideBookToPages(file, bookId);
-		} catch (IOException | SQLException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		file.delete();
-		Book book = bookRepository.findById(bookId).get();
+		Book book = bookRepository.getOne(bookId);
 		book.setPagesAmount(pageAmount);
 		bookRepository.save(book);
 	}
 
-	private int divideBookToPages(File file, Long bookId) throws IOException, SQLException {
+	private int divideBookToPages(File file, Long bookId) throws IOException {
 		List<String> lines = org.apache.commons.io.IOUtils.readLines(new FileReader(file));
 		int pageNumber = 1;
 		while (!lines.isEmpty()) {

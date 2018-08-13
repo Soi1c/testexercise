@@ -30,6 +30,9 @@ public class BookSharing {
 	@Column(name = "refuse_description")
 	private String refuseDescription;
 
+	@Column(name = "last_page")
+	private int lastPage = 1;
+
 	public BookSharing(Long ownerUserId, Long askingUserId, LocalDate expireDate, Long book_id) {
 		this.ownerUserId = ownerUserId;
 		this.askingUserId = askingUserId;
@@ -93,5 +96,13 @@ public class BookSharing {
 
 	public void setRefuseDescription(String refuseDescription) {
 		this.refuseDescription = refuseDescription;
+	}
+
+	public int getLastPage() {
+		return lastPage;
+	}
+
+	public void setLastPage(int lastPage) {
+		this.lastPage = lastPage;
 	}
 }
