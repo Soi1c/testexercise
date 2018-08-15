@@ -109,9 +109,9 @@ export class UserBookshareComponent implements OnInit{
     this.api.user.getBookFromAnotherUserBookshelf(this.userId,this.shelfId, this.bookId)
       .subscribe(
         response =>{
-          this.book.name = response.name;
-          this.book.description = response.description;
-
+          this.form.reset();
+          this.form.controls.name.patchValue(response.name);
+          this.form.controls.description.patchValue(response.description);
         }
       );
   }
@@ -119,8 +119,7 @@ export class UserBookshareComponent implements OnInit{
   public chooseBooks(value){
     this.bookId = value.value;
     this.showBook();
-    this.form.controls.name.patchValue(this.book.name);
-    this.form.controls.description.patchValue(this.book.description);
+
   }
 
   public chooseUser(value){
@@ -135,13 +134,15 @@ export class UserBookshareComponent implements OnInit{
   }
 
   public sendRequest() {
-    this.api.user.createBookSharingRequest(this.userId, this.shelfId, this.bookId)
+    this.api.user.createBookSharingRequest({ownerUserId:this.userId, book_id: this.bookId})
       .subscribe(
         response=>{
 
         }
       );
   }
+
+
 
   ngOnInit(){
     this.showUserList();

@@ -221,9 +221,9 @@ class User extends HttpRequest {
     return this.get(`${BASE}/users/` + userId+`/bookshelves/`+bookshelfId+`/`+bookId, null, authorisedOptions(token));
   }
 
-  createBookSharingRequest(userId, bookshelfId, bookId):Observable <any>{
+  createBookSharingRequest(book):Observable <any>{
     let token = `${this.auth.access_token}`;
-    return this.post(`${BASE}/users/` + userId+`/bookshelves/`+bookshelfId+`/`+bookId, null, authorisedOptions(token));
+    return this.post(`${BASE}/users/booksharingrequest`, book, authorisedOptions(token));
   }
 
   getMyRequests():Observable <any>{
