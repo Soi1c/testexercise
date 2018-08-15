@@ -8,4 +8,6 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Long> {
 
 	List<Book> findAllByBookshelfId(Long bookshelfId);
+
+	void deleteAllByBookshelfId(Long bookshelfId);
 }

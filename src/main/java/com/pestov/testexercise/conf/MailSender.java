@@ -2,11 +2,13 @@ package com.pestov.testexercise.conf;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+@Configuration
 public class MailSender {
 
 	@Value("${spring.mail.password}")
@@ -18,7 +20,7 @@ public class MailSender {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(465);
 
-		mailSender.setUsername("darkalt12@gmail.com");
+		mailSender.setUsername("squaddiepestov@gmail.com");
 		mailSender.setPassword(mailPassword);
 
 		Properties props = mailSender.getJavaMailProperties();

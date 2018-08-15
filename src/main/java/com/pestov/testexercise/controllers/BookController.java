@@ -44,7 +44,7 @@ public class BookController {
 
 	@RequestMapping(value = "{bookId}",method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<Book> updateBook(@PathVariable Long bookId,@RequestBody BookDto bookDto) {
+	public ResponseEntity<Book> updateBook(@PathVariable Long bookId, @RequestBody BookDto bookDto) {
 		if (!bookService.isBookBelongToUser(bookId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}

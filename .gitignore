@@ -25,3 +25,4 @@
 /.nb-gradle/
 
 /src/frontend/node_modules/
+/src/frontend/package-lock.json
