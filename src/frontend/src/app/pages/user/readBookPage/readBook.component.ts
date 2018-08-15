@@ -12,6 +12,7 @@ export class ReadBookComponent implements OnInit{
   constructor(private api: ApiService, private book: BookService ){
   }
   currentPage;
+  public lines:string [];
   public page;
   public title;
 
@@ -21,9 +22,12 @@ export class ReadBookComponent implements OnInit{
         response =>{
           this.currentPage = response.numeration;
           this.page = response.text;
+          this.lines = this.page.split('\n');
           },
         error => {}
       );
+
+
   }
 
 
@@ -33,7 +37,8 @@ export class ReadBookComponent implements OnInit{
   }
 
   getPrevPage(){
-    this.currentPage--;
+    if(this.currentPage > 1)
+      this.currentPage--;
     this.getPage(this.currentPage);
   }
 
@@ -42,7 +47,7 @@ export class ReadBookComponent implements OnInit{
       .subscribe(
         response=>{
           this.page = response.text;
-          console.log(this.page);
+          this.lines = this.page.split('\n');
         },
         error =>{}
       );

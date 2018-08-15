@@ -1,6 +1,6 @@
 textarea{
   width: 800px;
-  height: 500px;
+  height: 700px;
   border:none;
 }
 
@@ -21,9 +21,16 @@ textarea{
 }
 
 .book{
-  display: flex;
-  justify-content: space-between;
-  align-items:center;
   width: 100%;
   max-width: 1000px;
+  p{
+    text-indent: 40px;
+    text-align: justify;
+  }
+}
+
+nav{
+  display: flex;
+  justify-content: flex-end;
+  align-items:center;
 }

@@ -1,0 +1,17 @@
+<div *ngIf="isListShowable()">
+  <app-table
+    *ngIf="table.data.length"
+    [displayed]="table.displayed"
+    [data]="table.data"
+    [size]="table.size"
+    [page]="table.page"
+    (paginatorchanged)="paginatorChanged($event)"
+    (rowclicked)="rowClicked($event)">
+  </app-table>
+
+  <h4 *ngIf="errors">{{errors}}</h4>
+</div>
+
+<div *ngIf="isBookShowable()">
+  <app-button (click)="getBookList()">Назад</app-button>
+</div>

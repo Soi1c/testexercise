@@ -25,18 +25,4 @@ export class LocalStorageService {
     localStorage.setItem(name, JSON.stringify(value));
   }
 
-  public getFormStepData(step: number) {
-    const data = {};
-    for (const it of this[`step${step}`]) {
-      data[it] = this.getFormItem(it);
-    }
-    return data;
-  }
-
-  public setFormStepData(step: number, value: Object) {
-    this[`step${step}`] = Object.keys(value);
-    for (const it of this[`step${step}`]) {
-      this.setFormItem(it, value[it]);
-    }
-  }
 }

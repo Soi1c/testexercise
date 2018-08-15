@@ -1,0 +1,20 @@
+ul{
+  li{
+    padding: 10px 0;
+    list-style: none;
+    a{
+      cursor: pointer;
+      &:hover{
+        color: #1153ff;
+      }
+    }
+  }
+}
+
+.formWrap{
+  width: 500px;
+}
+
+.btnWrap{
+  width: 200px;
+}

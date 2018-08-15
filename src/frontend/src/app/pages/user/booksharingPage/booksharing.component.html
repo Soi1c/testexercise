@@ -1,0 +1,18 @@
+<ul class="menu">
+  <li [class.menu_active]="index === 0"><a (click)="index=0" >Одобреные книги</a></li>
+  <li [class.menu_active]="index === 1"><a (click)="index=1" >Мои заявки </a></li>
+  <li [class.menu_active]="index === 2"><a (click)="index=2" >Подать заявку</a></li>
+</ul>
+
+<div id ="content">
+  <div *ngIf="index === 0">
+    <app-approvedBooks></app-approvedBooks>
+  </div>
+  <div *ngIf="index === 1">
+    Мои заявки
+  </div>
+  <div *ngIf="index === 2">
+    <app-usersBookshare></app-usersBookshare>
+  </div>
+
+</div>

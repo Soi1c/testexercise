@@ -1,9 +1,19 @@
 
 <h1>{{title}}</h1>
+
+<h2>{{currentPage}}</h2>
 <div class="book">
-  <div (click)="getPrevPage()" class="left">
-  </div><textarea name="" id="" cols="30" rows="10">{{page}}</textarea>
-  <div (click)="getNextPage()" class="right"></div>
+
+  <div>
+      <p *ngFor="let x of lines">{{x}}</p>
+  </div>
+
+  <nav>
+    <div (click)="getPrevPage()" class="left"></div>
+    <div (click)="getNextPage()" class="right"></div>
+  </nav>
+
+
 </div>
 
 <p></p>

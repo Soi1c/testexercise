@@ -10,6 +10,7 @@ import 'rxjs/add/operator/share';
 import {forwardRef, Inject, Injectable} from "@angular/core";
 import {AuthService} from "./auth.service";
 import {httpFactory} from "@angular/http/src/http_module";
+import {observableToBeFn} from "rxjs/testing/TestScheduler";
 
 
 const
@@ -92,11 +93,13 @@ export class ApiService{
     public account;
     public bookshelves;
     public book;
+    public user;
     constructor(http: Http
                 ,@Inject(forwardRef(() => AuthService)) auth: AuthService){
       this.account = new Accounts(http);
       this.bookshelves = new BookShelf(http,auth);
-      this.book = new Book(http, auth)
+      this.book = new Book(http, auth);
+      this.user = new User(http, auth);
     }
 
 }
@@ -190,5 +193,76 @@ class Book extends HttpRequest{
   getPage(bookId, pageId):Observable <any>{
     const token = `${this.auth.access_token}`;
     return this.get(`${BASE}/books/`+bookId+`/pages/` + pageId,null, uploaderOptions(token));
+  }
+}
+
+class User extends HttpRequest {
+  constructor(http: Http, protected auth: AuthService) {
+    super(http);
+  }
+
+  getAllUsers():Observable <any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users`, null, authorisedOptions(token));
+  }
+
+  getUserBookshelves(userId):Observable <any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/` + userId, null, authorisedOptions(token));
+  }
+
+  getAllBooksFromAnotherUserBookshelf(userId, bookshelfId):Observable <any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/` + userId+`/bookshelves/`+bookshelfId, null, authorisedOptions(token));
+  }
+
+  getBookFromAnotherUserBookshelf(userId, bookshelfId, bookId):Observable <any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/` + userId+`/bookshelves/`+bookshelfId+`/`+bookId, null, authorisedOptions(token));
+  }
+
+  createBookSharingRequest(userId, bookshelfId, bookId):Observable <any>{
+    let token = `${this.auth.access_token}`;
+    return this.post(`${BASE}/users/` + userId+`/bookshelves/`+bookshelfId+`/`+bookId, null, authorisedOptions(token));
+  }
+
+  getMyRequests():Observable <any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/getMyRequests`, null, authorisedOptions(token));
+  }
+
+  allowRequest(id):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.put(`${BASE}/users/allowRequest/`+id, null, authorisedOptions(token));
+  }
+
+  refuseRequest(id):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.put(`${BASE}/users/refuseRequest/`+id, null, authorisedOptions(token));
+  }
+
+  getMyRefusedRequests():Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/myrefusedrequests`, null, authorisedOptions(token));
+  }
+
+  getMySharedBooks():Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/mysharedbooks`, null, authorisedOptions(token));
+  }
+
+  getSharedBookById(id):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/mysharedbooks/`+id, null, authorisedOptions(token));
+  }
+
+  getPage(bookId, pageId):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/mysharedbooks/`+bookId+`/pages/`+pageId, null, authorisedOptions(token));
+  }
+
+  continueReading(bookId):Observable<any>{
+    let token = `${this.auth.access_token}`;
+    return this.get(`${BASE}/users/mysharedbooks/`+bookId+`/continuereading`, null, authorisedOptions(token));
   }
 }

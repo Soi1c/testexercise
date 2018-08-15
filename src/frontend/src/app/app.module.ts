@@ -27,6 +27,9 @@ import {EmailConfirmComponent} from "./components/auth/emailConfirm/emailConfirm
 import {LocalStorageService} from "./services/local-storage.service";
 import {AuthService} from "./services/auth.service";
 import {BookService} from "./services/book.service";
+import {BooksharingComponent} from "./pages/user/booksharingPage/booksharing.component";
+import {ApprovedBooksComponent} from "./components/booksharing/approovedBooks/approvedBooks.component";
+import {UserBookshareComponent} from "./components/booksharing/users/userBookshare.component";
 
 
 
@@ -46,6 +49,9 @@ import {BookService} from "./services/book.service";
     TableWrapper,
     SinglebookshelfComponent,
     EmailConfirmComponent,
+    BooksharingComponent,
+    ApprovedBooksComponent,
+    UserBookshareComponent,
     TableHeaderLocalization
   ],
   imports: [

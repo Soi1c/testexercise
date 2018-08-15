@@ -1,0 +1,42 @@
+<div *ngIf="isUsersShowable()">
+  <h4>Выберите пользователея :</h4>
+  <ul>
+    <li *ngFor="let x of userList"><a (click)="chooseUser(x)" >{{x.name}}</a></li>
+  </ul>
+</div>
+<div *ngIf="isBookshelvesShowable()">
+  <h4>Выберите полоку пользователя :</h4>
+  <ul>
+    <li *ngFor="let x of bookshelfList"><a (click)="chooseBookshelf(x)" >{{x.name}}</a></li>
+  </ul>
+  <h4 *ngIf="errors">{{errors}}</h4>
+  <div class="btnWrap">
+    <app-button  (click)="state = STEPS.USERS">Назад</app-button>
+  </div>
+
+</div>
+<div *ngIf="isBookShowable()">
+  <h4>Выберите книгу пользователя :</h4>
+  <ul>
+    <li *ngFor="let x of booksList"><a (click)="chooseBooks(x)" >{{x.name}}</a></li>
+  </ul>
+  <h4 *ngIf="errors">{{errors}}</h4>
+  <div class="btnWrap">
+    <app-button  (click)="state = STEPS.BOOKSHALVES">Назад</app-button>
+  </div>
+</div>
+<div *ngIf="isSendRequestShowable()">
+  <div class="formWrap">
+  <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
+      <div class="input__wrapper">
+        <app-input-text [label]="true" inputType="text" formControlName="name" inputPlaceholder="Название"></app-input-text>
+        <app-input-text [label]="true" inputType="text" formControlName="description" inputPlaceholder="Описание книги"></app-input-text>
+      </div>
+      <app-error [error]="errors"></app-error>
+      <app-button [submit]="true" type="submit" (click)="sendRequest()">Отправить запрос</app-button>
+    </form>
+  </div>
+  <div class="btnWrap">
+    <app-button  (click)="state = STEPS.BOOKS">Назад</app-button>
+  </div>
+</div>
