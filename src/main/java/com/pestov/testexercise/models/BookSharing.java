@@ -33,6 +33,8 @@ public class BookSharing {
 	@Column(name = "last_page")
 	private int lastPage = 1;
 
+	public BookSharing() {}
+
 	public BookSharing(Long ownerUserId, Long askingUserId, LocalDate expireDate, Long bookId) {
 		this.ownerUserId = ownerUserId;
 		this.askingUserId = askingUserId;

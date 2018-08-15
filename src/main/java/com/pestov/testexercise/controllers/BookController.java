@@ -95,6 +95,9 @@ public class BookController {
 	@RequestMapping(value = "{bookId}/continuereading", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Page> continueReading(@PathVariable Long bookId) {
+		if (bookService.getBookById(bookId) == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
 		if (!bookService.isBookBelongToUser(bookId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
