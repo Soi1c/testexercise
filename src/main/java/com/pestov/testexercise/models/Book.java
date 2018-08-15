@@ -26,8 +26,7 @@ public class Book {
 	@Column(name = "total_amount")
 	private int pagesAmount;
 
-	public Book() {
-	}
+	public Book() {}
 
 	public Book(Long bookshelfId, String name) {
 		this.bookshelfId = bookshelfId;

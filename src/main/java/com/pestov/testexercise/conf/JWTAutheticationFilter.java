@@ -36,14 +36,16 @@ public class JWTAutheticationFilter extends UsernamePasswordAuthenticationFilter
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		try {
 			CustomUser customUser = new ObjectMapper().readValue(request.getInputStream(), CustomUser.class);
-			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(customUser.getEmail(), customUser.getPassword()));
+			return authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(customUser.getEmail(), customUser.getPassword()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,FilterChain chain,
+											Authentication authResult) throws IOException, ServletException {
 		LocalDateTime expirationTime = LocalDateTime.now().plus(EXPIRATION_TIME, ChronoUnit.MILLIS);
 		String token = Jwts.builder().setSubject(((User)authResult.getPrincipal()).getUsername())
 				.setExpiration(Date.from(expirationTime.atZone(TimeZone.getDefault().toZoneId()).toInstant()))

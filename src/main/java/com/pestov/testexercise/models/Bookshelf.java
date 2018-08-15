@@ -17,7 +17,7 @@ public class Bookshelf {
 
 	private String name;
 
-	public Bookshelf(){};
+	public Bookshelf(){}
 
 	public Bookshelf(Long userId, String name) {
 		this.userId = userId;

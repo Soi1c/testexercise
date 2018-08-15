@@ -18,9 +18,8 @@ public class CustomUser {
     @Column(name="is_active")
     private boolean isActive;
 
-    public CustomUser() {
+    public CustomUser() {}
 
-    }
     public CustomUser(String email, String password) {
         this.email = email;
         this.password = password;

@@ -119,5 +119,4 @@ public class UserService implements IUserService {
 	public BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId) {
 		return bookSharingRepository.findByAskingUserIdAndBookId(getLoggedUserId(), bookId);
 	}
-
 }

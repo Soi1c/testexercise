@@ -19,8 +19,7 @@ public class Page {
 	@Column(length = 32000)
 	private String text;
 
-	public Page() {
-	}
+	public Page() {}
 
 	public Page(Long bookId, int numeration, String text) {
 		this.bookId = bookId;

@@ -115,5 +115,4 @@ public class BookController {
 		bookService.changeBookshelf(bookId, bookshelfId);
 		return new ResponseEntity(HttpStatus.OK);
 	}
-
 }

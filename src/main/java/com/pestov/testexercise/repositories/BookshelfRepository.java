@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
 
-	//TODO удалять еще и связанные книги
 	List<Bookshelf> findAllByUserId(Long userId);
 }
