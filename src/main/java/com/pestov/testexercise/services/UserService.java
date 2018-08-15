@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
@@ -63,12 +64,17 @@ public class UserService implements IUserService {
 		return customUser;
 	}
 
-	public List<CustomUser> getUsers() {
-		return userRepository.findAll();
+	public List<UserDto> getUsers() {
+		List<CustomUser> usersList = userRepository.findAll();
+		List<UserDto> usersDtoList = new ArrayList<>();
+		for (CustomUser user : usersList) {
+			usersDtoList.add(new UserDto(user.getEmail(), user.getId()));
+		}
+		return usersDtoList;
 	}
 
 	public BookSharing createBookSharingRequest(BookSharingDto bookSharingDto) {
-		BookSharing bookSharing = new BookSharing(bookSharingDto.getOwnerUserId(), bookSharingDto.getAskingUserId(),
+		BookSharing bookSharing = new BookSharing(bookSharingDto.getOwnerUserId(), getLoggedUserId(),
 				bookSharingDto.getBook_id());
 		bookSharingRepository.save(bookSharing);
 		return bookSharing;

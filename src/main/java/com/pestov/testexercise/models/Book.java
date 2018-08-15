@@ -1,10 +1,12 @@
 package com.pestov.testexercise.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pestov.testexercise.dto.BookDto;
 
 import javax.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "books")
 public class Book {
 

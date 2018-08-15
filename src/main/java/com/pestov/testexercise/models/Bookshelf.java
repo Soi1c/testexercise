@@ -4,7 +4,7 @@ package com.pestov.testexercise.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "bookshelfs")
+@Table(name = "bookshelves")
 public class Bookshelf {
 
 	@Id

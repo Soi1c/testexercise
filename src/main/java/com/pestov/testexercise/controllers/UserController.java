@@ -1,6 +1,7 @@
 package com.pestov.testexercise.controllers;
 
 import com.pestov.testexercise.dto.BookSharingDto;
+import com.pestov.testexercise.dto.UserDto;
 import com.pestov.testexercise.models.*;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
@@ -28,7 +29,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<CustomUser>> getUsersList() {
+	public ResponseEntity<List<UserDto>> getUsersList() {
 		return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
 	}
 
@@ -53,12 +54,9 @@ public class UserController {
 		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{userId}/bookshelves/{bookshelfId}/{bookId}", method = RequestMethod.POST)
+	@RequestMapping(value = "booksharingrequest", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<BookSharing> createBookSharingRequest(@PathVariable Long userId,
-																@PathVariable Long bookshelfId,
-																@PathVariable Long bookId,
-																@RequestBody BookSharingDto bookSharingDto) {
+	public ResponseEntity<BookSharing> createBookSharingRequest(@RequestBody BookSharingDto bookSharingDto) {
 		BookSharing bookSharing = userService.createBookSharingRequest(bookSharingDto);
 		return new ResponseEntity<>(bookSharing, HttpStatus.OK);
 	}

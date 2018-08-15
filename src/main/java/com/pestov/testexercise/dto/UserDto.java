@@ -6,10 +6,15 @@ import org.json.JSONObject;
 public class UserDto {
 
     private String email;
-
     private String password;
+    private Long id;
 
-    public UserDto(final String userJson) {
+	public UserDto(String email, Long id) {
+		this.email = email;
+		this.id = id;
+	}
+
+	public UserDto(final String userJson) {
     	JSONObject result = new JSONObject(userJson);
     	this.email = result.getString("email");
     	this.password = result.getString("password");
@@ -19,10 +24,11 @@ public class UserDto {
         return email;
     }
 
-
     public String getPassword() {
         return password;
     }
 
-
+	public Long getId() {
+		return id;
+	}
 }

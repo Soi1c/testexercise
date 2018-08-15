@@ -1,6 +1,7 @@
 package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookSharingDto;
+import com.pestov.testexercise.dto.UserDto;
 import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
 
@@ -11,7 +12,7 @@ public interface IUserService {
 
     CustomUser registerNewUser(String userDto);
 
-	List<CustomUser> getUsers();
+	List<UserDto> getUsers();
 
 	BookSharing createBookSharingRequest(BookSharingDto bookSharingDto);
 
