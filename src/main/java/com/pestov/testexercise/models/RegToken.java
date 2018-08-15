@@ -19,8 +19,7 @@ public class RegToken {
 	@Column(name = "creation_time")
 	private LocalDateTime creationTime;
 
-	public RegToken() {
-	}
+	public RegToken() {}
 
 	public RegToken(CustomUser customUserId) {
 		this.customUser = customUserId;

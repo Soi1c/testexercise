@@ -30,7 +30,8 @@ public class BookService implements IBookService {
 
 	private final IUserService userService;
 
-	public BookService(BookRepository bookRepository, PageRepository pageRepository, BookSharingRepository bookSharingRepository, IBookshelfService bookshelfService, IUserService userService) {
+	public BookService(BookRepository bookRepository, PageRepository pageRepository,
+					   BookSharingRepository bookSharingRepository, IBookshelfService bookshelfService, IUserService userService) {
 		this.bookRepository = bookRepository;
 		this.pageRepository = pageRepository;
 		this.bookSharingRepository = bookSharingRepository;
@@ -101,11 +102,8 @@ public class BookService implements IBookService {
 
 	public boolean isBookBelongToUser(long bookId) {
 		Long bookshelfId = bookRepository.getOne(bookId).getBookshelfId();
-		if (!bookshelfService.bookshelvesByUser(getLoggedUserId())
-				.contains(bookshelfService.getBookshelfById(bookshelfId))) {
-			return false;
-		}
-		return true;
+		return bookshelfService.bookshelvesByUser(getLoggedUserId())
+				.contains(bookshelfService.getBookshelfById(bookshelfId));
 	}
 
 	public List<Book> allBooksByBookshelf(Long bookshelfId) {

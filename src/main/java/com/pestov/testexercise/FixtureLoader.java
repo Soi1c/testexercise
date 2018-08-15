@@ -29,7 +29,6 @@ public class FixtureLoader implements ApplicationListener<ApplicationReadyEvent>
 		this.userRepository = userRepository;
 	}
 
-
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		loadFixtures();
@@ -43,18 +42,8 @@ public class FixtureLoader implements ApplicationListener<ApplicationReadyEvent>
 	public void loadUsers() {
 		userRepository.deleteAllInBatch();
 		List<CustomUser> customUsers = loadFromJson("fixtures/users.json", CustomUser.class);
-		//customUsers.get(0).setRoles(Collections.singletonList(roleRepository.findByName("ROLE_ADMIN")));
-
-//		customUsers.forEach(u -> {
-//			List<Role> roles = new ArrayList<>();
-//			u.getRoles().forEach(r -> {
-//				Role byName = roleRepository.findByName(r.getName());
-//				roles.add(byName);
-//			});
-//			u.setRoles(roles);
-//		});
-//		customUsers.forEach(a -> a.setPassword(passwordEncoder.encode(a.getPassword())));
 		userRepository.saveAll(customUsers);
+		log.info(String.valueOf(customUsers.size()).concat(" users loaded from fixture"));
 	}
 
 	public <T> T loadFromJson(String resourcePath, Class<?> target) {
@@ -70,5 +59,4 @@ public class FixtureLoader implements ApplicationListener<ApplicationReadyEvent>
 			throw new IllegalStateException("Ошибка при загрузке " + resourcePath + ": " + e.getMessage());
 		}
 	}
-
 }
