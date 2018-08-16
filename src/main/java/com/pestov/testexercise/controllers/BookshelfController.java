@@ -1,6 +1,7 @@
 package com.pestov.testexercise.controllers;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pestov.testexercise.dto.BookshelfDto;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.Bookshelf;
@@ -21,7 +22,6 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 public class BookshelfController {
 
 	private final IBookshelfService bookshelfService;
-
 	private final IBookService bookService;
 
 	public BookshelfController(IBookshelfService bookshelfService, IBookService bookService) {
@@ -31,8 +31,12 @@ public class BookshelfController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
+	@JsonIgnore
 	public ResponseEntity<Bookshelf> submit(@RequestBody BookshelfDto request) {
-		Bookshelf newBookshelf = bookshelfService.saveNewBookshelf(getLoggedUserId(), request);
+		if (request.getName() == null || request.getName().equals("")) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+		}
+		Bookshelf newBookshelf = bookshelfService.saveNewBookshelf(request);
 		return new ResponseEntity<>(newBookshelf, HttpStatus.OK);
 	}
 

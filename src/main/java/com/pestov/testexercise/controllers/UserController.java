@@ -2,7 +2,10 @@ package com.pestov.testexercise.controllers;
 
 import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.dto.UserDto;
-import com.pestov.testexercise.models.*;
+import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.models.BookSharing;
+import com.pestov.testexercise.models.Bookshelf;
+import com.pestov.testexercise.models.Page;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import com.pestov.testexercise.services.IUserService;
@@ -61,9 +64,9 @@ public class UserController {
 		return new ResponseEntity<>(bookSharing, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "getMyRequests", method = RequestMethod.GET)
+	@RequestMapping(value = "getmyrequests", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<BookSharing>> getMyRequests() {
+	public ResponseEntity<List<BookSharingDto>> getMyRequests() {
 		return new ResponseEntity<>(userService.getMyRequests(), HttpStatus.OK);
 	}
 

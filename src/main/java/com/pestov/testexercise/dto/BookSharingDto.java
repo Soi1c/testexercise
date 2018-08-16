@@ -1,16 +1,22 @@
 package com.pestov.testexercise.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
 public class BookSharingDto {
 
 	@Nullable
 	private Long id;
 
+	@Nullable
 	private Long ownerUserId;
 
+	@Nullable
 	private Long askingUserId;
 
 	@Nullable
@@ -19,43 +25,18 @@ public class BookSharingDto {
 	@Nullable
 	private LocalDate expireDate;
 
+	@Nullable
 	private Long book_id;
 
 	@Nullable
 	private String refuseDescription;
 
 	@Nullable
-	public Long getId() {
-		return id;
-	}
-
-	public Long getOwnerUserId() {
-		return ownerUserId;
-	}
-
-	public Long getAskingUserId() {
-		return askingUserId;
-	}
-
-	public boolean isAllowed() {
-		return isAllowed;
-	}
+	private String askingUsername;
 
 	@Nullable
-	public LocalDate getExpireDate() {
-		return expireDate;
-	}
-
-	public Long getBook_id() {
-		return book_id;
-	}
+	private String bookName;
 
 	@Nullable
-	public String getRefuseDescription() {
-		return refuseDescription;
-	}
-
-	public void setRefuseDescription(@Nullable String refuseDescription) {
-		this.refuseDescription = refuseDescription;
-	}
+	private String bookshelfName;
 }

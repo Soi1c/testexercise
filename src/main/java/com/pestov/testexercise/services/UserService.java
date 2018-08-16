@@ -2,9 +2,10 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.dto.UserDto;
-import com.pestov.testexercise.errors.UsernameNotFoundException;
+import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
+import com.pestov.testexercise.repositories.BookRepository;
 import com.pestov.testexercise.repositories.BookSharingRepository;
 import com.pestov.testexercise.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,22 +26,22 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 public class UserService implements IUserService {
 
 	private final UserRepository userRepository;
-
 	private final IRegTokenService regTokenService;
-
 	private final IEmailService emailService;
-
 	private final BookSharingRepository bookSharingRepository;
-
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final BookRepository bookRepository;
+
 
 	public UserService(UserRepository userRepository, IRegTokenService regTokenService, IEmailService emailService,
-					   BookSharingRepository bookSharingRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+					   BookSharingRepository bookSharingRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+					   BookRepository bookRepository) {
 		this.userRepository = userRepository;
 		this.regTokenService = regTokenService;
 		this.emailService = emailService;
 		this.bookSharingRepository = bookSharingRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.bookRepository = bookRepository;
 	}
 
 	@Value("${spring.application.url}")
@@ -74,14 +75,26 @@ public class UserService implements IUserService {
 	}
 
 	public BookSharing createBookSharingRequest(BookSharingDto bookSharingDto) {
-		BookSharing bookSharing = new BookSharing(bookSharingDto.getOwnerUserId(), getLoggedUserId(),
-				bookSharingDto.getBook_id());
+		CustomUser owner = userRepository.getOne(bookSharingDto.getOwnerUserId());
+		CustomUser asker = userRepository.getOne(bookSharingDto.getAskingUserId());
+		Book book = bookRepository.getOne(bookSharingDto.getBook_id());
+		BookSharing bookSharing = new BookSharing(owner, asker, book);
 		bookSharingRepository.save(bookSharing);
 		return bookSharing;
 	}
 
-	public List<BookSharing> getMyRequests() {
-		return bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(getLoggedUserId());
+	public List<BookSharingDto> getMyRequests() {
+		List<BookSharing> myRequests = bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(getLoggedUserId());
+		List<BookSharingDto> myRequestsDto = null;
+		for (BookSharing bookSharing: myRequests) {
+			BookSharingDto booksharingDto = new BookSharingDto();
+			booksharingDto.setAskingUsername(bookSharing.getAskingUser().getEmail());
+			booksharingDto.setBookName(bookSharing.getBook().getName());
+			booksharingDto.setBookshelfName(bookSharing.getBook().getBookshelf().getName());
+			booksharingDto.setId(bookSharing.getId());
+			myRequestsDto.add(booksharingDto);
+		}
+		return myRequestsDto;
 	}
 
 	public BookSharing allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {

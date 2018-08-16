@@ -1,10 +1,21 @@
 package com.pestov.testexercise.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "bookshelves")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
 public class Bookshelf {
 
 	@Id
@@ -12,31 +23,20 @@ public class Bookshelf {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "user_id")
-	private Long userId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private CustomUser user;
 
 	private String name;
 
+	@JsonIgnore
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="bookshelf")
+	private List<Book> books = new ArrayList<>();
+
 	public Bookshelf(){}
 
-	public Bookshelf(Long userId, String name) {
-		this.userId = userId;
-		this.name = name;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
+	public Bookshelf(CustomUser user, String name) {
+		this.user = user;
 		this.name = name;
 	}
 }

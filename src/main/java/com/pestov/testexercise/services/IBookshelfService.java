@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IBookshelfService {
 
-	Bookshelf saveNewBookshelf(Long userId, BookshelfDto bookshelfDto);
+	Bookshelf saveNewBookshelf(BookshelfDto bookshelfDto);
 
 	List<Bookshelf> bookshelvesByUser(Long userId);
 

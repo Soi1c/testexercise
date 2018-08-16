@@ -16,7 +16,7 @@ public interface IUserService {
 
 	BookSharing createBookSharingRequest(BookSharingDto bookSharingDto);
 
-	List<BookSharing> getMyRequests();
+	List<BookSharingDto> getMyRequests();
 
 	BookSharing allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
 

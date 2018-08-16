@@ -1,11 +1,16 @@
 package com.pestov.testexercise.models;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name="reg_token")
+@Getter
+@Setter
 public class RegToken {
 
 	@OneToOne(targetEntity = CustomUser.class)
@@ -23,29 +28,5 @@ public class RegToken {
 
 	public RegToken(CustomUser customUserId) {
 		this.customUser = customUserId;
-	}
-
-	public CustomUser getUserId() {
-		return customUser;
-	}
-
-	public void setUserId(CustomUser customUserId) {
-		this.customUser = customUserId;
-	}
-
-	public String getRegToken() {
-		return regToken;
-	}
-
-	public void setRegToken(String regToken) {
-		this.regToken = regToken;
-	}
-
-	public LocalDateTime getCreationTime() {
-		return creationTime;
-	}
-
-	public void setCreationTime(LocalDateTime creationTime) {
-		this.creationTime = creationTime;
 	}
 }

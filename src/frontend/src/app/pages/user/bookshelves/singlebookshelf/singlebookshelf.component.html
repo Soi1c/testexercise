@@ -1,7 +1,7 @@
 <div *ngIf="isListShowable()">
   <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
     <div class="input__wrapper">
-      <app-input-text [label]="true" inputType="text" formControlName="bookshelfId" inputPlaceholder="ID"></app-input-text>
+      <app-input-text [label]="true" inputType="text" formControlName="bookshelf" inputPlaceholder="ID"></app-input-text>
       <app-input-text [label]="true" inputType="text" formControlName="bookshelfName" inputPlaceholder="Название книжной полки"></app-input-text>
     </div>
     <app-error [error]="errors"></app-error>

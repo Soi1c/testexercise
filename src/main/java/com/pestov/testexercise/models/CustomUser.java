@@ -1,9 +1,19 @@
 package com.pestov.testexercise.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
 public class CustomUser {
     @Id
     @Column(unique = true, nullable = false)
@@ -18,6 +28,18 @@ public class CustomUser {
     @Column(name="is_active")
     private boolean isActive;
 
+    @JsonIgnore
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
+    private List<Bookshelf> bookshelves = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="ownerUser")
+	private List<BookSharing> ownerBooksharings = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="askingUser")
+	private List<BookSharing> askingBooksharings = new ArrayList<>();
+
     public CustomUser() {}
 
     public CustomUser(String email, String password) {
@@ -25,36 +47,4 @@ public class CustomUser {
         this.password = password;
         this.isActive = false;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isActive() {
-		return isActive;
-	}
-
-	public void setActive(boolean active) {
-		isActive = active;
-	}
 }

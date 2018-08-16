@@ -3,6 +3,7 @@ package com.pestov.testexercise.services;
 import com.pestov.testexercise.dto.BookDto;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.BookSharing;
+import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.models.Page;
 import com.pestov.testexercise.repositories.BookRepository;
 import com.pestov.testexercise.repositories.BookSharingRepository;
@@ -39,8 +40,8 @@ public class BookService implements IBookService {
 		this.userService = userService;
 	}
 
-	public Book saveNewBook(BookDto bookDto) {
-		Book book = new Book(bookDto);
+	public Book saveNewBook(BookDto bookDto, Bookshelf bookshelf) {
+		Book book = new Book(bookDto, bookshelf);
 		bookRepository.save(book);
 		return book;
 	}
@@ -96,14 +97,14 @@ public class BookService implements IBookService {
 
 	public void changeBookshelf(Long bookId, Long bookshelfId) {
 		Book book = bookRepository.getOne(bookId);
-		book.setBookshelfId(bookshelfId);
+		book.setBookshelf(bookshelfService.getBookshelfById(bookshelfId));
 		bookRepository.save(book);
 	}
 
 	public boolean isBookBelongToUser(long bookId) {
-		Long bookshelfId = bookRepository.getOne(bookId).getBookshelfId();
+		Bookshelf bookshelf = bookRepository.getOne(bookId).getBookshelf();
 		return bookshelfService.bookshelvesByUser(getLoggedUserId())
-				.contains(bookshelfService.getBookshelfById(bookshelfId));
+				.contains(bookshelf);
 	}
 
 	public List<Book> allBooksByBookshelf(Long bookshelfId) {
@@ -128,13 +129,14 @@ public class BookService implements IBookService {
 	private int divideBookToPages(File file, Long bookId) throws IOException {
 		List<String> lines = org.apache.commons.io.IOUtils.readLines(new FileReader(file));
 		int pageNumber = 1;
+		Book book = bookRepository.getOne(bookId);
 		while (!lines.isEmpty()) {
 			if (lines.size() > 30) {
 				String pageText = "";
 				for (int i = 0; i < 30; i++) {
 					pageText = pageText.concat(lines.get(i)).concat("\n");
 				}
-				Page page = new Page(bookId, pageNumber++, pageText);
+				Page page = new Page(book, pageNumber++, pageText);
 				pageRepository.save(page);
 				lines.subList(0, 30).clear();
 			} else {
@@ -143,7 +145,7 @@ public class BookService implements IBookService {
 					pageText = pageText.concat(line).concat("\n");
 				}
 				lines.clear();
-				Page page = new Page(bookId, pageNumber++, pageText);
+				Page page = new Page(book, pageNumber++, pageText);
 				pageRepository.save(page);
 				lines.clear();
 			}

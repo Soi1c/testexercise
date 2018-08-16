@@ -6,9 +6,12 @@ import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.repositories.BookRepository;
 import com.pestov.testexercise.repositories.BookshelfRepository;
 import com.pestov.testexercise.repositories.PageRepository;
+import com.pestov.testexercise.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
 
 @Service
 public class BookshelfService implements IBookshelfService {
@@ -16,15 +19,18 @@ public class BookshelfService implements IBookshelfService {
 	private final BookshelfRepository bookshelfRepository;
 	private final BookRepository bookRepository;
 	private final PageRepository pageRepository;
+	private final UserRepository userRepository;
 
-	public BookshelfService(BookshelfRepository bookshelfRepository, BookRepository bookRepository, PageRepository pageRepository) {
+	public BookshelfService(BookshelfRepository bookshelfRepository, BookRepository bookRepository,
+							PageRepository pageRepository, UserRepository userRepository) {
 		this.bookshelfRepository = bookshelfRepository;
 		this.bookRepository = bookRepository;
 		this.pageRepository = pageRepository;
+		this.userRepository = userRepository;
 	}
 
-	public Bookshelf saveNewBookshelf(Long userId, BookshelfDto bookshelfDto) {
-		Bookshelf bookshelf = new Bookshelf(userId, bookshelfDto.getName());
+	public Bookshelf saveNewBookshelf(BookshelfDto bookshelfDto) {
+		Bookshelf bookshelf = new Bookshelf(userRepository.getOne(getLoggedUserId()), bookshelfDto.getName());
 		return bookshelfRepository.save(bookshelf);
 	}
 

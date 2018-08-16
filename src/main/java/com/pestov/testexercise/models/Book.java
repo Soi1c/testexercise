@@ -1,13 +1,22 @@
 package com.pestov.testexercise.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pestov.testexercise.dto.BookDto;
+import com.pestov.testexercise.repositories.BookshelfRepository;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "books")
+@Getter
+@Setter
 public class Book {
 
 	@Id
@@ -15,8 +24,9 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "bookshelf_id")
-	private Long bookshelfId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bookshelf_id")
+	private Bookshelf bookshelf;
 
 	private String name;
 
@@ -28,71 +38,30 @@ public class Book {
 	@Column(name = "total_amount")
 	private int pagesAmount;
 
+	@JsonIgnore
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="book")
+	private List<Page> pages = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="book")
+	private List<BookSharing> bookSharings = new ArrayList<>();
+
 	public Book() {}
 
-	public Book(Long bookshelfId, String name) {
-		this.bookshelfId = bookshelfId;
-		this.name = name;
-	}
-
-	public Book(Long bookshelfId, String name, String description) {
-		this.bookshelfId = bookshelfId;
+	public Book(Bookshelf bookshelf, String name, String description) {
+		this.bookshelf = bookshelf;
 		this.name = name;
 		this.description = description;
 	}
 
-	public Book(BookDto bookDto) {
+	public Book(BookDto bookDto, Bookshelf bookshelf) {
 		if (bookDto.getDescription() != null) {
-			this.bookshelfId = bookDto.getBookshelfId();
+			this.bookshelf = bookshelf;
 			this.name = bookDto.getName();
 			this.description = bookDto.getDescription();
 		} else {
-			this.bookshelfId = bookDto.getBookshelfId();
+			this.bookshelf = bookshelf;
 			this.name = bookDto.getName();
 		}
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Long getBookshelfId() {
-		return bookshelfId;
-	}
-
-	public void setBookshelfId(Long bookshelfId) {
-		this.bookshelfId = bookshelfId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public int getLastPage() {
-		return lastPage;
-	}
-
-	public void setLastPage(int lastPage) {
-		this.lastPage = lastPage;
-	}
-
-	public int getPagesAmount() {
-		return pagesAmount;
-	}
-
-	public void setPagesAmount(int pagesAmount) {
-		this.pagesAmount = pagesAmount;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 }

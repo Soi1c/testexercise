@@ -3,6 +3,7 @@ package com.pestov.testexercise.controllers;
 import com.pestov.testexercise.dto.BookDto;
 import com.pestov.testexercise.errors.ApiError;
 import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.models.Page;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
@@ -27,7 +28,6 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 public class BookController {
 
 	private final IBookService bookService;
-
 	private final IBookshelfService bookshelfService;
 
 	public BookController(IBookService bookService, IBookshelfService bookshelfService) {
@@ -38,7 +38,8 @@ public class BookController {
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<Book> addNewBook(@RequestBody BookDto bookDto) {
-		Book book = bookService.saveNewBook(bookDto);
+		Bookshelf bookshelf = bookshelfService.getBookshelfById(bookDto.getBookshelfId());
+		Book book = bookService.saveNewBook(bookDto, bookshelf);
 		return new ResponseEntity<>(book, HttpStatus.OK);
 	}
 
@@ -87,7 +88,7 @@ public class BookController {
 	@ResponseBody
 	public ResponseEntity<Page> getPage(@PathVariable Long bookId, @PathVariable int pageNum) {
 		if (!bookService.isBookBelongToUser(bookId)) {
-			return new ResponseEntity(HttpStatus.FORBIDDEN);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		return new ResponseEntity<>(bookService.getPageByNum(bookId, pageNum), HttpStatus.OK);
 	}
@@ -96,10 +97,10 @@ public class BookController {
 	@ResponseBody
 	public ResponseEntity<Page> continueReading(@PathVariable Long bookId) {
 		if (bookService.getBookById(bookId) == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		if (!bookService.isBookBelongToUser(bookId)) {
-			return new ResponseEntity(HttpStatus.FORBIDDEN);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		Page lastReadPage = bookService.continueReading(bookId);
 		return new ResponseEntity<>(lastReadPage, HttpStatus.OK);
@@ -113,7 +114,7 @@ public class BookController {
 		}
 		if (!bookshelfService.bookshelvesByUser(getLoggedUserId())
 				.contains(bookshelfService.getBookshelfById(bookshelfId))) {
-			return new ResponseEntity("Bookshelf does not belong to user!!!", HttpStatus.FORBIDDEN);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		bookService.changeBookshelf(bookId, bookshelfId);
 		return new ResponseEntity(HttpStatus.OK);

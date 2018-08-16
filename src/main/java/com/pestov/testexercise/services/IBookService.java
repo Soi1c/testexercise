@@ -2,6 +2,7 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookDto;
 import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.models.Page;
 
 import java.io.File;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface IBookService {
 
-	Book saveNewBook(BookDto bookDto);
+	Book saveNewBook(BookDto bookDto, Bookshelf bookshelf);
 
 	void addTextToBook(File file, Long bookId);
 

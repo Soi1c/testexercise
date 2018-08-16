@@ -1,8 +1,5 @@
 package com.pestov.testexercise;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.models.CustomUser;
@@ -15,13 +12,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -42,47 +37,32 @@ public class FixtureLoader implements ApplicationListener<ApplicationReadyEvent>
 		loadFixtures();
 	}
 
+	@Transactional
 	public void loadFixtures() {
-		loadUsers();
-		loadBookshelves();
-		loadBooks();
-	}
-
-	@Transactional
-	public void loadUsers() {
 		userRepository.deleteAllInBatch();
-		List<CustomUser> customUsers = loadFromJson("fixtures/users.json", CustomUser.class);
-		userRepository.saveAll(customUsers);
-		log.info(String.valueOf(customUsers.size()).concat(" users loaded from fixture"));
-	}
-
-	@Transactional
-	public void loadBookshelves() {
 		bookshelfRepository.deleteAllInBatch();
-		List<Bookshelf> bookshelves = loadFromJson("fixtures/bookshelves.json", Bookshelf.class);
-		bookshelfRepository.saveAll(bookshelves);
-		log.info(String.valueOf(bookshelves.size()).concat(" bookshelves loaded from fixture"));
-	}
-
-	@Transactional
-	public void loadBooks() {
 		bookRepository.deleteAllInBatch();
-		List<Book> books = loadFromJson("fixtures/books.json", Book.class);
+		CustomUser customUser1 = new CustomUser("test@test.com", "$2a$10$/lZmy.ZMWCBmLlaw78/JaevmM.VjqQthF0T9avAunsVBE7019sIVy");
+		CustomUser customUser2 = new CustomUser("test1@test.com", "$2a$10$/lZmy.ZMWCBmLlaw78/JaevmM.VjqQthF0T9avAunsVBE7019sIVy");
+		CustomUser customUser3 = new CustomUser("test2@test.com", "$2a$10$/lZmy.ZMWCBmLlaw78/JaevmM.VjqQthF0T9avAunsVBE7019sIVy");
+		CustomUser customUser4 = new CustomUser("test3@test.com", "$2a$10$/lZmy.ZMWCBmLlaw78/JaevmM.VjqQthF0T9avAunsVBE7019sIVy");
+		List<CustomUser> customUsers = Stream.of(customUser1, customUser2, customUser3, customUser4)
+				.peek(cu -> cu.setActive(true))
+				.collect(Collectors.toList());
+		userRepository.saveAll(customUsers);
+		log.info(String.valueOf(customUsers.size()).concat(" users loaded from fixtures"));
+
+		Bookshelf bookshelf1 = new Bookshelf(customUser2,"Первая полка пользователя test1");
+		Bookshelf bookshelf2 = new Bookshelf(customUser2,"Вторая полка пользователя test1");
+		Bookshelf bookshelf3 = new Bookshelf(customUser2,"Третья полка пользователя test1");
+		List<Bookshelf> bookshelves = Arrays.asList(bookshelf1, bookshelf2, bookshelf3);
+		bookshelfRepository.saveAll(bookshelves);
+		log.info(String.valueOf(bookshelves.size()).concat(" bookshelves loaded from fixtures"));
+
+		Book book1 = new Book(bookshelf1, "Первая книга первой полки юзера test1", "Я заебался фикстуры переделывать");
+		Book book2 = new Book(bookshelf1, "Вторая книга первой полки юзера test1", "Убейте меня");
+		List<Book> books = Arrays.asList(book1, book2);
 		bookRepository.saveAll(books);
-		log.info(String.valueOf(books.size()).concat(" books loaded from fixture"));
-	}
-
-	public <T> T loadFromJson(String resourcePath, Class<?> target) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		InputStream resource = getClass().getClassLoader().getResourceAsStream(resourcePath);
-
-		try (Reader reader = new InputStreamReader(resource, UTF_8)) {
-			final Class<?> elementClass = Class.forName(target.getName());
-			final TypeFactory typeFactory = objectMapper.getTypeFactory();
-			final CollectionType valueType = typeFactory.constructCollectionType(List.class, elementClass);
-			return objectMapper.readValue(reader, valueType);
-		} catch (IOException | ClassNotFoundException e) {
-			throw new IllegalStateException("Ошибка при загрузке " + resourcePath + ": " + e.getMessage());
-		}
+		log.info(String.valueOf(books.size()).concat(" books loaded from fixtures"));
 	}
 }

@@ -1,10 +1,17 @@
 package com.pestov.testexercise.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "book_sharing")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
 public class BookSharing {
 
 	@Id
@@ -12,11 +19,13 @@ public class BookSharing {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "owner_user_id")
-	private Long ownerUserId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner_user")
+	private CustomUser ownerUser;
 
-	@Column(name = "asking_user_id")
-	private Long askingUserId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "asking_user")
+	private CustomUser askingUser;
 
 	@Column(name = "is_allowed")
 	private boolean allowed = false;
@@ -24,8 +33,9 @@ public class BookSharing {
 	@Column(name = "expire_date")
 	private LocalDate expireDate;
 
-	@Column(name = "bookId")
-	private Long bookId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "book")
+	private Book book;
 
 	@Column(name = "refuse_description")
 	private String refuseDescription;
@@ -35,76 +45,16 @@ public class BookSharing {
 
 	public BookSharing() {}
 
-	public BookSharing(Long ownerUserId, Long askingUserId, LocalDate expireDate, Long bookId) {
-		this.ownerUserId = ownerUserId;
-		this.askingUserId = askingUserId;
+	public BookSharing(CustomUser ownerUser, CustomUser askingUser, LocalDate expireDate, Book book) {
+		this.ownerUser = ownerUser;
+		this.askingUser = askingUser;
 		this.expireDate = expireDate;
-		this.bookId = bookId;
+		this.book = book;
 	}
 
-	public BookSharing(Long ownerUserId, Long askingUserId, Long bookId) {
-		this.ownerUserId = ownerUserId;
-		this.askingUserId = askingUserId;
-		this.bookId = bookId;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Long getOwnerUserId() {
-		return ownerUserId;
-	}
-
-	public void setOwnerUserId(Long ownerUserId) {
-		this.ownerUserId = ownerUserId;
-	}
-
-	public Long getAskingUserId() {
-		return askingUserId;
-	}
-
-	public void setAskingUserId(Long askingUserId) {
-		this.askingUserId = askingUserId;
-	}
-
-	public boolean isAllowed() {
-		return allowed;
-	}
-
-	public void setAllowed(boolean allowed) {
-		this.allowed = allowed;
-	}
-
-	public LocalDate getExpireDate() {
-		return expireDate;
-	}
-
-	public void setExpireDate(LocalDate expireDate) {
-		this.expireDate = expireDate;
-	}
-
-	public Long getBookId() {
-		return bookId;
-	}
-
-	public void setBookId(Long bookId) {
-		this.bookId = bookId;
-	}
-
-	public String getRefuseDescription() {
-		return refuseDescription;
-	}
-
-	public void setRefuseDescription(String refuseDescription) {
-		this.refuseDescription = refuseDescription;
-	}
-
-	public int getLastPage() {
-		return lastPage;
-	}
-
-	public void setLastPage(int lastPage) {
-		this.lastPage = lastPage;
+	public BookSharing(CustomUser ownerUser, CustomUser askingUser, Book book) {
+		this.ownerUser = ownerUser;
+		this.askingUser = askingUser;
+		this.book = book;
 	}
 }

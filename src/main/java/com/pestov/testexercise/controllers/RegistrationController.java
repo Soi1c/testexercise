@@ -31,9 +31,9 @@ public class RegistrationController {
 	@ResponseBody
 	public ResponseEntity approveUser(@RequestParam String token) {
 		if (regTokenService.approveUserAndDeleteToken(token)) {
-			return new ResponseEntity("token approved", HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.OK).build();
 		} else {
-			return new ResponseEntity("token not approved", HttpStatus.NOT_ACCEPTABLE);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 	}
 }
