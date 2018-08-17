@@ -14,19 +14,19 @@ public interface IUserService {
 
 	List<UserDto> getUsers();
 
-	BookSharing createBookSharingRequest(BookSharingDto bookSharingDto);
+	void createBookSharingRequest(BookSharingDto bookSharingDto);
 
 	List<BookSharingDto> getMyRequests();
 
-	BookSharing allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
+	BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
 
-	BookSharing refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
+	BookSharingDto refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
 
 	void deleteExpiredBooksharings(LocalDate yesterday);
 
-	List<BookSharing> myRefusedRequests();
+	List<BookSharingDto> myRefusedRequests();
 
-	List<BookSharing> mySharedBooks();
+	List<BookSharingDto> mySharedBooks();
 
 	boolean checkBookShared(Long bookId);
 

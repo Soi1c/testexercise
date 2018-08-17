@@ -1,6 +1,8 @@
 package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookDto;
+import com.pestov.testexercise.dto.PageDto;
+import com.pestov.testexercise.mapper.Mappers;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.Bookshelf;
@@ -11,9 +13,11 @@ import com.pestov.testexercise.repositories.PageRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
@@ -22,77 +26,86 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 public class BookService implements IBookService {
 
 	private final BookRepository bookRepository;
-
 	private final PageRepository pageRepository;
-
 	private final BookSharingRepository bookSharingRepository;
-
 	private final IBookshelfService bookshelfService;
-
 	private final IUserService userService;
+	private final Mappers mappers;
 
-	public BookService(BookRepository bookRepository, PageRepository pageRepository,
-					   BookSharingRepository bookSharingRepository, IBookshelfService bookshelfService, IUserService userService) {
+	public BookService(BookRepository bookRepository,
+					   PageRepository pageRepository,
+					   BookSharingRepository bookSharingRepository,
+					   IBookshelfService bookshelfService,
+					   IUserService userService,
+					   Mappers mappers) {
 		this.bookRepository = bookRepository;
 		this.pageRepository = pageRepository;
 		this.bookSharingRepository = bookSharingRepository;
 		this.bookshelfService = bookshelfService;
 		this.userService = userService;
+		this.mappers = mappers;
 	}
 
-	public Book saveNewBook(BookDto bookDto, Bookshelf bookshelf) {
+	public BookDto saveNewBook(BookDto bookDto, Bookshelf bookshelf) {
 		Book book = new Book(bookDto, bookshelf);
 		bookRepository.save(book);
-		return book;
+		bookDto = mappers.getBookMapper().map(book, bookDto);
+		return bookDto;
 	}
 
-	public Book updateBook(Long bookId, BookDto bookDto) {
+	public BookDto updateBook(Long bookId, BookDto bookDto) {
 		Book book = bookRepository.getOne(bookId);
 		book.setName(bookDto.getName());
 		book.setDescription(bookDto.getDescription());
 		bookRepository.save(book);
-		return book;
+		mappers.getBookMapper().map(book, bookDto);
+		return bookDto;
 	}
 
 	public void deleteBook(Long bookId) {
 		bookRepository.deleteById(bookId);
 	}
 
-	public Book getBookById(Long bookId) {
-		return bookRepository.getOne(bookId);
+	public BookDto getBookById(Long bookId) {
+		Book book =  bookRepository.getOne(bookId);
+		BookDto bookDto = new BookDto();
+		mappers.getBookMapper().map(book, bookDto);
+		return bookDto;
 	}
 
-	public String getTextOfPage(Long bookId, int numeration) {
-		Page targetPage = pageRepository.findPageByBookIdAndNumeration(bookId, numeration);
-		Book book = bookRepository.getOne(bookId);
-		book.setLastPage(numeration);
-		bookRepository.save(book);
-		return targetPage.getText();
-	}
-
-	public Page getPageByNum(Long bookId, int pageNum) {
+	public PageDto getPageByNum(Long bookId, int pageNum) {
 		Book book = bookRepository.getOne(bookId);
 		Page page = pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
 		book.setLastPage(pageNum);
 		bookRepository.save(book);
-		return page;
+		PageDto pageDto = new PageDto();
+		mappers.getPageMapper().map(page, pageDto);
+		return pageDto;
 	}
 
-	public Page getSharedPageByNum(Long bookId, int pageNum) {
+	public PageDto getSharedPageByNum(Long bookId, int pageNum) {
 		BookSharing bookSharing = userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId);
 		Page page = pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
 		bookSharing.setLastPage(pageNum);
 		bookSharingRepository.save(bookSharing);
-		return page;
+		PageDto pageDto = new PageDto();
+		mappers.getPageMapper().map(page, pageDto);
+		return pageDto;
 	}
 
-	public Page continueReading(Long bookId) {
-		return pageRepository.findPageByBookIdAndNumeration(bookId, bookRepository.getOne(bookId).getLastPage());
+	public PageDto continueReading(Long bookId) {
+		Page page =  pageRepository.findPageByBookIdAndNumeration(bookId, bookRepository.getOne(bookId).getLastPage());
+		PageDto pageDto = new PageDto();
+		mappers.getPageMapper().map(page, pageDto);
+		return pageDto;
 	}
 
-	public Page continueReadingSharedBook(Long bookId) {
-		return pageRepository.findPageByBookIdAndNumeration(bookId,
+	public PageDto continueReadingSharedBook(Long bookId) {
+		Page page = pageRepository.findPageByBookIdAndNumeration(bookId,
 				userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId).getLastPage());
+		PageDto pageDto = new PageDto();
+		mappers.getPageMapper().map(page, pageDto);
+		return pageDto;
 	}
 
 	public void changeBookshelf(Long bookId, Long bookshelfId) {
@@ -103,15 +116,21 @@ public class BookService implements IBookService {
 
 	public boolean isBookBelongToUser(long bookId) {
 		Bookshelf bookshelf = bookRepository.getOne(bookId).getBookshelf();
-		return bookshelfService.bookshelvesByUser(getLoggedUserId())
+		return bookshelfService.bookshelfInstancesByUser(getLoggedUserId())
 				.contains(bookshelf);
 	}
 
-	public List<Book> allBooksByBookshelf(Long bookshelfId) {
-		return bookRepository.findAllByBookshelfId(bookshelfId);
+	public List<BookDto> allBooksByBookshelf(Long bookshelfId) {
+		List<Book> books = bookRepository.findAllByBookshelfId(bookshelfId);
+		List<BookDto> targetDto = new ArrayList<>();
+		for (Book book: books) {
+			targetDto.add(mappers.getBookMapper().map(book, new BookDto()));
+		}
+		return targetDto;
 	}
 
 	@Async
+	@Transactional
 	public void addTextToBook(File file, Long bookId) {
 		if (pageRepository.existsByBookId(bookId)) pageRepository.deleteAllByBookId(bookId);
 		int pageAmount = 0;

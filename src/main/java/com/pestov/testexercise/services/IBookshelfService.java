@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface IBookshelfService {
 
-	Bookshelf saveNewBookshelf(BookshelfDto bookshelfDto);
+	BookshelfDto saveNewBookshelf(BookshelfDto bookshelfDto);
 
-	List<Bookshelf> bookshelvesByUser(Long userId);
+	List<BookshelfDto> bookshelvesByUser(Long userId);
+
+	List<Bookshelf> bookshelfInstancesByUser(Long userId);
 
 	void deleteBookshelf(Long id);
 

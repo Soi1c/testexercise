@@ -2,7 +2,6 @@ package com.pestov.testexercise.controllers;
 
 import com.pestov.testexercise.services.IRegTokenService;
 import com.pestov.testexercise.services.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 public class RegistrationController {
 
     private final IUserService userService;
-
 	private final IRegTokenService regTokenService;
 
 	public RegistrationController(IUserService userService, IRegTokenService regTokenService) {

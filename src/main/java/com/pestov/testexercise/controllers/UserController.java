@@ -1,11 +1,7 @@
 package com.pestov.testexercise.controllers;
 
-import com.pestov.testexercise.dto.BookSharingDto;
-import com.pestov.testexercise.dto.UserDto;
-import com.pestov.testexercise.models.Book;
-import com.pestov.testexercise.models.BookSharing;
-import com.pestov.testexercise.models.Bookshelf;
-import com.pestov.testexercise.models.Page;
+import com.pestov.testexercise.dto.*;
+import com.pestov.testexercise.mapper.Mappers;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import com.pestov.testexercise.services.IUserService;
@@ -23,11 +19,13 @@ public class UserController {
 	private final IUserService userService;
  	private final IBookshelfService bookshelfService;
  	private final IBookService bookService;
+ 	private final Mappers mappers;
 
-	public UserController(IUserService userService, IBookshelfService bookshelfService, IBookService bookService) {
+	public UserController(IUserService userService, IBookshelfService bookshelfService, IBookService bookService, Mappers mappers) {
 		this.userService = userService;
 		this.bookshelfService = bookshelfService;
 		this.bookService = bookService;
+		this.mappers = mappers;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -38,20 +36,20 @@ public class UserController {
 
 	@RequestMapping(value = "{userId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<Bookshelf>> getBookshelvesByUser(@PathVariable Long userId) {
+	public ResponseEntity<List<BookshelfDto>> getBookshelvesByUser(@PathVariable Long userId) {
 		return new ResponseEntity<>(bookshelfService.bookshelvesByUser(userId), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{userId}/bookshelves/{bookshelfId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<Book>> getBooksByBookshelfForUser(@PathVariable Long userId,
-																 @PathVariable Long bookshelfId) {
+	public ResponseEntity<List<BookDto>> getBooksByBookshelfForUser(@PathVariable Long userId,
+																	@PathVariable Long bookshelfId) {
 		return new ResponseEntity<>(bookService.allBooksByBookshelf(bookshelfId), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{userId}/bookshelves/{bookshelfId}/{bookId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Book> getBook(@PathVariable Long userId,
+	public ResponseEntity<BookDto> getBook(@PathVariable Long userId,
 										@PathVariable Long bookshelfId,
 										@PathVariable Long bookId) {
 		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
@@ -59,9 +57,9 @@ public class UserController {
 
 	@RequestMapping(value = "booksharingrequest", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<BookSharing> createBookSharingRequest(@RequestBody BookSharingDto bookSharingDto) {
-		BookSharing bookSharing = userService.createBookSharingRequest(bookSharingDto);
-		return new ResponseEntity<>(bookSharing, HttpStatus.OK);
+	public ResponseEntity createBookSharingRequest(@RequestBody BookSharingDto bookSharingDto) {
+		userService.createBookSharingRequest(bookSharingDto);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@RequestMapping(value = "getmyrequests", method = RequestMethod.GET)
@@ -72,37 +70,37 @@ public class UserController {
 
 	@RequestMapping(value = "allowRequest/{booksharingId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<BookSharing> allowRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
+	public ResponseEntity<BookSharingDto> allowRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
 		return new ResponseEntity<>(userService.allowBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "refuseRequest/{booksharingId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<BookSharing> refuseRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
+	public ResponseEntity<BookSharingDto> refuseRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
 		return new ResponseEntity<>(userService.refuseBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "myrefusedrequests", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<BookSharing>> myRefusedRequests() {
+	public ResponseEntity<List<BookSharingDto>> myRefusedRequests() {
 		return new ResponseEntity<>(userService.myRefusedRequests(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "mysharedbooks", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<BookSharing>> mySharedBooks() {
+	public ResponseEntity<List<BookSharingDto>> mySharedBooks() {
 		return new ResponseEntity<>(userService.mySharedBooks(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "mysharedbooks/{bookId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Book> getSharedBook(@PathVariable Long bookId) {
+	public ResponseEntity<BookDto> getSharedBook(@PathVariable Long bookId) {
 		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "mysharedbooks/{bookId}/pages/{pageNum}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Page> getSharedPage(@PathVariable Long bookId, @PathVariable int pageNum) {
+	public ResponseEntity<PageDto> getSharedPage(@PathVariable Long bookId, @PathVariable int pageNum) {
 		if (!userService.checkBookShared(bookId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
@@ -111,7 +109,7 @@ public class UserController {
 
 	@RequestMapping(value = "mysharedbooks/{bookId}/continuereading", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Page> continueReadSharedBook(@PathVariable Long bookId) {
+	public ResponseEntity<PageDto> continueReadSharedBook(@PathVariable Long bookId) {
 		if (!userService.checkBookShared(bookId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}

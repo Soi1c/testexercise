@@ -2,9 +2,8 @@ package com.pestov.testexercise.controllers;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pestov.testexercise.dto.BookDto;
 import com.pestov.testexercise.dto.BookshelfDto;
-import com.pestov.testexercise.models.Book;
-import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import org.json.JSONObject;
@@ -32,23 +31,23 @@ public class BookshelfController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	@JsonIgnore
-	public ResponseEntity<Bookshelf> submit(@RequestBody BookshelfDto request) {
+	public ResponseEntity<BookshelfDto> submit(@RequestBody BookshelfDto request) {
 		if (request.getName() == null || request.getName().equals("")) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 		}
-		Bookshelf newBookshelf = bookshelfService.saveNewBookshelf(request);
-		return new ResponseEntity<>(newBookshelf, HttpStatus.OK);
+		BookshelfDto resultDto = bookshelfService.saveNewBookshelf(request);
+		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<Bookshelf>> list() {
+	public ResponseEntity<List<BookshelfDto>> list() {
 		return new ResponseEntity<>(bookshelfService.bookshelvesByUser(getLoggedUserId()), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<Book>> getBooksByBookshelf(@PathVariable Long id) {
+	public ResponseEntity<List<BookDto>> getBooksByBookshelf(@PathVariable Long id) {
 		return new ResponseEntity<>(bookService.allBooksByBookshelf(id), HttpStatus.OK);
 	}
 

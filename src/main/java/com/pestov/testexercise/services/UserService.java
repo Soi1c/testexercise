@@ -2,6 +2,7 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.dto.UserDto;
+import com.pestov.testexercise.mapper.Mappers;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
@@ -31,17 +32,23 @@ public class UserService implements IUserService {
 	private final BookSharingRepository bookSharingRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final BookRepository bookRepository;
+	private final Mappers mappers;
 
 
-	public UserService(UserRepository userRepository, IRegTokenService regTokenService, IEmailService emailService,
-					   BookSharingRepository bookSharingRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-					   BookRepository bookRepository) {
+	public UserService(UserRepository userRepository,
+					   IRegTokenService regTokenService,
+					   IEmailService emailService,
+					   BookSharingRepository bookSharingRepository,
+					   BCryptPasswordEncoder bCryptPasswordEncoder,
+					   BookRepository bookRepository,
+					   Mappers mappers) {
 		this.userRepository = userRepository;
 		this.regTokenService = regTokenService;
 		this.emailService = emailService;
 		this.bookSharingRepository = bookSharingRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.bookRepository = bookRepository;
+		this.mappers = mappers;
 	}
 
 	@Value("${spring.application.url}")
@@ -74,13 +81,12 @@ public class UserService implements IUserService {
 		return usersDtoList;
 	}
 
-	public BookSharing createBookSharingRequest(BookSharingDto bookSharingDto) {
+	public void createBookSharingRequest(BookSharingDto bookSharingDto) {
 		CustomUser owner = userRepository.getOne(bookSharingDto.getOwnerUserId());
 		CustomUser asker = userRepository.getOne(bookSharingDto.getAskingUserId());
 		Book book = bookRepository.getOne(bookSharingDto.getBook_id());
 		BookSharing bookSharing = new BookSharing(owner, asker, book);
 		bookSharingRepository.save(bookSharing);
-		return bookSharing;
 	}
 
 	public List<BookSharingDto> getMyRequests() {
@@ -97,22 +103,24 @@ public class UserService implements IUserService {
 		return myRequestsDto;
 	}
 
-	public BookSharing allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
+	public BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
 		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
 		bookSharing.setAllowed(true);
 		if (bookSharingDto.getExpireDate() != null) {
 			bookSharing.setExpireDate(bookSharingDto.getExpireDate());
 		}
 		bookSharingRepository.save(bookSharing);
-		return bookSharing;
+		mappers.getBooksharingMapper().map(bookSharing, bookSharingDto);
+		return bookSharingDto;
 	}
 
-	public BookSharing refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
+	public BookSharingDto refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
 		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
 		bookSharing.setAllowed(false);
 		bookSharing.setRefuseDescription(bookSharingDto.getRefuseDescription());
 		bookSharingRepository.save(bookSharing);
-		return bookSharing;
+		mappers.getBooksharingMapper().map(bookSharing, bookSharingDto);
+		return bookSharingDto;
 	}
 
 	public void deleteExpiredBooksharings(LocalDate yesterday) {
@@ -123,12 +131,22 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public List<BookSharing> myRefusedRequests() {
-		return bookSharingRepository.findAllByAskingUserIdAndAllowedIsFalse(getLoggedUserId());
+	public List<BookSharingDto> myRefusedRequests() {
+		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndAllowedIsFalse(getLoggedUserId());
+		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
+		for (BookSharing bookSharing : bookSharings) {
+			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
+		}
+		return bookSharingDtos;
 	}
 
-	public List<BookSharing> mySharedBooks() {
-		return bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(getLoggedUserId());
+	public List<BookSharingDto> mySharedBooks() {
+		List<BookSharing> bookSharings =  bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(getLoggedUserId());
+		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
+		for (BookSharing bookSharing : bookSharings) {
+			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
+		}
+		return bookSharingDtos;
 	}
 
 	public boolean checkBookShared(Long bookId) {

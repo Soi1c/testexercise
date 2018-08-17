@@ -1,22 +1,20 @@
 package com.pestov.testexercise.dto;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
-public class BookDto {
+public class PageDto {
 
 	@Nullable
 	private Long id;
 
 	@Nullable
-	private String name;
+	private int numeration;
 
 	@Nullable
-	private String description;
-
-	@Nullable
-	private long bookshelfId;
+	private String text;
 }

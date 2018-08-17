@@ -1,38 +1,35 @@
 package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookDto;
-import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.dto.PageDto;
 import com.pestov.testexercise.models.Bookshelf;
-import com.pestov.testexercise.models.Page;
 
 import java.io.File;
 import java.util.List;
 
 public interface IBookService {
 
-	Book saveNewBook(BookDto bookDto, Bookshelf bookshelf);
+	BookDto saveNewBook(BookDto bookDto, Bookshelf bookshelf);
 
 	void addTextToBook(File file, Long bookId);
 
-	String getTextOfPage(Long bookId, int pageId);
-
-	Page continueReading(Long bookId);
+	PageDto continueReading(Long bookId);
 
 	void changeBookshelf(Long bookId, Long bookshelfId);
 
 	boolean isBookBelongToUser(long bookId);
 
-	List<Book> allBooksByBookshelf(Long bookshelfId);
+	List<BookDto> allBooksByBookshelf(Long bookshelfId);
 
-	Book getBookById(Long bookId);
+	BookDto getBookById(Long bookId);
 
-	Page getPageByNum(Long bookId, int pageNum);
+	PageDto getPageByNum(Long bookId, int pageNum);
 
-	Book updateBook(Long bookId, BookDto bookDto);
+	BookDto updateBook(Long bookId, BookDto bookDto);
 
 	void deleteBook(Long bookId);
 
-	Page getSharedPageByNum(Long bookId, int pageNum);
+	PageDto getSharedPageByNum(Long bookId, int pageNum);
 
-	Page continueReadingSharedBook(Long bookId);
+	PageDto continueReadingSharedBook(Long bookId);
 }
