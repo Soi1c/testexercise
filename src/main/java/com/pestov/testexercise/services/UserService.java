@@ -81,7 +81,7 @@ public class UserService implements IUserService {
 
 	public void createBookSharingRequest(BookSharingDto bookSharingDto, Long customUserId) {
 		CustomUser owner = userRepository.getOne(bookSharingDto.getOwnerUserId());
-		CustomUser asker = userRepository.getOne(bookSharingDto.getAskingUserId());
+		CustomUser asker = userRepository.getOne(customUserId);
 		Book book = bookRepository.getOne(bookSharingDto.getBook_id());
 		BookSharing bookSharing = new BookSharing(owner, asker, book);
 		bookSharingRepository.save(bookSharing);
