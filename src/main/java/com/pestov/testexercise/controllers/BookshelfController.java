@@ -59,10 +59,9 @@ public class BookshelfController {
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<String> renameBookshelf(@RequestBody BookshelfDto bookshelfDto) {
+	public ResponseEntity renameBookshelf(@RequestBody BookshelfDto bookshelfDto) {
 		bookshelfService.renameBookshelf(bookshelfDto);
-		JSONObject response = new JSONObject().put("status", "ok");
-		return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 }
