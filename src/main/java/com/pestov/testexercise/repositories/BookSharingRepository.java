@@ -11,7 +11,7 @@ public interface BookSharingRepository extends JpaRepository<BookSharing, Long> 
 
 	List<BookSharing> findAllByOwnerUserIdAndAllowedIsFalse(Long ownerId);
 
-	List<BookSharing> findAllByAskingUserIdAndAllowedIsFalse(Long askingUserId);
+	List<BookSharing> findAllByAskingUserIdAndRefusedIsTrue (Long askingUserId);
 
 	List<BookSharing> findAllByAskingUserIdAndAllowedIsTrue(Long askingUserId);
 

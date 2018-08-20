@@ -4,11 +4,13 @@ import com.pestov.testexercise.dto.*;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import com.pestov.testexercise.services.IUserService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -55,6 +57,9 @@ public class UserController {
 	@RequestMapping(value = "booksharingrequest", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity createBookSharingRequest(@RequestBody BookSharingDto bookSharingDto, @RequestAttribute Long customUserId) {
+		if (userService.isRequestAlreadySent(bookSharingDto.getBook_id(), customUserId)) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+		}
 		userService.createBookSharingRequest(bookSharingDto, customUserId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -67,13 +72,16 @@ public class UserController {
 
 	@RequestMapping(value = "allowRequest/{booksharingId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<BookSharingDto> allowRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
-		return new ResponseEntity<>(userService.allowBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
+	public ResponseEntity<BookSharingDto> allowRequestById(@PathVariable Long booksharingId,
+														   BookSharingDto bookSharingDto,
+														   @RequestParam(required = false, value = "expireDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate expireDate) {
+		return new ResponseEntity<>(userService.allowBooksharingRequestById(booksharingId, bookSharingDto, expireDate), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "refuseRequest/{booksharingId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<BookSharingDto> refuseRequestById(@PathVariable Long booksharingId, BookSharingDto bookSharingDto) {
+	public ResponseEntity<BookSharingDto> refuseRequestById(@PathVariable Long booksharingId,
+															BookSharingDto bookSharingDto) {
 		return new ResponseEntity<>(userService.refuseBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
 	}
 

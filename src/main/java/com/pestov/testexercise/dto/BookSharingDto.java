@@ -39,4 +39,7 @@ public class BookSharingDto {
 
 	@Nullable
 	private String bookshelfName;
+
+	@Nullable
+	private boolean refused;
 }

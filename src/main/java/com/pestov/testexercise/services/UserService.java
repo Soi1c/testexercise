@@ -101,11 +101,11 @@ public class UserService implements IUserService {
 		return myRequestsDto;
 	}
 
-	public BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto) {
+	public BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto, LocalDate expireDate) {
 		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
 		bookSharing.setAllowed(true);
 		if (bookSharingDto.getExpireDate() != null) {
-			bookSharing.setExpireDate(bookSharingDto.getExpireDate());
+			bookSharing.setExpireDate(expireDate);
 		}
 		bookSharingRepository.save(bookSharing);
 		mappers.getBooksharingMapper().map(bookSharing, bookSharingDto);
@@ -116,6 +116,7 @@ public class UserService implements IUserService {
 		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
 		bookSharing.setAllowed(false);
 		bookSharing.setRefuseDescription(bookSharingDto.getRefuseDescription());
+		bookSharing.setRefused(true);
 		bookSharingRepository.save(bookSharing);
 		mappers.getBooksharingMapper().map(bookSharing, bookSharingDto);
 		return bookSharingDto;
@@ -130,7 +131,7 @@ public class UserService implements IUserService {
 	}
 
 	public List<BookSharingDto> myRefusedRequests(Long customUserId) {
-		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndAllowedIsFalse(customUserId);
+		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndRefusedIsTrue(customUserId);
 		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
 		for (BookSharing bookSharing : bookSharings) {
 			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
@@ -153,5 +154,9 @@ public class UserService implements IUserService {
 
 	public BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId, Long customUserId) {
 		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId);
+	}
+
+	public Boolean isRequestAlreadySent(Long bookId, Long customUserId) {
+		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId) != null;
 	}
 }

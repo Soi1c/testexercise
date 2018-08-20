@@ -20,8 +20,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,10 +35,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestexerciseApplication.class)
-@WebMvcTest(BookshelfController.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-@Ignore
 public class BookshelfControllerTest extends TestexerciseApplicationTests {
 
 	@Autowired
@@ -60,6 +60,7 @@ public class BookshelfControllerTest extends TestexerciseApplicationTests {
 
 		this.mockMvc.perform(post("/bookshelf")
 				.content(mapper.writeValueAsString(bookshelfDto))
+				.contentType(MediaType.APPLICATION_JSON)
 				.characterEncoding("UTF-8")
 				.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk());

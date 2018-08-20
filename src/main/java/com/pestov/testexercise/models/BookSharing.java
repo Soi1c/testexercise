@@ -43,6 +43,8 @@ public class BookSharing {
 	@Column(name = "last_page")
 	private int lastPage = 1;
 
+	private boolean refused = false;
+
 	public BookSharing() {}
 
 	public BookSharing(CustomUser ownerUser, CustomUser askingUser, LocalDate expireDate, Book book) {

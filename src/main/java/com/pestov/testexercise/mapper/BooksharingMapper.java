@@ -22,6 +22,7 @@ public class BooksharingMapper extends AbstractMapper<BookSharing, BookSharingDt
 		target.setOwnerUserId(source.getOwnerUser().getId());
 		target.setExpireDate(source.getExpireDate());
 		target.setRefuseDescription(source.getRefuseDescription());
+		target.setRefused(source.isRefused());
 
 		return target;
 	}
