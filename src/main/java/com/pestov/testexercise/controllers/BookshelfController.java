@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
-
 @Controller
 @RequestMapping(value = "bookshelf")
 public class BookshelfController {
@@ -31,18 +29,18 @@ public class BookshelfController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	@JsonIgnore
-	public ResponseEntity<BookshelfDto> submit(@RequestBody BookshelfDto request) {
+	public ResponseEntity<BookshelfDto> submit(@RequestBody BookshelfDto request, @RequestAttribute Long customUserId) {
 		if (request.getName() == null || request.getName().equals("")) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 		}
-		BookshelfDto resultDto = bookshelfService.saveNewBookshelf(request);
+		BookshelfDto resultDto = bookshelfService.saveNewBookshelf(request, customUserId);
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<BookshelfDto>> list() {
-		return new ResponseEntity<>(bookshelfService.bookshelvesByUser(getLoggedUserId()), HttpStatus.OK);
+	public ResponseEntity<List<BookshelfDto>> list(@RequestAttribute Long customUserId) {
+		return new ResponseEntity<>(bookshelfService.bookshelvesByUser(customUserId), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)

@@ -19,8 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
-
 
 @Service
 @Slf4j
@@ -89,8 +87,8 @@ public class UserService implements IUserService {
 		bookSharingRepository.save(bookSharing);
 	}
 
-	public List<BookSharingDto> getMyRequests() {
-		List<BookSharing> myRequests = bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(getLoggedUserId());
+	public List<BookSharingDto> getMyRequests(Long customUserId) {
+		List<BookSharing> myRequests = bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(customUserId);
 		List<BookSharingDto> myRequestsDto = null;
 		for (BookSharing bookSharing: myRequests) {
 			BookSharingDto booksharingDto = new BookSharingDto();
@@ -131,8 +129,8 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public List<BookSharingDto> myRefusedRequests() {
-		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndAllowedIsFalse(getLoggedUserId());
+	public List<BookSharingDto> myRefusedRequests(Long customUserId) {
+		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndAllowedIsFalse(customUserId);
 		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
 		for (BookSharing bookSharing : bookSharings) {
 			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
@@ -140,8 +138,8 @@ public class UserService implements IUserService {
 		return bookSharingDtos;
 	}
 
-	public List<BookSharingDto> mySharedBooks() {
-		List<BookSharing> bookSharings =  bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(getLoggedUserId());
+	public List<BookSharingDto> mySharedBooks(Long customUserId) {
+		List<BookSharing> bookSharings =  bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(customUserId);
 		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
 		for (BookSharing bookSharing : bookSharings) {
 			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
@@ -149,11 +147,11 @@ public class UserService implements IUserService {
 		return bookSharingDtos;
 	}
 
-	public boolean checkBookShared(Long bookId) {
-		return bookSharingRepository.findByAskingUserIdAndBookId(getLoggedUserId(), bookId).isAllowed();
+	public boolean checkBookShared(Long bookId, Long customUserId) {
+		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId).isAllowed();
 	}
 
-	public BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId) {
-		return bookSharingRepository.findByAskingUserIdAndBookId(getLoggedUserId(), bookId);
+	public BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId, Long customUserId) {
+		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId);
 	}
 }

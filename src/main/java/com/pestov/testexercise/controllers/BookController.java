@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
-
 @Controller
 @RequestMapping(value = "books")
 public class BookController {
@@ -41,8 +39,10 @@ public class BookController {
 
 	@RequestMapping(value = "{bookId}",method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity<BookDto> updateBook(@PathVariable Long bookId, @RequestBody BookDto bookDto) {
-		if (!bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity<BookDto> updateBook(@PathVariable Long bookId,
+											  @RequestBody BookDto bookDto,
+											  @RequestAttribute Long customUserId) {
+		if (!bookService.isBookBelongToUser(bookId, customUserId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		BookDto resultDto = bookService.updateBook(bookId, bookDto);
@@ -51,8 +51,8 @@ public class BookController {
 
  	@RequestMapping(value = "{bookId}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity deleteBook(@PathVariable Long bookId) {
-		if (!bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity deleteBook(@PathVariable Long bookId, @RequestAttribute Long customUserId) {
+		if (!bookService.isBookBelongToUser(bookId, customUserId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		bookService.deleteBook(bookId);
@@ -61,8 +61,10 @@ public class BookController {
 
 
 	@RequestMapping(value = "{bookId}", method = RequestMethod.POST)
-	public ResponseEntity addBookText(@RequestParam("file") MultipartFile file, @PathVariable Long bookId) throws IOException {
-		if (!bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity addBookText(@RequestParam("file") MultipartFile file,
+									  @PathVariable Long bookId,
+									  @RequestAttribute Long customUserId) throws IOException {
+		if (!bookService.isBookBelongToUser(bookId, customUserId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		if (!Objects.requireNonNull(file.getOriginalFilename()).endsWith(".txt")) {
@@ -82,8 +84,10 @@ public class BookController {
 
 	@RequestMapping(value = "{bookId}/pages/{pageNum}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<PageDto> getPage(@PathVariable Long bookId, @PathVariable int pageNum) {
-		if (!bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity<PageDto> getPage(@PathVariable Long bookId,
+										   @PathVariable int pageNum,
+										   @RequestAttribute Long customUserId) {
+		if (!bookService.isBookBelongToUser(bookId, customUserId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		return new ResponseEntity<>(bookService.getPageByNum(bookId, pageNum), HttpStatus.OK);
@@ -91,11 +95,11 @@ public class BookController {
 
 	@RequestMapping(value = "{bookId}/continuereading", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<PageDto> continueReading(@PathVariable Long bookId) {
+	public ResponseEntity<PageDto> continueReading(@PathVariable Long bookId, @RequestAttribute Long customUserId) {
 		if (bookService.getBookById(bookId) == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		if (!bookService.isBookBelongToUser(bookId)) {
+		if (!bookService.isBookBelongToUser(bookId, customUserId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		PageDto lastReadPage = bookService.continueReading(bookId);
@@ -104,11 +108,13 @@ public class BookController {
 
 	@RequestMapping(value = "{bookId}/movetoanotherbookshelf/{bookshelfId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity moveBookToAnotherBookshelf(@PathVariable Long bookId, @PathVariable Long bookshelfId) {
-		if (!bookService.isBookBelongToUser(bookId)) {
+	public ResponseEntity moveBookToAnotherBookshelf(@PathVariable Long bookId,
+													 @PathVariable Long bookshelfId,
+													 @RequestAttribute Long customUserId) {
+		if (!bookService.isBookBelongToUser(bookId, customUserId)) {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-		if (!bookshelfService.bookshelfInstancesByUser(getLoggedUserId())
+		if (!bookshelfService.bookshelfInstancesByUser(customUserId)
 				.contains(bookshelfService.getBookshelfById(bookshelfId))) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}

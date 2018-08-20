@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
-
 @Service
 public class BookshelfService implements IBookshelfService {
 
@@ -36,8 +34,8 @@ public class BookshelfService implements IBookshelfService {
 		this.mappers = mappers;
 	}
 
-	public BookshelfDto saveNewBookshelf(BookshelfDto bookshelfDto) {
-		Bookshelf bookshelf = new Bookshelf(userRepository.getOne(getLoggedUserId()), bookshelfDto.getName());
+	public BookshelfDto saveNewBookshelf(BookshelfDto bookshelfDto, Long customUserId) {
+		Bookshelf bookshelf = new Bookshelf(userRepository.getOne(customUserId), bookshelfDto.getName());
 		bookshelfRepository.save(bookshelf);
 		mappers.getBookshelfMapper().map(bookshelf, bookshelfDto);
 		return bookshelfDto;

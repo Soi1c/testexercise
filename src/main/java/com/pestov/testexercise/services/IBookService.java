@@ -17,7 +17,7 @@ public interface IBookService {
 
 	void changeBookshelf(Long bookId, Long bookshelfId);
 
-	boolean isBookBelongToUser(long bookId);
+	boolean isBookBelongToUser(long bookId, Long customUserid);
 
 	List<BookDto> allBooksByBookshelf(Long bookshelfId);
 
@@ -29,7 +29,7 @@ public interface IBookService {
 
 	void deleteBook(Long bookId);
 
-	PageDto getSharedPageByNum(Long bookId, int pageNum);
+	PageDto getSharedPageByNum(Long bookId, int pageNum, Long customUserId);
 
-	PageDto continueReadingSharedBook(Long bookId);
+	PageDto continueReadingSharedBook(Long bookId, Long customUserId);
 }

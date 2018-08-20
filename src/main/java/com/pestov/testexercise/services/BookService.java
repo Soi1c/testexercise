@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserId;
-
 @Service
 public class BookService implements IBookService {
 
@@ -83,8 +81,8 @@ public class BookService implements IBookService {
 		return pageDto;
 	}
 
-	public PageDto getSharedPageByNum(Long bookId, int pageNum) {
-		BookSharing bookSharing = userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId);
+	public PageDto getSharedPageByNum(Long bookId, int pageNum, Long customUserId) {
+		BookSharing bookSharing = userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId, customUserId);
 		Page page = pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
 		bookSharing.setLastPage(pageNum);
 		bookSharingRepository.save(bookSharing);
@@ -100,9 +98,9 @@ public class BookService implements IBookService {
 		return pageDto;
 	}
 
-	public PageDto continueReadingSharedBook(Long bookId) {
+	public PageDto continueReadingSharedBook(Long bookId, Long customUserId) {
 		Page page = pageRepository.findPageByBookIdAndNumeration(bookId,
-				userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId).getLastPage());
+				userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId, customUserId).getLastPage());
 		PageDto pageDto = new PageDto();
 		mappers.getPageMapper().map(page, pageDto);
 		return pageDto;
@@ -114,9 +112,9 @@ public class BookService implements IBookService {
 		bookRepository.save(book);
 	}
 
-	public boolean isBookBelongToUser(long bookId) {
+	public boolean isBookBelongToUser(long bookId, Long customUserId) {
 		Bookshelf bookshelf = bookRepository.getOne(bookId).getBookshelf();
-		return bookshelfService.bookshelfInstancesByUser(getLoggedUserId())
+		return bookshelfService.bookshelfInstancesByUser(customUserId)
 				.contains(bookshelf);
 	}
 

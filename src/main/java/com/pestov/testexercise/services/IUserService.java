@@ -16,7 +16,7 @@ public interface IUserService {
 
 	void createBookSharingRequest(BookSharingDto bookSharingDto);
 
-	List<BookSharingDto> getMyRequests();
+	List<BookSharingDto> getMyRequests(Long customUserId);
 
 	BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
 
@@ -24,11 +24,11 @@ public interface IUserService {
 
 	void deleteExpiredBooksharings(LocalDate yesterday);
 
-	List<BookSharingDto> myRefusedRequests();
+	List<BookSharingDto> myRefusedRequests(Long customUserId);
 
-	List<BookSharingDto> mySharedBooks();
+	List<BookSharingDto> mySharedBooks(Long customUserId);
 
-	boolean checkBookShared(Long bookId);
+	boolean checkBookShared(Long bookId, Long customUserId);
 
-	BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId);
+	BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId, Long customUserId);
 }

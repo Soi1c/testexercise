@@ -2,7 +2,6 @@ package com.pestov.testexercise.conf;
 
 import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.services.CustomDetailsUserService;
-import com.pestov.testexercise.services.IUserService;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,22 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.pestov.testexercise.conf.SecurityConstants.HEADER_STRING;
-import static com.pestov.testexercise.conf.SecurityConstants.SECRET;
-import static com.pestov.testexercise.conf.SecurityConstants.TOKEN_PREFIX;
+import static com.pestov.testexercise.conf.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private final CustomDetailsUserService customDetailsUserService;
 
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, CustomDetailsUserService customDetailsUserService) {
+	JWTAuthorizationFilter(AuthenticationManager authenticationManager, CustomDetailsUserService customDetailsUserService) {
 		super(authenticationManager);
 		this.customDetailsUserService = customDetailsUserService;
-	}
-
-	public static Long getLoggedUserId() {
-		CustomUser auth = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return auth.getId();
 	}
 
 	@Override
@@ -47,13 +39,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 		chain.doFilter(request, response);
 	}
 
-	private UsernamePasswordAuthenticationToken getAuthenticationToken(HttpServletRequest request) {
+	private UsernamePasswordAuthenticationToken getAuthenticationToken(HttpServletRequest request) throws IOException {
 		String token = request.getHeader(HEADER_STRING);
 		if (token == null) return null;
 		String email = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
 				.getBody().getSubject();
 		UserDetails userDetails = customDetailsUserService.loadUserByUsername(email);
 		CustomUser customUser = customDetailsUserService.loadUserByEmail(email);
+		request.setAttribute("customUserId", customUser.getId());
 
 		return email != null ?
 				new UsernamePasswordAuthenticationToken(customUser, null, userDetails.getAuthorities()) : null;
