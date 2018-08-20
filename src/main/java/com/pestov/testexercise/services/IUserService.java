@@ -14,7 +14,7 @@ public interface IUserService {
 
 	List<UserDto> getUsers();
 
-	void createBookSharingRequest(BookSharingDto bookSharingDto);
+	void createBookSharingRequest(BookSharingDto bookSharingDto, Long customUserId);
 
 	List<BookSharingDto> getMyRequests(Long customUserId);
 

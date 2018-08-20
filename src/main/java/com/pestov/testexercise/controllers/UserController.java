@@ -1,7 +1,6 @@
 package com.pestov.testexercise.controllers;
 
 import com.pestov.testexercise.dto.*;
-import com.pestov.testexercise.mapper.Mappers;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import com.pestov.testexercise.services.IUserService;
@@ -19,13 +18,11 @@ public class UserController {
 	private final IUserService userService;
  	private final IBookshelfService bookshelfService;
  	private final IBookService bookService;
- 	private final Mappers mappers;
 
-	public UserController(IUserService userService, IBookshelfService bookshelfService, IBookService bookService, Mappers mappers) {
+	public UserController(IUserService userService, IBookshelfService bookshelfService, IBookService bookService) {
 		this.userService = userService;
 		this.bookshelfService = bookshelfService;
 		this.bookService = bookService;
-		this.mappers = mappers;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -57,8 +54,8 @@ public class UserController {
 
 	@RequestMapping(value = "booksharingrequest", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity createBookSharingRequest(@RequestBody BookSharingDto bookSharingDto) {
-		userService.createBookSharingRequest(bookSharingDto);
+	public ResponseEntity createBookSharingRequest(@RequestBody BookSharingDto bookSharingDto, @RequestAttribute Long customUserId) {
+		userService.createBookSharingRequest(bookSharingDto, customUserId);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 

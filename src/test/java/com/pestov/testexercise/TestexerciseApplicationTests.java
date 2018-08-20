@@ -1,10 +1,6 @@
 package com.pestov.testexercise;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class TestexerciseApplicationTests {
+
+	protected String authTokenForUserTest1 = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUB0ZXN0LmNvbSIsImV4cCI6MTUzNTYxNjI0NX0.nABPIVbaf6ivyWc4vFoVWTiXr-PmaumvjcpshlqzCuY";
 }

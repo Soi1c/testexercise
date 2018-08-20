@@ -79,7 +79,7 @@ public class UserService implements IUserService {
 		return usersDtoList;
 	}
 
-	public void createBookSharingRequest(BookSharingDto bookSharingDto) {
+	public void createBookSharingRequest(BookSharingDto bookSharingDto, Long customUserId) {
 		CustomUser owner = userRepository.getOne(bookSharingDto.getOwnerUserId());
 		CustomUser asker = userRepository.getOne(bookSharingDto.getAskingUserId());
 		Book book = bookRepository.getOne(bookSharingDto.getBook_id());
@@ -89,7 +89,7 @@ public class UserService implements IUserService {
 
 	public List<BookSharingDto> getMyRequests(Long customUserId) {
 		List<BookSharing> myRequests = bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(customUserId);
-		List<BookSharingDto> myRequestsDto = null;
+		List<BookSharingDto> myRequestsDto = new ArrayList<>();
 		for (BookSharing bookSharing: myRequests) {
 			BookSharingDto booksharingDto = new BookSharingDto();
 			booksharingDto.setAskingUsername(bookSharing.getAskingUser().getEmail());

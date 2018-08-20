@@ -29,11 +29,11 @@ public class BookshelfController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	@JsonIgnore
-	public ResponseEntity<BookshelfDto> submit(@RequestBody BookshelfDto request, @RequestAttribute Long customUserId) {
-		if (request.getName() == null || request.getName().equals("")) {
+	public ResponseEntity<BookshelfDto> submit(@RequestBody BookshelfDto bookshelfDto, @RequestAttribute Long customUserId) {
+		if (bookshelfDto.getName() == null || bookshelfDto.getName().equals("")) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 		}
-		BookshelfDto resultDto = bookshelfService.saveNewBookshelf(request, customUserId);
+		BookshelfDto resultDto = bookshelfService.saveNewBookshelf(bookshelfDto, customUserId);
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}
 
