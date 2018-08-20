@@ -6,6 +6,7 @@ import {ApiService} from "../../services/api.service";
 import {error} from "util";
 import { Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import {validate} from "codelyzer/walkerFactory/walkerFn";
 
 
 @Component({
@@ -19,11 +20,12 @@ export class AuthComponent implements OnInit{
   constructor(private api: ApiService, protected router: Router, protected authService: AuthService){}
 
   ngOnInit() {
-    this.clearForm();
+
     this.form = new FormGroup({
-      username: new FormControl(''),
-      password: new FormControl('',[Validators.required, Validators.pattern(/^[-.\w]+@([\w-]+\.)+[\w-]{2,12}$/)])
+      password: new FormControl('',[Validators.required]),
+      username: new FormControl('',[Validators.required, Validators.pattern(/^[-.\w]+@([\w-]+\.)+[\w-]{2,12}$/)])
     });
+    this.clearForm();
   }
 
 
@@ -66,6 +68,7 @@ export class AuthComponent implements OnInit{
 
   public toggleLoginForm() {
     this.clearForm();
+    this.errors = '';
     this.status = {
       login: true,
       forgotPassword: false,
@@ -77,6 +80,8 @@ export class AuthComponent implements OnInit{
 
   public toggleRegistrationForm() {
     this.clearForm();
+    this.errors = '';
+
     this.status = {
       login: false,
       forgotPassword: false,
@@ -116,7 +121,7 @@ export class AuthComponent implements OnInit{
       forgotPassword: false,
       forgotLogin: false,
       registration: false
-    }
+    };
     console.log("send password on email");
   }
   login(){
@@ -137,7 +142,7 @@ export class AuthComponent implements OnInit{
   }
 
   clearForm(){
-    //this.form.value.username.reset();
+    this.form.reset();
   }
 
 

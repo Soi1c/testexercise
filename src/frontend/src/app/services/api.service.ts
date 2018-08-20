@@ -38,8 +38,17 @@ const
     body: JSON.parse(response._body)
   } : {...response}),
 
-  prepareSuccess = response =>
-    prepare(response).body,
+  prepareSuccess = response =>{
+    console.log(response);
+    let res = prepare(response).body;
+    console.log(res);
+    if(!res){
+      res = "ok";
+    }
+    //return prepare(response).body;
+    return res;
+  },
+
 
   prepareError = response => {
     const error = prepare(response);
@@ -130,10 +139,10 @@ class BookShelf extends HttpRequest{
     super(http);
   }
 
-  getBookShelves(): Observable<any>{
+  getBookShelves(filter): Observable<any>{
 
     let token = `${this.auth.access_token}`;
-    return this.get(`${BASE}/bookshelf`,null, authorisedOptions(token));
+    return this.get(`${BASE}/bookshelf`,filter, authorisedOptions(token));
   }
 
   deleteBookshelfById(id): Observable<any>{
@@ -228,12 +237,12 @@ class User extends HttpRequest {
 
   getMyRequests():Observable <any>{
     let token = `${this.auth.access_token}`;
-    return this.get(`${BASE}/users/getMyRequests`, null, authorisedOptions(token));
+    return this.get(`${BASE}/users/getmyrequests`, null, authorisedOptions(token));
   }
 
-  allowRequest(id):Observable<any>{
+  allowRequest(id,body):Observable<any>{
     let token = `${this.auth.access_token}`;
-    return this.put(`${BASE}/users/allowRequest/`+id, null, authorisedOptions(token));
+    return this.put(`${BASE}/users/allowRequest/`+id, body, authorisedOptions(token));
   }
 
   refuseRequest(id):Observable<any>{

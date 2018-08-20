@@ -1,19 +1,20 @@
 <div class="wrapper">
   <div class="nav">
     <ul >
-      <li [class.active]="index === 0">
-        <a (click)="index = 0">Читать книгу</a>
+      <li (click)="index = 0" [class.active]="index === 0">
+        <a >Читать книгу</a>
       </li>
-      <li [class.active]="index === 1">
-        <a (click)="index = 1">Книжная полка</a>
+      <li (click)="index = 1" [class.active]="index === 1">
+        <a >Книжная полка</a>
       </li>
-      <li [class.active]="index === 2">
-        <a (click)="index = 2">Одобренные книги</a>
-      </li>
-      <li [class.active]="tabIndex === 3">
-        <a (click)="logout()">Выход</a>
+      <li (click)="index = 2" [class.active]="index === 2">
+        <a >Одобренные книги</a>
       </li>
     </ul>
+    <div class="btnWrap">
+    <app-button [submit]="true" type="submit" (click)="logout()">Выход</app-button>
+    </div>
+
   </div>
 
   <div id ="content">

@@ -17,7 +17,8 @@ export class UserBookshareComponent implements OnInit{
     USERS:"SHOW_USER_LIST",
     BOOKSHALVES:"SHOW_BOOKSHALVES",
     BOOKS:"SHOW_BOOKS",
-    SEND_REQUEST:"SEND_REQUEST"
+    SEND_REQUEST:"SEND_REQUEST",
+    REQUEST_RESULT:"REQUEST_RESULT"
   };
 
   state;
@@ -43,6 +44,8 @@ export class UserBookshareComponent implements OnInit{
   public isBookshelvesShowable = () =>this.state === this.STEPS.BOOKSHALVES;
   public isBookShowable = () =>this.state === this.STEPS.BOOKS;
   public isSendRequestShowable = () =>this.state === this.STEPS.SEND_REQUEST;
+  public isRequestResultShowable = () =>this.state === this.STEPS.REQUEST_RESULT;
+
 
   public showUserList(){
     this.state = this.STEPS.USERS;
@@ -137,7 +140,7 @@ export class UserBookshareComponent implements OnInit{
     this.api.user.createBookSharingRequest({ownerUserId:this.userId, book_id: this.bookId})
       .subscribe(
         response=>{
-
+          this.state = this.STEPS.REQUEST_RESULT;
         }
       );
   }
@@ -150,5 +153,7 @@ export class UserBookshareComponent implements OnInit{
       name: new FormControl(''),
       description: new FormControl('')
     });
+    this.form.controls.name.disable();
+    this.form.controls.description.disable();
   }
 }

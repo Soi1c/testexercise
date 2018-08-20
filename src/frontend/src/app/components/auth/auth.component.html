@@ -46,12 +46,25 @@
           error="Неправильный формат e-mail адреса">
         </app-error>
       </app-input-text>
-      <app-input-text [label]="true" inputType="password" formControlName="password" inputPlaceholder="Введите пароль"></app-input-text>
+      <app-input-text
+        label="true"
+        inputType="password"
+        formControlName="password"
+        inputPlaceholder="Введите пароль">
+        <app-error
+          *ngIf="form.controls.password?.errors?.required"
+          error="Не может быть пустым">
+        </app-error>
+      </app-input-text>
 
       <app-captcha></app-captcha>
       <app-error [error]="errors"></app-error>
 
-      <app-button [submit]="true" type="submit" (click)="createNewUser()">Регистрация</app-button>
+      <app-button
+        submit="true"
+        type="submit"
+        [disabled]="!form.valid"
+        (click)="createNewUser()">Регистрация</app-button>
     </form>
   </div>
 

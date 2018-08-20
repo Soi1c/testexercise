@@ -41,10 +41,8 @@ export class ApprovedBooksComponent implements OnInit{
               }),
               response)
             : this.table.data;
-          this.table.size = R.propOr(this.table.size, 'totalElements', response);
-          this.table.page = R.propOr(this.table.page, 'number', response);
           this.errors = '';
-          if(!this.table.size){
+          if(this.table.data.length == 0){
             this.errors = 'У вас еще нет одобренных книг...'
           }
         },
@@ -64,7 +62,7 @@ export class ApprovedBooksComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.getBookList();
+    this.getBookList({size: 10, page: 1});
 
   }
 

@@ -3,7 +3,7 @@ import {Component, OnInit} from "@angular/core";
 import {ApiService} from "../../../../services/api.service";
 import R from "ramda";
 import {BookshelvesComponent} from "../bookshelves.component";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserComponent} from "../../user.component";
 import {BookService} from "../../../../services/book.service";
 
@@ -215,16 +215,16 @@ export class SinglebookshelfComponent implements OnInit{
 
   ngOnInit(){
     this.formCreation = new FormGroup({
-      bookName: new FormControl(''),
-      bookDescription: new FormControl(''),
+      bookName: new FormControl('',[Validators.required]),
+      bookDescription: new FormControl('',[Validators.required]),
       upload: new FormControl('')
     });
     this.form = new FormGroup({
-      bookshelfId: new FormControl(''),
-      bookshelfName: new FormControl('')
+      bookshelfId: new FormControl('',[Validators.required]),
+      bookshelfName: new FormControl('',[Validators.required])
     });
     this.changeBookshelfForm = new FormGroup({
-      bookshelf: new FormControl('')
+      bookshelf: new FormControl('',[Validators.required])
     });
     this.uploadTitle = 'Загрузить книгу';
     this.showList();

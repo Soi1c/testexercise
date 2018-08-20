@@ -40,3 +40,7 @@
     <app-button  (click)="state = STEPS.BOOKS">Назад</app-button>
   </div>
 </div>
+
+<div *ngIf="isRequestResultShowable()">
+  <h3>Ваш запрос успешно отправлен</h3>
+</div>

@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.active{
+  background-color: lighten(#f1f1f1,3%);
+}
+
 .nav{
   background-color: #f1f1f1;
   border-right: 1px solid #d3d3d3;
@@ -10,18 +14,24 @@
   width:300px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   position: fixed;
   ul{
+    padding: 0;
     li{
-      padding: 20px;
+      list-style: none;
+      padding: 20px 0 20px 25px;
+      cursor: pointer;
       a{
         text-transform: uppercase;
         letter-spacing: 3px;
         cursor: pointer;
-        &:hover{
+        &:hover li {
           color: red;
         }
+      }
+      &:hover{
+        background-color: lighten(#f1f1f1,3%);
       }
     }
   }
@@ -32,4 +42,8 @@
   width: 100%;
   max-width: 1200px;
   margin-left: 300px;
+}
+
+.btnWrap{
+  margin: 20px 20px;
 }

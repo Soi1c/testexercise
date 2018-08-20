@@ -18,9 +18,14 @@
 <div *ngIf="isCreationShowable()">
 
   <form [formGroup]="form" novalidate fxFlex fxLayout="column" fxLayoutAlign="space-between center">
-    <app-input-text [label]="true" inputType="text" formControlName="bookshelfName" inputPlaceholder="Название книжной полки"></app-input-text>
+    <app-input-text [label]="true" inputType="text" formControlName="bookshelfName" inputPlaceholder="Название книжной полки">
+      <app-error
+        *ngIf="form.controls.bookshelfName?.errors?.required"
+        error="Не может быть пустым">
+      </app-error>
+    </app-input-text>
     <app-error [error]="errors"></app-error>
-    <app-button [submit]="true" type="submit" (click)="createBookShelf()">Создать</app-button>
+    <app-button [submit]="true" type="submit" [disabled]="!form.valid" (click)="createBookShelf()">Создать</app-button>
     <app-button (click)="showList()">Назад</app-button>
 
   </form>

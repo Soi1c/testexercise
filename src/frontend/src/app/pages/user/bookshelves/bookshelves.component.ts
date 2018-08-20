@@ -1,7 +1,9 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import R from "ramda";
 import {ApiService} from "../../../services/api.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import { MdPaginator} from '@angular/material';
+
 
 const VIEW_STATES = {
     LIST:"SHOW_LIST_OF_SHELFS",
@@ -20,6 +22,9 @@ export class BookshelvesComponent implements OnInit{
   constructor(private api: ApiService){
     this.showList();
   }
+
+  @ViewChild(MdPaginator) paginator: MdPaginator;
+
 
   public form: FormGroup;
   public state;
@@ -42,6 +47,7 @@ export class BookshelvesComponent implements OnInit{
     this.getList({page: 0, size: 10});
   }
   public showCreation(){
+    this.form.reset();
     this.state = VIEW_STATES.CREATION;
   }
   public showSingleShelf(){
@@ -53,7 +59,7 @@ export class BookshelvesComponent implements OnInit{
 
   private getList = (filter?) => {
     this.state = VIEW_STATES.LIST;
-    this.api.bookshelves.getBookShelves()
+    this.api.bookshelves.getBookShelves(filter)
       .subscribe(
         (response) => {
           this.table.data = R.prop( response)
@@ -64,7 +70,8 @@ export class BookshelvesComponent implements OnInit{
               }),
               response)
             : this.table.data;
-          this.table.size = R.propOr(this.table.size, 'totalElements', response);
+          this.table.size = this.table.data.length;
+        //  this.table.data = new MatTableDataSource
           this.table.page = R.propOr(this.table.page, 'number', response);
         });
   }
@@ -90,8 +97,9 @@ export class BookshelvesComponent implements OnInit{
     this.getList({size: data.pageSize, page: data.pageIndex});
 
   ngOnInit() {
+    //this.table.data.paginator = this.paginator;
     this.form = new FormGroup({
-      bookshelfName: new FormControl(''),
+      bookshelfName: new FormControl('',[Validators.required]),
     });
   }
 }
