@@ -1,8 +1,10 @@
 package com.pestov.testexercise.controllers;
 
 import com.pestov.testexercise.dto.BookDto;
+import com.pestov.testexercise.dto.BookshelfDto;
 import com.pestov.testexercise.dto.PageDto;
 import com.pestov.testexercise.errors.ApiError;
+import com.pestov.testexercise.mapper.Mappers;
 import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
@@ -23,16 +25,22 @@ public class BookController {
 
 	private final IBookService bookService;
 	private final IBookshelfService bookshelfService;
+	private final Mappers mappers;
 
-	public BookController(IBookService bookService, IBookshelfService bookshelfService) {
+	public BookController(IBookService bookService, IBookshelfService bookshelfService, Mappers mappers) {
 		this.bookService = bookService;
 		this.bookshelfService = bookshelfService;
+		this.mappers = mappers;
 	}
 
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<BookDto> addNewBook(@RequestBody BookDto bookDto) {
+	public ResponseEntity<BookDto> addNewBook(@RequestBody BookDto bookDto, @RequestAttribute Long customUserId) {
 		Bookshelf bookshelf = bookshelfService.getBookshelfById(bookDto.getBookshelfId());
+		if (!bookshelfService.bookshelfInstancesByUser(customUserId)
+				.contains(bookshelfService.getBookshelfById(bookDto.getBookshelfId()))) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 		BookDto resultDto = bookService.saveNewBook(bookDto, bookshelf);
 		return new ResponseEntity<>(resultDto, HttpStatus.OK);
 	}

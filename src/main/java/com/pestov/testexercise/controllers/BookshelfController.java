@@ -51,10 +51,12 @@ public class BookshelfController {
 
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity<String> deleteBookshelf(@PathVariable Long id) {
+	public ResponseEntity<String> deleteBookshelf(@PathVariable Long id, @RequestAttribute Long customUserId) {
+		if (!bookshelfService.bookshelfInstancesByUser(customUserId).contains(bookshelfService.getBookshelfById(id))) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 		bookshelfService.deleteBookshelf(id);
-		JSONObject response = new JSONObject().put("status", "ok");
-		return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)

@@ -1,34 +1,20 @@
 package com.pestov.testexercise.dto;
 
 
-import org.json.JSONObject;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.lang.Nullable;
 
+@Getter
+@Setter
 public class UserDto {
 
+	@Nullable
     private String email;
-    private String password;
+
+	@Nullable
+	private String password;
+
+    @Nullable
     private Long id;
-
-	public UserDto(String email, Long id) {
-		this.email = email;
-		this.id = id;
-	}
-
-	public UserDto(final String userJson) {
-    	JSONObject result = new JSONObject(userJson);
-    	this.email = result.getString("email");
-    	this.password = result.getString("password");
-	}
-
-	public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-	public Long getId() {
-		return id;
-	}
 }

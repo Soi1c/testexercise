@@ -1,5 +1,6 @@
 package com.pestov.testexercise.controllers;
 
+import com.pestov.testexercise.dto.UserDto;
 import com.pestov.testexercise.services.IRegTokenService;
 import com.pestov.testexercise.services.IUserService;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ public class RegistrationController {
 
 	@RequestMapping(value = "submit", method = RequestMethod.POST)
     @ResponseBody
-    public void submit(@RequestBody String request) {
-        userService.registerNewUser(request);
+    public void submit(@RequestBody UserDto userDto) {
+        userService.registerNewUser(userDto);
     }
 
 	@RequestMapping(value = "confirmEmail", method = RequestMethod.GET)

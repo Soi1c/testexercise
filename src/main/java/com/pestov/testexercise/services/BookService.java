@@ -135,7 +135,7 @@ public class BookService implements IBookService {
 		try {
 			pageAmount = divideBookToPages(file, bookId);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException();
 		}
 		file.delete();
 		Book book = bookRepository.getOne(bookId);

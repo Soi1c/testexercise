@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IUserService {
 
-    CustomUser registerNewUser(String userDto);
+    CustomUser registerNewUser(UserDto userDto);
 
 	List<UserDto> getUsers();
 

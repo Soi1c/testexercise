@@ -10,4 +10,6 @@ public interface RegTokenRepository extends JpaRepository<RegToken, Long> {
 	RegToken save(RegToken regToken);
 
 	void delete(RegToken regToken);
+
+	RegToken findByCustomUser_Id(Long customUserId);
 }

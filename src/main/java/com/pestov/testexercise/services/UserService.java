@@ -54,19 +54,20 @@ public class UserService implements IUserService {
 
 	@Override
 	@Transactional
-	public CustomUser registerNewUser(String userDto) {
+	public CustomUser registerNewUser(UserDto userDto) {
 		final CustomUser customUser = new CustomUser();
-		UserDto dto = new UserDto(userDto);
-		customUser.setEmail(dto.getEmail());
-		customUser.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+		customUser.setEmail(userDto.getEmail());
+		assert userDto.getPassword() != null;
+		customUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 		userRepository.save(customUser);
 		String token = regTokenService.saveNewRegToken(customUser);
 		emailService.sendSimpleMessage(
-				dto.getEmail(),
+				userDto.getEmail(),
 				"Подтверждение регистрации",
 				applicationUrl.concat("/signup/confirmEmail?token=").concat(token)
 		);
-		log.info("Email sent to ".concat(dto.getEmail()));
+		assert userDto.getEmail() != null;
+		log.info("Email sent to ".concat(userDto.getEmail()));
 		return customUser;
 	}
 
@@ -74,7 +75,10 @@ public class UserService implements IUserService {
 		List<CustomUser> usersList = userRepository.findAll();
 		List<UserDto> usersDtoList = new ArrayList<>();
 		for (CustomUser user : usersList) {
-			usersDtoList.add(new UserDto(user.getEmail(), user.getId()));
+			UserDto userDto = new UserDto();
+			userDto.setEmail(user.getEmail());
+			userDto.setId(user.getId());
+			usersDtoList.add(userDto);
 		}
 		return usersDtoList;
 	}
