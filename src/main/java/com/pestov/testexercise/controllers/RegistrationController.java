@@ -22,8 +22,12 @@ public class RegistrationController {
 
 	@RequestMapping(value = "submit", method = RequestMethod.POST)
     @ResponseBody
-    public void submit(@RequestBody UserDto userDto) {
+    public ResponseEntity submit(@RequestBody UserDto userDto) {
+		if (userService.isEmailAlreadyExists(userDto.getEmail())) {
+			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+		}
         userService.registerNewUser(userDto);
+		return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 	@RequestMapping(value = "confirmEmail", method = RequestMethod.GET)

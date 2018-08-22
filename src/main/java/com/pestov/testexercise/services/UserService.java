@@ -163,4 +163,8 @@ public class UserService implements IUserService {
 	public Boolean isRequestAlreadySent(Long bookId, Long customUserId) {
 		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId) != null;
 	}
+
+	public Boolean isEmailAlreadyExists(String email) {
+		return userRepository.findByEmail(email).isPresent();
+	}
 }

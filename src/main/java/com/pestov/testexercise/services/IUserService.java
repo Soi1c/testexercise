@@ -33,4 +33,6 @@ public interface IUserService {
 	BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId, Long customUserId);
 
 	Boolean isRequestAlreadySent(Long bookId, Long customUserId);
+
+	Boolean isEmailAlreadyExists(String email);
 }

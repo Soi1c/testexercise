@@ -137,6 +137,8 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 				.file(multipartFile)
 				.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk());
+		// :(
+		Thread.sleep(1000);
 	}
 
 	@Test
