@@ -29,8 +29,8 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<List<UserDto>> getUsersList() {
-		return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+	public ResponseEntity<List<UserDto>> getUsersList(@RequestAttribute Long customUserId) {
+		return new ResponseEntity<>(userService.getUsers(customUserId), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "{userId}", method = RequestMethod.GET)

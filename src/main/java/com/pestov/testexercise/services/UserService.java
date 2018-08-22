@@ -71,10 +71,13 @@ public class UserService implements IUserService {
 		return customUser;
 	}
 
-	public List<UserDto> getUsers() {
+	public List<UserDto> getUsers(Long customUserId) {
 		List<CustomUser> usersList = userRepository.findAll();
 		List<UserDto> usersDtoList = new ArrayList<>();
 		for (CustomUser user : usersList) {
+			if (user.getId().equals(customUserId) || !user.isActive()) {
+				continue;
+			}
 			UserDto userDto = new UserDto();
 			userDto.setEmail(user.getEmail());
 			userDto.setId(user.getId());
@@ -95,6 +98,9 @@ public class UserService implements IUserService {
 		List<BookSharing> myRequests = bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(customUserId);
 		List<BookSharingDto> myRequestsDto = new ArrayList<>();
 		for (BookSharing bookSharing: myRequests) {
+			if (bookSharing.isRefused()) {
+				continue;
+			}
 			BookSharingDto booksharingDto = new BookSharingDto();
 			booksharingDto.setAskingUsername(bookSharing.getAskingUser().getEmail());
 			booksharingDto.setBookName(bookSharing.getBook().getName());

@@ -12,7 +12,7 @@ public interface IUserService {
 
     CustomUser registerNewUser(UserDto userDto);
 
-	List<UserDto> getUsers();
+	List<UserDto> getUsers(Long customUserId);
 
 	void createBookSharingRequest(BookSharingDto bookSharingDto, Long customUserId);
 

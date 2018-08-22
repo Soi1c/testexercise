@@ -125,17 +125,28 @@ public class UserControllerTest extends TestexerciseApplicationTests {
 				.content(mapper.writeValueAsString(bookSharingDto))
 				.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk());
-		Thread.sleep(30000);
 		Assert.assertEquals("plz no", bookSharingRepository.getOne(10L).getRefuseDescription());
 		Assert.assertFalse(bookSharingRepository.getOne(10L).isAllowed());
 	}
 
 	@Test
-	public void myRefusedRequests() {
+	public void myRefusedRequests() throws Exception {
+		createNewBookSharingRequest();
+		bookSharingRepository.getOne(10L).setRefused(true);
+		this.mockMvc.perform(get("/users/myrefusedrequests")
+		.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest2))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(1)));
 	}
 
 	@Test
-	public void mySharedBooks() {
+	public void mySharedBooks() throws Exception {
+		createNewBookSharingRequest();
+		bookSharingRepository.getOne(10L).setAllowed(true);
+		this.mockMvc.perform(get("/users/mysharedbooks")
+		.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest2))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(1)));
 	}
 
 	@Test
