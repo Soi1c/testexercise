@@ -14,4 +14,16 @@
 
 <div *ngIf="isBookShowable()">
   <app-button (click)="getBookList()">Назад</app-button>
+  <h1>{{title}}</h1>
+  <div class="book">
+    <div>
+      <p *ngFor="let x of lines">{{x}}</p>
+    </div>
+    <nav>
+      <div (click)="getPrevPage()" class="left"></div>
+      <div (click)="getNextPage()" class="right"></div>
+    </nav>
+
+
+  </div>
 </div>

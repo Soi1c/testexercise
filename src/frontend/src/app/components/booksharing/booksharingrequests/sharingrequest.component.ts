@@ -28,7 +28,7 @@ export class SharingRequestComponent implements OnInit{
     data: [],
     size: 0,
     page: 0,
-    displayed: ['id', 'bookshelf', 'name', 'user', 'allowed']
+    displayed: ['id', 'bookshelfName', 'bookName', 'askingUsername', 'allowed']
   };
 
   MASKS = MASKS;
@@ -79,28 +79,28 @@ export class SharingRequestComponent implements OnInit{
     this.form.controls.id.patchValue(this.requestId);
     this.form.controls.bookshelfName.patchValue(data.bookshelfName);
     this.form.controls.bookName.patchValue(data.bookName);
-    this.form.controls.username.patchValue(data.user);
+    this.form.controls.username.patchValue(data.askingUsername);
 
   }
 
   public accept(){
-    let body = {};
+    let date = '';
     if(this.form.controls.expirationDate.value){
-      body = {"expireDate":this.form.controls.expirationDate.value};
+      date = this.form.controls.expirationDate.value;
     }
-    this.api.user.allowRequest(this.requestId,body)
+    this.api.user.allowRequest(this.requestId,date)
       .subscribe(
         response=>{
-          this.state = this.VIEW_STATES.LIST;
+          this.getAllRequest();
         }
       );
   }
 
   public reject(){
-    this.api.user.refuseRequest(this.requestId)
+    this.api.user.refuseRequest(this.requestId, {refuseDescription:this.form.controls.failReason.value})
       .subscribe(
         response=>{
-          this.state = this.VIEW_STATES.LIST;
+          this.getAllRequest();
         }
       );
   }
@@ -112,8 +112,10 @@ export class SharingRequestComponent implements OnInit{
       bookshelfName: new FormControl('',[Validators.required]),
       bookName: new FormControl('',[Validators.required]),
       username: new FormControl('',[Validators.required]),
-      expirationDate: new FormControl('')
-    });
+      expirationDate: new FormControl(''),
+      failReason: new FormControl('')
+
+  });
 
     this.form.controls.id.disable();
     this.form.controls.bookshelfName.disable();

@@ -39,13 +39,10 @@ const
   } : {...response}),
 
   prepareSuccess = response =>{
-    console.log(response);
-    let res = prepare(response).body;
-    console.log(res);
-    if(!res){
-      res = "ok";
+    if(response._body != ""){
+      return prepare(response).body;
     }
-    //return prepare(response).body;
+    let res = '{"status" :"ok"}';
     return res;
   },
 
@@ -240,14 +237,15 @@ class User extends HttpRequest {
     return this.get(`${BASE}/users/getmyrequests`, null, authorisedOptions(token));
   }
 
-  allowRequest(id,body):Observable<any>{
+  allowRequest(id,date?):Observable<any>{
+    console.log(date);
     let token = `${this.auth.access_token}`;
-    return this.put(`${BASE}/users/allowRequest/`+id, body, authorisedOptions(token));
+    return this.put(`${BASE}/users/allowrequest/`+id + `?expireDate=` + date, null, authorisedOptions(token));
   }
 
-  refuseRequest(id):Observable<any>{
+  refuseRequest(id,failReason):Observable<any>{
     let token = `${this.auth.access_token}`;
-    return this.put(`${BASE}/users/refuseRequest/`+id, null, authorisedOptions(token));
+    return this.put(`${BASE}/users/refuserequest/`+id, failReason, authorisedOptions(token));
   }
 
   getMyRefusedRequests():Observable<any>{

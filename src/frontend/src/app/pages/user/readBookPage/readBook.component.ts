@@ -30,7 +30,6 @@ export class ReadBookComponent implements OnInit{
 
   }
 
-
   getNextPage(){
     this.currentPage++;
     this.getPage(this.currentPage);

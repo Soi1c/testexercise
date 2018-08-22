@@ -27,6 +27,8 @@
             <app-input-text [label]="true" inputType="text" formControlName="bookName" inputPlaceholder="Название книги"></app-input-text>
             <app-input-text [label]="true" inputType="text" formControlName="username" inputPlaceholder="Пользователь"></app-input-text>
             <app-input-text [label]="true" inputType="text" formControlName="expirationDate" inputPlaceholder="Дата окончания разрешения" [mask]="MASKS.date"></app-input-text>
+            <app-input-text [label]="true" inputType="text" formControlName="failReason" inputPlaceholder="Причина отклонения"></app-input-text>
+
           </div>
           <app-button [submit]="true" type="submit" (click)="accept()">Подтвердить</app-button>
           <app-button [submit]="true" type="submit" (click)="reject()">Отклонить</app-button>

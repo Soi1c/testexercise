@@ -4,8 +4,10 @@ export const HEADERS_LOCALISATIONS = {
     dateStart: 'Дата создания',
     booksCount: 'Количество книг',
     description: 'Краткое описание',
-    user: 'Пользователь',
+    askingUsername: 'Пользователь',
     bookshelf: 'Книжная полка',
+    bookshelfName: 'Книжная полка',
+    bookName: 'Название',
     allowed:'Подтверждено',
     expireDate: 'Дата окончания разрешения'
 };

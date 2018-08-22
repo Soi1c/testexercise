@@ -1,0 +1,16 @@
+
+
+.book{
+  width: 100%;
+  max-width: 1000px;
+  p{
+    text-indent: 40px;
+    text-align: justify;
+  }
+}
+
+nav{
+  display: flex;
+  justify-content: flex-end;
+  align-items:center;
+}

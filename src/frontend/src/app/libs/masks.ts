@@ -3,7 +3,7 @@ export const MASKS = {
   date: {
     guide: false,
     keepCharPositions: true,
-    mask: [/\d/, /\d/, '.', /\d/, /\d/, '.',/\d/, /\d/, /\d/, /\d/ ]
+    mask: [/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-',/\d/, /\d/ ]
   },
   passportCode: {
     guide: false,

@@ -141,6 +141,9 @@ export class UserBookshareComponent implements OnInit{
       .subscribe(
         response=>{
           this.state = this.STEPS.REQUEST_RESULT;
+        },
+        error=>{
+          console.log(error)
         }
       );
   }
