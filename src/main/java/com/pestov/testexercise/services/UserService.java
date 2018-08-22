@@ -105,13 +105,14 @@ public class UserService implements IUserService {
 		return myRequestsDto;
 	}
 
-	public BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto, LocalDate expireDate) {
+	public BookSharingDto allowBooksharingRequestById(Long booksharingId, LocalDate expireDate) {
 		BookSharing bookSharing = bookSharingRepository.getOne(booksharingId);
 		bookSharing.setAllowed(true);
-		if (bookSharingDto.getExpireDate() != null) {
+		if (expireDate != null) {
 			bookSharing.setExpireDate(expireDate);
 		}
 		bookSharingRepository.save(bookSharing);
+		BookSharingDto bookSharingDto = new BookSharingDto();
 		mappers.getBooksharingMapper().map(bookSharing, bookSharingDto);
 		return bookSharingDto;
 	}
@@ -156,15 +157,20 @@ public class UserService implements IUserService {
 		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId).isAllowed();
 	}
 
-	public BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId, Long customUserId) {
+	public BookSharing findBooksharingByAskingUserIdAndBookId(Long customUserId, Long bookId) {
 		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId);
 	}
 
 	public Boolean isRequestAlreadySent(Long bookId, Long customUserId) {
-		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId) != null;
+		return (bookSharingRepository.findByAskingUserIdAndBookIdAndRefusedIsFalse(customUserId, bookId) != null
+				|| bookSharingRepository.findByAskingUserIdAndBookIdAndExpireDateBefore(customUserId, bookId, LocalDate.now()) != null);
 	}
 
 	public Boolean isEmailAlreadyExists(String email) {
 		return userRepository.findByEmail(email).isPresent();
+	}
+
+	public BookSharing findBooksharingById(Long booksharingId) {
+		return bookSharingRepository.getOne(booksharingId);
 	}
 }

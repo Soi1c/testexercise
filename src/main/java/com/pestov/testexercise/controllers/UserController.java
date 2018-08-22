@@ -70,18 +70,25 @@ public class UserController {
 		return new ResponseEntity<>(userService.getMyRequests(customUserId), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "allowRequest/{booksharingId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "allowrequest/{booksharingId}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseEntity<BookSharingDto> allowRequestById(@PathVariable Long booksharingId,
-														   BookSharingDto bookSharingDto,
-														   @RequestParam(required = false, value = "expireDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate expireDate) {
-		return new ResponseEntity<>(userService.allowBooksharingRequestById(booksharingId, bookSharingDto, expireDate), HttpStatus.OK);
+														   @RequestParam(required = false, value = "expireDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate expireDate,
+														   @RequestAttribute Long customUserId) {
+		if (!userService.findBooksharingById(booksharingId).getOwnerUser().getId().equals(customUserId)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		return new ResponseEntity<>(userService.allowBooksharingRequestById(booksharingId, expireDate), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "refuseRequest/{booksharingId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "refuserequest/{booksharingId}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseEntity<BookSharingDto> refuseRequestById(@PathVariable Long booksharingId,
-															BookSharingDto bookSharingDto) {
+															@RequestBody BookSharingDto bookSharingDto,
+															@RequestAttribute Long customUserId) {
+		if (!userService.findBooksharingById(booksharingId).getOwnerUser().getId().equals(customUserId)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 		return new ResponseEntity<>(userService.refuseBooksharingRequestById(booksharingId, bookSharingDto), HttpStatus.OK);
 	}
 

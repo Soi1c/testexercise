@@ -32,7 +32,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailsService))
 				.formLogin().loginPage("/login.html")
 				.defaultSuccessUrl("/static/homepage.html")
-				.failureUrl("/login.html?error=true")
 				.and()
 				.logout().logoutSuccessUrl("/login.html");
 	}

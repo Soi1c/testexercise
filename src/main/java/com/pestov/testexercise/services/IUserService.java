@@ -18,7 +18,7 @@ public interface IUserService {
 
 	List<BookSharingDto> getMyRequests(Long customUserId);
 
-	BookSharingDto allowBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto, LocalDate expireDate);
+	BookSharingDto allowBooksharingRequestById(Long booksharingId, LocalDate expireDate);
 
 	BookSharingDto refuseBooksharingRequestById(Long booksharingId, BookSharingDto bookSharingDto);
 
@@ -30,9 +30,11 @@ public interface IUserService {
 
 	boolean checkBookShared(Long bookId, Long customUserId);
 
-	BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId, Long customUserId);
+	BookSharing findBooksharingByAskingUserIdAndBookId(Long customUserId, Long bookId);
 
 	Boolean isRequestAlreadySent(Long bookId, Long customUserId);
 
 	Boolean isEmailAlreadyExists(String email);
+
+	BookSharing findBooksharingById(Long booksharingId);
 }

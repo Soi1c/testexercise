@@ -82,7 +82,7 @@ public class BookService implements IBookService {
 	}
 
 	public PageDto getSharedPageByNum(Long bookId, int pageNum, Long customUserId) {
-		BookSharing bookSharing = userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId, customUserId);
+		BookSharing bookSharing = userService.findBooksharingByAskingUserIdAndBookId(customUserId, bookId);
 		Page page = pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
 		bookSharing.setLastPage(pageNum);
 		bookSharingRepository.save(bookSharing);
@@ -100,7 +100,7 @@ public class BookService implements IBookService {
 
 	public PageDto continueReadingSharedBook(Long bookId, Long customUserId) {
 		Page page = pageRepository.findPageByBookIdAndNumeration(bookId,
-				userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId, customUserId).getLastPage());
+				userService.findBooksharingByAskingUserIdAndBookId(customUserId, bookId).getLastPage());
 		PageDto pageDto = new PageDto();
 		mappers.getPageMapper().map(page, pageDto);
 		return pageDto;

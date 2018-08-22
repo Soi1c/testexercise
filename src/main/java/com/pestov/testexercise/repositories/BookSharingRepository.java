@@ -18,4 +18,8 @@ public interface BookSharingRepository extends JpaRepository<BookSharing, Long> 
 	List<BookSharing> findAllByExpireDateEquals(LocalDate yesterday);
 
 	BookSharing findByAskingUserIdAndBookId(Long askingUserId, Long bookId);
+
+	BookSharing findByAskingUserIdAndBookIdAndRefusedIsFalse(Long askingUserId, Long bookId);
+
+	BookSharing findByAskingUserIdAndBookIdAndExpireDateBefore(Long askingUserId, Long bookId, LocalDate date);
 }
