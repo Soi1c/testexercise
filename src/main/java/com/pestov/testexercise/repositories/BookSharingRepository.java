@@ -1,6 +1,7 @@
 package com.pestov.testexercise.repositories;
 
 import com.pestov.testexercise.models.BookSharing;
+import com.pestov.testexercise.models.CustomUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public interface BookSharingRepository extends JpaRepository<BookSharing, Long> 
 
 	List<BookSharing> findAllByExpireDateEquals(LocalDate yesterday);
 
-	BookSharing findByAskingUserIdAndBookId(Long askingUserId, Long bookId);
+	BookSharing findByAskingUserAndBookId(CustomUser askingUser, Long bookId);
 
 	BookSharing findByAskingUserIdAndBookIdAndRefusedIsFalse(Long askingUserId, Long bookId);
 

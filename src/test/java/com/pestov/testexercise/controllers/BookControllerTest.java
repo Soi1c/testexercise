@@ -10,8 +10,8 @@ import com.pestov.testexercise.repositories.BookRepository;
 import com.pestov.testexercise.repositories.BookshelfRepository;
 import com.pestov.testexercise.repositories.PageRepository;
 import com.pestov.testexercise.services.IBookshelfService;
+import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,9 +51,6 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 	@Autowired
 	private PageRepository pageRepository;
 
-	@Before
-	public void getUser() {
-	}
 
 	@Test
 	public void addNewBook() throws Exception {
@@ -61,12 +59,15 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 		bookDto.setBookshelfId(5L);
 		bookDto.setName("Тестовая книга для первой полки юзера test1@test.com");
 		bookDto.setDescription("Дескриптион");
-		this.mockMvc.perform(post("/books")
+		JSONObject response = new JSONObject(this.mockMvc.perform(post("/books")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(bookDto))
 				.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id", not(isEmptyString())));
+				.andExpect(jsonPath("$.id", not(isEmptyString())))
+				.andReturn().getResponse().getContentAsString());
+		Long id = response.getLong("id");
+		bookRepository.deleteById(id);
 	}
 
 	@Test
@@ -89,7 +90,7 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 	@Test
 	public void updateBook() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		Book book = bookRepository.getOne(8L);
+		Book book = bookRepository.findById(8L).get();
 		Assert.assertEquals("Первая книга первой полки юзера test1", book.getName());
 		Assert.assertEquals("Я заебался фикстуры переделывать", book.getDescription());
 		BookDto bookDto = new BookDto();
@@ -103,14 +104,20 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 				.andExpect(jsonPath("$.id", is(book.getId().intValue())))
 				.andExpect(jsonPath("$.name", is("Changed Name")))
 				.andExpect(jsonPath("$.description", is("Changed description")));
+		book.setName("Первая книга первой полки юзера test1");
+		book.setDescription("Я заебался фикстуры переделывать");
+		bookRepository.save(book);
 	}
 
 	@Test
 	public void deleteBook() throws Exception {
+		Book book = new Book(bookshelfRepository.findById(6L).get(), "name", "desc");
+		Long bookId = bookRepository.save(book).getId();
 		this.mockMvc.perform(delete("/books/8")
 				.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk());
 		Assert.assertEquals(Optional.empty(), bookRepository.findById(8L));
+		bookRepository.deleteById(bookId);
 	}
 
 	@Test
@@ -119,7 +126,7 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 		bookshelfDto.setName("Полка для другого юзера");
 		Long foreignShelfId = bookshelfService.saveNewBookshelf(bookshelfDto, 4L).getId();
 		Book book = new Book();
-		book.setBookshelf(bookshelfRepository.getOne(foreignShelfId));
+		book.setBookshelf(bookshelfRepository.findById(foreignShelfId).get());
 		book.setName("Тестовая книга для первой полки юзера test3@test.com");
 		book.setDescription("Дескриптион");
 		Long foreignBookId = bookRepository.save(book).getId();
@@ -139,6 +146,9 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 				.andExpect(status().isOk());
 		// :(
 		Thread.sleep(1000);
+		pageRepository.deleteAll();
+		bookRepository.findById(8L).get().setLastPage(1);
+		bookRepository.findById(8L).get().setPagesAmount(0);
 	}
 
 	@Test
@@ -154,7 +164,7 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 	@Test
 	public void getPage() throws Exception {
 		Page page = new Page();
-		page.setBook(bookRepository.getOne(8L));
+		page.setBook(bookRepository.findById(8L).get());
 		page.setNumeration(1);
 		page.setText("Test text");
 		pageRepository.save(page);
@@ -163,12 +173,13 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.numeration", is(1)))
 				.andExpect(jsonPath("$.text", is("Test text")));
+		pageRepository.deleteAll();
 	}
 
 	@Test
 	public void continueReading() throws Exception {
 		Page page = new Page();
-		page.setBook(bookRepository.getOne(8L));
+		page.setBook(bookRepository.findById(8L).get());
 		page.setNumeration(1);
 		page.setText("Test text");
 		pageRepository.save(page);
@@ -177,6 +188,7 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.numeration", is(1)))
 				.andExpect(jsonPath("$.text", is("Test text")));
+		pageRepository.deleteAll();
 	}
 
 	@Test
@@ -184,6 +196,9 @@ public class BookControllerTest extends TestexerciseApplicationTests {
 		this.mockMvc.perform(put("/books/8/movetoanotherbookshelf/7")
 		.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk());
-		Assert.assertEquals(7, bookRepository.getOne(8L).getBookshelf().getId().intValue());
+		Assert.assertEquals(7, bookRepository.findById(8L).get().getBookshelf().getId().intValue());
+		Book book = bookRepository.findById(8L).get();
+		book.setBookshelf(bookshelfRepository.findById(5L).get());
+		bookRepository.save(book);
 	}
 }

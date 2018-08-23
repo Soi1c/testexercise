@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -87,17 +89,24 @@ public class UserService implements IUserService {
 	}
 
 	public void createBookSharingRequest(BookSharingDto bookSharingDto, Long customUserId) {
-		CustomUser owner = userRepository.getOne(bookSharingDto.getOwnerUserId());
-		CustomUser asker = userRepository.getOne(customUserId);
-		Book book = bookRepository.getOne(bookSharingDto.getBook_id());
-		BookSharing bookSharing = new BookSharing(owner, asker, book);
+		Optional<CustomUser> owner = userRepository.findById(bookSharingDto.getOwnerUserId());
+		Optional<CustomUser> asker = userRepository.findById(customUserId);
+		Optional<Book> book = bookRepository.findById(bookSharingDto.getBook_id());
+		if (!owner.isPresent()) {
+			throw new NoSuchElementException();
+		} else if (!asker.isPresent()) {
+			throw new NoSuchElementException();
+		} else if (!book.isPresent()) {
+			throw new NoSuchElementException();
+		}
+		BookSharing bookSharing = new BookSharing(owner.get(), asker.get(), book.get());
 		bookSharingRepository.save(bookSharing);
 	}
 
 	public List<BookSharingDto> getMyRequests(Long customUserId) {
 		List<BookSharing> myRequests = bookSharingRepository.findAllByOwnerUserIdAndAllowedIsFalse(customUserId);
 		List<BookSharingDto> myRequestsDto = new ArrayList<>();
-		for (BookSharing bookSharing: myRequests) {
+		for (BookSharing bookSharing : myRequests) {
 			if (bookSharing.isRefused()) {
 				continue;
 			}
@@ -141,8 +150,8 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public List<BookSharingDto> myRefusedRequests(Long customUserId) {
-		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndRefusedIsTrue(customUserId);
+	public List<BookSharingDto> myRefusedRequests(Long askingUserId) {
+		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndRefusedIsTrue(askingUserId);
 		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
 		for (BookSharing bookSharing : bookSharings) {
 			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
@@ -151,7 +160,7 @@ public class UserService implements IUserService {
 	}
 
 	public List<BookSharingDto> mySharedBooks(Long customUserId) {
-		List<BookSharing> bookSharings =  bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(customUserId);
+		List<BookSharing> bookSharings = bookSharingRepository.findAllByAskingUserIdAndAllowedIsTrue(customUserId);
 		List<BookSharingDto> bookSharingDtos = new ArrayList<>();
 		for (BookSharing bookSharing : bookSharings) {
 			bookSharingDtos.add(mappers.getBooksharingMapper().map(bookSharing, new BookSharingDto()));
@@ -159,12 +168,14 @@ public class UserService implements IUserService {
 		return bookSharingDtos;
 	}
 
-	public boolean checkBookShared(Long bookId, Long customUserId) {
-		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId).isAllowed();
+	public boolean checkBookShared(Long customUserId, Long bookId) {
+		return bookSharingRepository.findByAskingUserAndBookId(
+				userRepository.findById(customUserId).orElseThrow(NoSuchElementException::new), bookId).isAllowed();
 	}
 
 	public BookSharing findBooksharingByAskingUserIdAndBookId(Long customUserId, Long bookId) {
-		return bookSharingRepository.findByAskingUserIdAndBookId(customUserId, bookId);
+		return bookSharingRepository.findByAskingUserAndBookId(
+				userRepository.findById(customUserId).orElseThrow(NoSuchElementException::new), bookId);
 	}
 
 	public Boolean isRequestAlreadySent(Long bookId, Long customUserId) {

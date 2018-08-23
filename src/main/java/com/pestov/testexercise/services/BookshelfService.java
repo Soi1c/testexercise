@@ -10,8 +10,10 @@ import com.pestov.testexercise.repositories.PageRepository;
 import com.pestov.testexercise.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class BookshelfService implements IBookshelfService {
@@ -34,6 +36,7 @@ public class BookshelfService implements IBookshelfService {
 		this.mappers = mappers;
 	}
 
+	@Transactional
 	public BookshelfDto saveNewBookshelf(BookshelfDto bookshelfDto, Long customUserId) {
 		Bookshelf bookshelf = new Bookshelf(userRepository.getOne(customUserId), bookshelfDto.getName());
 		bookshelfRepository.save(bookshelf);
@@ -44,7 +47,7 @@ public class BookshelfService implements IBookshelfService {
 	public List<BookshelfDto> bookshelvesByUser(Long userId) {
 		List<Bookshelf> bookshelves = bookshelfRepository.findAllByUserId(userId);
 		List<BookshelfDto> targetDto = new ArrayList<>();
-		for (Bookshelf bookshelf: bookshelves) {
+		for (Bookshelf bookshelf : bookshelves) {
 			targetDto.add(mappers.getBookshelfMapper().map(bookshelf, new BookshelfDto()));
 		}
 		return targetDto;
@@ -54,6 +57,7 @@ public class BookshelfService implements IBookshelfService {
 		return bookshelfRepository.findAllByUserId(userId);
 	}
 
+	@Transactional
 	public void deleteBookshelf(Long id) {
 		List<Book> books = bookRepository.findAllByBookshelfId(id);
 		for (Book book : books) {
@@ -63,6 +67,7 @@ public class BookshelfService implements IBookshelfService {
 		bookshelfRepository.deleteById(id);
 	}
 
+	@Transactional
 	public void renameBookshelf(BookshelfDto bookshelfDto) {
 		Bookshelf target = bookshelfRepository.getOne(bookshelfDto.getId());
 		target.setName(bookshelfDto.getName());
@@ -70,6 +75,10 @@ public class BookshelfService implements IBookshelfService {
 	}
 
 	public Bookshelf getBookshelfById(Long id) {
-		return bookshelfRepository.getOne(id);
+		if (bookshelfRepository.findById(id).isPresent()) {
+			return bookshelfRepository.findById(id).get();
+		} else {
+			throw new NoSuchElementException();
+		}
 	}
 }

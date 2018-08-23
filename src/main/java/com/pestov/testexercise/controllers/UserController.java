@@ -115,7 +115,7 @@ public class UserController {
 	public ResponseEntity<PageDto> getSharedPage(@PathVariable Long bookId,
 												 @PathVariable int pageNum,
 												 @RequestAttribute Long customUserId) {
-		if (!userService.checkBookShared(bookId, customUserId)) {
+		if (!userService.checkBookShared(customUserId, bookId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		return new ResponseEntity<>(bookService.getSharedPageByNum(bookId, pageNum, customUserId), HttpStatus.OK);
@@ -124,7 +124,7 @@ public class UserController {
 	@RequestMapping(value = "mysharedbooks/{bookId}/continuereading", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<PageDto> continueReadSharedBook(@PathVariable Long bookId, @RequestAttribute Long customUserId) {
-		if (!userService.checkBookShared(bookId, customUserId)) {
+		if (!userService.checkBookShared(customUserId, bookId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		return new ResponseEntity<>(bookService.continueReadingSharedBook(bookId, customUserId), HttpStatus.OK);

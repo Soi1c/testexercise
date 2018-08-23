@@ -1,13 +1,10 @@
 package com.pestov.testexercise.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pestov.testexercise.dto.UserDto;
 import com.pestov.testexercise.repositories.RegTokenRepository;
 import com.pestov.testexercise.repositories.UserRepository;
 import com.pestov.testexercise.services.IEmailService;
-import com.pestov.testexercise.services.IRegTokenService;
-import com.pestov.testexercise.services.IUserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +67,7 @@ public class RegistrationControllerTest {
 		this.mockMvc.perform(get("/signup/confirmEmail")
 				.param("token", token))
 				.andExpect(status().isOk());
-		Assert.assertTrue(userRepository.getOne(createdUserId).isActive());
+		Assert.assertTrue(userRepository.findById(createdUserId).get().isActive());
 	}
 
 	private void registerNewUser() throws Exception {

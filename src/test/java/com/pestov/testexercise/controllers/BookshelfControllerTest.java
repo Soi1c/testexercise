@@ -8,13 +8,11 @@ import com.pestov.testexercise.models.Bookshelf;
 import com.pestov.testexercise.repositories.BookRepository;
 import com.pestov.testexercise.repositories.BookshelfRepository;
 import com.pestov.testexercise.repositories.UserRepository;
-import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +45,11 @@ public class BookshelfControllerTest extends TestexerciseApplicationTests {
 	@Autowired
 	private IBookshelfService bookshelfService;
 	@Autowired
-	private IBookService bookService;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private BookshelfRepository bookshelfRepository;
 	@Autowired
 	private BookRepository bookRepository;
-
-	@Before
-	public void setUp() throws Exception {
-	}
 
 	@Test
 	public void submit() throws Exception {
@@ -71,8 +63,7 @@ public class BookshelfControllerTest extends TestexerciseApplicationTests {
 				.characterEncoding("UTF-8")
 				.header(HttpHeaders.AUTHORIZATION, authTokenForUserTest1))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id", not(isEmptyString())))
-				.andReturn();
+				.andExpect(jsonPath("$.id", not(isEmptyString())));
 	}
 
 	@Test
