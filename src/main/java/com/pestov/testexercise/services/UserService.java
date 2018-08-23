@@ -2,6 +2,8 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.dto.UserDto;
+import com.pestov.testexercise.errors.BookNotFoundException;
+import com.pestov.testexercise.errors.UserNotFoundException;
 import com.pestov.testexercise.mapper.Mappers;
 import com.pestov.testexercise.models.Book;
 import com.pestov.testexercise.models.BookSharing;
@@ -19,7 +21,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 @Service
@@ -89,17 +90,10 @@ public class UserService implements IUserService {
 	}
 
 	public void createBookSharingRequest(BookSharingDto bookSharingDto, Long customUserId) {
-		Optional<CustomUser> owner = userRepository.findById(bookSharingDto.getOwnerUserId());
-		Optional<CustomUser> asker = userRepository.findById(customUserId);
-		Optional<Book> book = bookRepository.findById(bookSharingDto.getBook_id());
-		if (!owner.isPresent()) {
-			throw new NoSuchElementException();
-		} else if (!asker.isPresent()) {
-			throw new NoSuchElementException();
-		} else if (!book.isPresent()) {
-			throw new NoSuchElementException();
-		}
-		BookSharing bookSharing = new BookSharing(owner.get(), asker.get(), book.get());
+		CustomUser owner = userRepository.findById(bookSharingDto.getOwnerUserId()).orElseThrow(UserNotFoundException::new);
+		CustomUser asker = userRepository.findById(customUserId).orElseThrow(UserNotFoundException::new);
+		Book book = bookRepository.findById(bookSharingDto.getBook_id()).orElseThrow(BookNotFoundException::new);
+		BookSharing bookSharing = new BookSharing(owner, asker, book);
 		bookSharingRepository.save(bookSharing);
 	}
 
