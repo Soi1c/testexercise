@@ -1,6 +1,7 @@
 package com.pestov.testexercise.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pestov.testexercise.TestexerciseApplicationTests;
 import com.pestov.testexercise.dto.UserDto;
 import com.pestov.testexercise.repositories.RegTokenRepository;
 import com.pestov.testexercise.repositories.UserRepository;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class RegistrationControllerTest {
+public class RegistrationControllerTest extends TestexerciseApplicationTests {
 
 	@Autowired
 	private MockMvc mockMvc;

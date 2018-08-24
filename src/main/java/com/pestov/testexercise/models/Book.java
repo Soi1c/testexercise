@@ -3,10 +3,8 @@ package com.pestov.testexercise.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pestov.testexercise.dto.BookDto;
-import com.pestov.testexercise.repositories.BookshelfRepository;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -39,14 +37,15 @@ public class Book {
 	private int pagesAmount;
 
 	@JsonIgnore
-	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="book")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "book")
 	private List<Page> pages = new ArrayList<>();
 
 	@JsonIgnore
-	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="book")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "book")
 	private List<BookSharing> bookSharings = new ArrayList<>();
 
-	public Book() {}
+	public Book() {
+	}
 
 	public Book(Bookshelf bookshelf, String name, String description) {
 		this.bookshelf = bookshelf;
@@ -55,13 +54,8 @@ public class Book {
 	}
 
 	public Book(BookDto bookDto, Bookshelf bookshelf) {
-		if (bookDto.getDescription() != null) {
-			this.bookshelf = bookshelf;
-			this.name = bookDto.getName();
-			this.description = bookDto.getDescription();
-		} else {
-			this.bookshelf = bookshelf;
-			this.name = bookDto.getName();
-		}
+		this.bookshelf = bookshelf;
+		this.name = bookDto.getName();
+		this.description = bookDto.getDescription();
 	}
 }

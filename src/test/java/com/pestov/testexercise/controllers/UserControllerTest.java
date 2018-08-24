@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest extends TestexerciseApplicationTests {
+public class UserControllerTest extends TestexerciseApplicationTests{
 
     @Autowired
     private BookSharingRepository bookSharingRepository;

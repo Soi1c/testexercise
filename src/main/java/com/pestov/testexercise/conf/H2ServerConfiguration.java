@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.sql.SQLException;
 
+@Profile("dev")
 @Configuration
 public class H2ServerConfiguration {
-
 	// TCP port for remote connections, default 9092
 	@Value("${h2.tcp.port:9092}")
 	private String h2TcpPort;
@@ -27,9 +28,6 @@ public class H2ServerConfiguration {
 	@Bean
 	@ConditionalOnExpression("${h2.tcp.enabled:false}")
 	public Server h2TcpServer() throws SQLException {
-		if (h2TcpPort == null || h2TcpPort.equals("")) {
-			return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", String.valueOf(Integer.valueOf((int) (Math.random()*1000)))).start();
-		}
 		return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", h2TcpPort).start();
 	}
 
