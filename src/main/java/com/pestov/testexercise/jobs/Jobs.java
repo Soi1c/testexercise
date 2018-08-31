@@ -15,7 +15,7 @@ public class Jobs {
 		this.userService = userService;
 	}
 
-	@Scheduled(cron = "0 1 * * *")
+	@Scheduled(cron = "0 0 1 * * *")
 	public void deleteExpiredBooksharings() {
 		LocalDate yesterday = LocalDate.now().minusDays(1);
 		userService.deleteExpiredBooksharings(yesterday);

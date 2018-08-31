@@ -24,8 +24,8 @@ public class BookSharing {
 	@Column(name = "expire_date")
 	private LocalDate expireDate;
 
-	@Column(name = "book_id")
-	private Long book_id;
+	@Column(name = "bookId")
+	private Long bookId;
 
 	@Column(name = "refuse_description")
 	private String refuseDescription;
@@ -33,17 +33,17 @@ public class BookSharing {
 	@Column(name = "last_page")
 	private int lastPage = 1;
 
-	public BookSharing(Long ownerUserId, Long askingUserId, LocalDate expireDate, Long book_id) {
+	public BookSharing(Long ownerUserId, Long askingUserId, LocalDate expireDate, Long bookId) {
 		this.ownerUserId = ownerUserId;
 		this.askingUserId = askingUserId;
 		this.expireDate = expireDate;
-		this.book_id = book_id;
+		this.bookId = bookId;
 	}
 
-	public BookSharing(Long ownerUserId, Long askingUserId, Long book_id) {
+	public BookSharing(Long ownerUserId, Long askingUserId, Long bookId) {
 		this.ownerUserId = ownerUserId;
 		this.askingUserId = askingUserId;
-		this.book_id = book_id;
+		this.bookId = bookId;
 	}
 
 	public Long getId() {
@@ -82,12 +82,12 @@ public class BookSharing {
 		this.expireDate = expireDate;
 	}
 
-	public Long getBook_id() {
-		return book_id;
+	public Long getBookId() {
+		return bookId;
 	}
 
-	public void setBook_id(Long book_id) {
-		this.book_id = book_id;
+	public void setBookId(Long bookId) {
+		this.bookId = bookId;
 	}
 
 	public String getRefuseDescription() {

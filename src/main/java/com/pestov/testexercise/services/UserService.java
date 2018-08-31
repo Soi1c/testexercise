@@ -104,11 +104,11 @@ public class UserService implements IUserService {
 	}
 
 	public boolean checkBookShared(Long bookId) {
-		return bookSharingRepository.findByAskingUserIdAndBook_id(getLoggedUserId(), bookId).isAllowed();
+		return bookSharingRepository.findByAskingUserIdAndBookId(getLoggedUserId(), bookId).isAllowed();
 	}
 
 	public BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId) {
-		return bookSharingRepository.findByAskingUserIdAndBook_id(getLoggedUserId(), bookId);
+		return bookSharingRepository.findByAskingUserIdAndBookId(getLoggedUserId(), bookId);
 	}
 
 }
