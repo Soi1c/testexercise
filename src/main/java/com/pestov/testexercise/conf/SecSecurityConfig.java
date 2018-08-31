@@ -1,24 +1,22 @@
 package com.pestov.testexercise.conf;
 
 import com.pestov.testexercise.services.CustomDetailsUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pestov.testexercise.services.IUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private CustomDetailsUserService customUserDetailsService;
+	private final CustomDetailsUserService customUserDetailsService;
 
-	@Autowired
-	public SecSecurityConfig(CustomDetailsUserService customDetailsUserService) {
-		this.customUserDetailsService = customDetailsUserService;
+	public SecSecurityConfig(CustomDetailsUserService customUserDetailsService) {
+		this.customUserDetailsService = customUserDetailsService;
 	}
 
 	@Override
@@ -40,8 +38,8 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder(){
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
+	public BCryptPasswordEncoder bCryptPasswordEncoder(){
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		return encoder;
 	}
 }

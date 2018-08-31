@@ -2,7 +2,7 @@
   {
     "id":1,
     "email":"test@test.com",
-    "password":"test",
+    "password":"$2y$12$1H4rjCKC0oST78DM.C/yReBiLzoJ/cwfMzK.zikOovVSovCY8OoCe",
     "active":true
   }
 ]

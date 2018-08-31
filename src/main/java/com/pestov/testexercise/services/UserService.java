@@ -2,12 +2,14 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookSharingDto;
 import com.pestov.testexercise.dto.UserDto;
+import com.pestov.testexercise.errors.UsernameNotFoundException;
 import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.repositories.BookSharingRepository;
 import com.pestov.testexercise.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +31,15 @@ public class UserService implements IUserService {
 
 	private final BookSharingRepository bookSharingRepository;
 
-	public UserService(UserRepository userRepository, IRegTokenService regTokenService, IEmailService emailService, BookSharingRepository bookSharingRepository) {
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	public UserService(UserRepository userRepository, IRegTokenService regTokenService, IEmailService emailService,
+					   BookSharingRepository bookSharingRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
 		this.regTokenService = regTokenService;
 		this.emailService = emailService;
 		this.bookSharingRepository = bookSharingRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	@Value("${spring.application.url}")
@@ -45,7 +51,7 @@ public class UserService implements IUserService {
 		final CustomUser customUser = new CustomUser();
 		UserDto dto = new UserDto(userDto);
 		customUser.setEmail(dto.getEmail());
-		customUser.setPassword(dto.getPassword());
+		customUser.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 		userRepository.save(customUser);
 		String token = regTokenService.saveNewRegToken(customUser);
 		emailService.sendSimpleMessage(

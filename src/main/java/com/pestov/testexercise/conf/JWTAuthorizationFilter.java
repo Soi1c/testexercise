@@ -2,6 +2,7 @@ package com.pestov.testexercise.conf;
 
 import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.services.CustomDetailsUserService;
+import com.pestov.testexercise.services.IUserService;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
