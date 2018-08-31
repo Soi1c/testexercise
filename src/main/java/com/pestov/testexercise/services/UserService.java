@@ -6,6 +6,7 @@ import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.CustomUser;
 import com.pestov.testexercise.repositories.BookSharingRepository;
 import com.pestov.testexercise.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import static com.pestov.testexercise.conf.JWTAuthorizationFilter.getLoggedUserI
 
 
 @Service
+@Slf4j
 public class UserService implements IUserService {
 
 	private final UserRepository userRepository;
@@ -51,6 +53,7 @@ public class UserService implements IUserService {
 				"Подтверждение регистрации",
 				applicationUrl.concat("/signup/confirmEmail?token=").concat(token)
 		);
+		log.info("Email sent to ".concat(dto.getEmail()));
 		return customUser;
 	}
 

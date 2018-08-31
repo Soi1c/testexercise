@@ -70,16 +70,18 @@ public class BookService implements IBookService {
 
 	public Page getPageByNum(Long bookId, int pageNum) {
 		Book book = bookRepository.getOne(bookId);
-		book.setLastPage(pageNum++);
+		Page page = pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
+		book.setLastPage(pageNum);
 		bookRepository.save(book);
-		return pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
+		return page;
 	}
 
 	public Page getSharedPageByNum(Long bookId, int pageNum) {
 		BookSharing bookSharing = userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId);
-		bookSharing.setLastPage(pageNum++);
+		Page page = pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
+		bookSharing.setLastPage(pageNum);
 		bookSharingRepository.save(bookSharing);
-		return pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
+		return page;
 	}
 
 	public Page continueReading(Long bookId) {
