@@ -2,8 +2,10 @@ package com.pestov.testexercise.services;
 
 import com.pestov.testexercise.dto.BookDto;
 import com.pestov.testexercise.models.Book;
+import com.pestov.testexercise.models.BookSharing;
 import com.pestov.testexercise.models.Page;
 import com.pestov.testexercise.repositories.BookRepository;
+import com.pestov.testexercise.repositories.BookSharingRepository;
 import com.pestov.testexercise.repositories.PageRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -22,12 +24,18 @@ public class BookService implements IBookService {
 
 	private final PageRepository pageRepository;
 
-	private final BookshelfService bookshelfService;
+	private final BookSharingRepository bookSharingRepository;
 
-	public BookService(BookRepository bookRepository, PageRepository pageRepository, BookshelfService bookshelfService) {
+	private final IBookshelfService bookshelfService;
+
+	private final IUserService userService;
+
+	public BookService(BookRepository bookRepository, PageRepository pageRepository, BookSharingRepository bookSharingRepository, IBookshelfService bookshelfService, IUserService userService) {
 		this.bookRepository = bookRepository;
 		this.pageRepository = pageRepository;
+		this.bookSharingRepository = bookSharingRepository;
 		this.bookshelfService = bookshelfService;
+		this.userService = userService;
 	}
 
 	public Book saveNewBook(BookDto bookDto) {
@@ -67,8 +75,20 @@ public class BookService implements IBookService {
 		return pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
 	}
 
+	public Page getSharedPageByNum(Long bookId, int pageNum) {
+		BookSharing bookSharing = userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId);
+		bookSharing.setLastPage(pageNum++);
+		bookSharingRepository.save(bookSharing);
+		return pageRepository.findPageByBookIdAndNumeration(bookId, pageNum);
+	}
+
 	public Page continueReading(Long bookId) {
 		return pageRepository.findPageByBookIdAndNumeration(bookId, bookRepository.getOne(bookId).getLastPage());
+	}
+
+	public Page continueReadingSharedBook(Long bookId) {
+		return pageRepository.findPageByBookIdAndNumeration(bookId,
+				userService.findBooksharingByLoggedAskingUserIdAndBookId(bookId).getLastPage());
 	}
 
 	public void changeBookshelf(Long bookId, Long bookshelfId) {

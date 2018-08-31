@@ -30,4 +30,8 @@ public interface IBookService {
 	Book updateBook(Long bookId, BookDto bookDto);
 
 	void deleteBook(Long bookId);
+
+	Page getSharedPageByNum(Long bookId, int pageNum);
+
+	Page continueReadingSharedBook(Long bookId);
 }

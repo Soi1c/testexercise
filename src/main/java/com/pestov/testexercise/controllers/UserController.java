@@ -1,10 +1,7 @@
 package com.pestov.testexercise.controllers;
 
 import com.pestov.testexercise.dto.BookSharingDto;
-import com.pestov.testexercise.models.Book;
-import com.pestov.testexercise.models.BookSharing;
-import com.pestov.testexercise.models.Bookshelf;
-import com.pestov.testexercise.models.CustomUser;
+import com.pestov.testexercise.models.*;
 import com.pestov.testexercise.services.IBookService;
 import com.pestov.testexercise.services.IBookshelfService;
 import com.pestov.testexercise.services.IUserService;
@@ -102,12 +99,21 @@ public class UserController {
 		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "mysharedbooks/{bookId}/pages/{pageId}", method = RequestMethod.GET)
+	@RequestMapping(value = "mysharedbooks/{bookId}/pages/{pageNum}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Book> getSharedPage(@PathVariable Long bookId, @PathVariable Long pageId) {
+	public ResponseEntity<Page> getSharedPage(@PathVariable Long bookId, @PathVariable int pageNum) {
 		if (!userService.checkBookShared(bookId)) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		return new ResponseEntity<>(bookService.getBookById(bookId), HttpStatus.OK);
+		return new ResponseEntity<>(bookService.getSharedPageByNum(bookId, pageNum), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "mysharedbooks/{bookId}/continuereading", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Page> continueReadSharedBook(@PathVariable Long bookId) {
+		if (!userService.checkBookShared(bookId)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		return new ResponseEntity<>(bookService.continueReadingSharedBook(bookId), HttpStatus.OK);
 	}
 }

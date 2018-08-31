@@ -28,4 +28,6 @@ public interface IUserService {
 	List<BookSharing> mySharedBooks();
 
 	boolean checkBookShared(Long bookId);
+
+	BookSharing findBooksharingByLoggedAskingUserIdAndBookId(Long bookId);
 }
